@@ -1,5 +1,7 @@
 downloads/
-files/
+master/
+processed/
+indicators/
 __pycache__/
 indicators/
 master/
