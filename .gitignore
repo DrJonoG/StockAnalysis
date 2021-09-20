@@ -1,3 +1,4 @@
+testing.py
 downloads/
 master/
 processed/
@@ -5,4 +6,8 @@ indicators/
 __pycache__/
 indicators/
 master/
+backtesting/results/
 README.md
+docs/api.conf
+.atomignore
+main.py

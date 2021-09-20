@@ -14,25 +14,34 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 
 import plotly
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import matplotlib.pyplot as plt
 
 class VisualDisplay:
     def __init__(self, name, df):
         self.chartName = name
         self.df = df
-        self.figure = self.CandleStick
+        self.figure = self.CandleStick()
 
     def CandleStick(self):
         # Create candlestick
-        candlestick = go.Candlestick(
-            name = self.chartName,
-            x = self.df.index,
-            open = self.df['open'],
-            high = self.df['high'],
-            low = self.df['low'],
-            close = self.df['close']
-        )
+        self.figure = go.Figure(dict({
+            "data":
+                [go.Candlestick(
+                    name = self.chartName,
+                    x = self.df.index,
+                    open = self.df['open'],
+                    high = self.df['high'],
+                    low = self.df['low'],
+                    close = self.df['close']
+                )],
+            "layout": {
+                "title": {
+                    "text": self.chartName
+                }
+            }
+        }))
 
-        self.figure.add_trace(candlestick, row=1, col=1)
 
     def AddMarker(self):
         pass

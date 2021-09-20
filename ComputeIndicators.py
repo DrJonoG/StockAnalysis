@@ -153,10 +153,11 @@ class ComputeIndicators(object):
             tickerDF = pd.read_csv(fileName)
             # File name
             fileName = Path(fileName).name
-            PrintProgressBar(index+1, fileCount, prefix = 'Progress: ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+            PrintProgressBar(index, fileCount, prefix = '==> Progress: ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
             tickerDF = self.Indicators(tickerDF)
             # Save
             tickerDF.to_csv(destination + fileName, index=True)
+        PrintProgressBar(fileCount, fileCount, prefix = '==> Indicators complete  ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
 
     def ComputeForDF(self, dataframes, destination):
         """
@@ -173,7 +174,7 @@ class ComputeIndicators(object):
         # Iterate through each of the csv files
         start = time.time()
         for index, value in enumerate(dataframes):
-            PrintProgressBar(index+1, dfCount, prefix = 'Progress:  ' + str(value).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+            PrintProgressBar(index, dfCount, prefix = '==> Progress:  ' + str(value).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
             # Get dataframe
             df = dataframes[value]
             # Calculate the indicators
@@ -181,6 +182,7 @@ class ComputeIndicators(object):
             # If destination is specified, save the dataframe
             if destination:
                 indicatorDF[value].to_csv(destination + value + ".csv", index=True)
+        PrintProgressBar(dfCount, dfCount, prefix = '==> Indicators complete  ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
 
         return indicatorDF
 
