@@ -12,31 +12,21 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 # See the License for the specific language governing permissions and limitations under the License.
 #
 
-# Simple example to download symbol data from AlphaVantage obtaining all historic data
 import os
 import sys
 import inspect
+import pandas as pd
 # Setup
 currentDir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentDir = os.path.dirname(currentDir)
 sys.path.insert(0, parentDir)
-# Import custom
-import data.Alpha as A
-from helpers import SymbolIterator
+# Custom import
+import analysis.Gappers as G
 
 if __name__ == '__main__':
     # Clear screen prior to execution
     clear = lambda: os.system('cls')
     clear()
-    # Download varialbles
-    destinationPath = "../downloads/"
-    symbolFileList = ["../downloads/symbols.csv"]
-    alpha = A.Alpha('../docs/api.conf')
-
-    # If saving, make folders
-    if destinationPath:
-        if not os.path.exists(destinationPath):
-            os.makedirs(destinationPath)
-
-    # Download maximum data for each symbol
-    SymbolIterator(symbolFileList, alpha.DownloadExtended, [destinationPath + '5m/', 5, '*', '*', True], apiCap=150, functionCalls=24)
+    # Gappers
+    gappers = G.Gappers()
+    gappers.AnalyseGaps('../downloads/5m/AMC.csv', 'D', 0.02)

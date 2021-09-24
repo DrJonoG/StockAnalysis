@@ -12,7 +12,13 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 # See the License for the specific language governing permissions and limitations under the License.
 #
 
-# Simple example to download symbol data from AlphaVantage obtaining all historic data
+'''
+    AlphaVantage fundamental download
+    The free API key has a limit of 50 requests per minute and 500 per day.
+    For academics it is possible to request a free academic key with 150 requests per minute and unlimited requests per day
+    Highly recommended
+'''
+
 import os
 import sys
 import inspect
@@ -38,5 +44,5 @@ if __name__ == '__main__':
         if not os.path.exists(destinationPath):
             os.makedirs(destinationPath)
 
-    # Download maximum data for each symbol
-    SymbolIterator(symbolFileList, alpha.DownloadExtended, [destinationPath + '5m/', 5, '*', '*', True], apiCap=150, functionCalls=24)
+    # Get fundamental for each symbol
+    SymbolIterator(symbolFileList, alpha.Downloadfundamental, [destinationPath + 'fundamentals.csv'], prefix='Downloading', apiCap=150, functionCalls=1)

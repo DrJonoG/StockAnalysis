@@ -12,8 +12,6 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 # See the License for the specific language governing permissions and limitations under the License.
 #
 
-
-# Simple example to download symbol data and compute indicators for these.
 import os
 import sys
 import inspect
@@ -23,24 +21,16 @@ currentDir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentDir = os.path.dirname(currentDir)
 sys.path.insert(0, parentDir)
 # Import custom
-import DownloadData as DL
 import ComputeIndicators as CI
 
 if __name__ == '__main__':
-    # Download varialbles
-    dataSource = 'yahoo'
-    destinationPath = "./downloads/"
-    tickerList = ["./files/SymbolList.csv"]
-
-    # Create download instance
-    symbolData = DL.DownloadData(dataSource)
-    # Downloads data and stores in variable, doesn't save as a file
-    symbolDF = symbolData.Download(dataRange='60d', dataInterval='5m', symbolList=['AMC'])
-    # Alternatively this approach downloads symbol data, appends to existing file it exists.
-    # symbolDF = symbolData.Download(dataRange='60d', dataInterval='5m', symbolList=tickerList, destinationPath=destinationPath + '5m/')
+    # Clear screen prior to execution
+    clear = lambda: os.system('cls')
+    clear()
 
     # Inidcator varialbles
-    indicatorDestination = "./indicators/"
+    source = '../downloads/5m/'
+    destination = '../indicators/5m/'
     indicators = {
         'expMovingAverage': [3, 5, 10, 20, 50, 100],
         'simpleMovingAverage': [5, 10, 20, 50, 100],
@@ -54,8 +44,4 @@ if __name__ == '__main__':
     # Indicator Initialise
     symbolIndicators = CI.ComputeIndicators(**indicators)
     # Compute indicators on variable
-    indicatorDF = symbolIndicators.Compute(symbolDF)
-    # Display
-    pd.set_option('display.max_rows', 50)
-    pd.set_option('display.max_columns', None)
-    print(indicatorDF)
+    symbolIndicators.Compute(source, destination, marketOnly=False)

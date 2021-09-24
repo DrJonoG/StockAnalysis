@@ -14,6 +14,7 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 
 from pathlib import Path
 from helpers import PrintProgressBar
+from pandas.tseries.holiday import USFederalHolidayCalendar as calendar
 import datetime
 import numpy as np
 import pandas as pd
@@ -30,13 +31,15 @@ class ComputeIndicators(object):
             Bollinger
             Moving averages
             Exponential moving averages
+            Ability to process on the fly as opposed to saving
+            Remove holidays and out of hours
         #TODO:
             Add more indicators
-            Ability to process on the fly as opposed to saving
             Improve efficiency
     """
     def __init__(self, **argd):
         self.__dict__.update(argd)
+
 
     def ComputeRSI(self, diff):
         """
@@ -44,9 +47,7 @@ class ComputeIndicators(object):
 
         Parameters
         ----------
-        diff : Series
-            First discrete difference of element
-
+        diff : Series            First discrete difference of element
         """
         # Preserve dimensions off diff values
         upChange = 0 * diff
@@ -61,6 +62,7 @@ class ComputeIndicators(object):
         downChangeAvg = downChange.ewm(com=self.rsiLength-1 , min_periods=self.rsiLength).mean()
         # Calculate RSI value
         return round(100 - (100 / (abs(upChangeAvg/downChangeAvg)+1)), self.precision)
+
 
     def ComputerBollinger(self, close, period, stdDev):
         """
@@ -77,7 +79,6 @@ class ComputeIndicators(object):
 
         stdDev: Float
             Standard deviation of upper and lower bands
-
         """
         # Calculate moving average and standard deviation on stock close
         movingAverage = close.rolling(period).mean()
@@ -86,6 +87,7 @@ class ComputeIndicators(object):
         bollingerUpper = movingAverage + standardDeviation * stdDev
         bollingerLower = movingAverage - standardDeviation * stdDev
         return [movingAverage, bollingerUpper, bollingerLower]
+
 
     def ComputeVWAP(self, df):
         """
@@ -96,15 +98,67 @@ class ComputeIndicators(object):
         ----------
         df : Dataframe
             Dataframe containing the volume and close for a series of data
-
         """
         volume = df.volume
         close = df.close
         return round(df.assign(vwap=(close * volume).cumsum() / volume.cumsum()),2)
 
-    def Indicators(self, tickerDF):
+
+    def Indicators(self, tickerDF, destination, marketOnly):
+        """
+	    Computer indicators on tickerDF
+
+        Parameters
+        ----------
+        tickerDF : Dataframe
+            Pandas dataframe for one symbol
+        marketOnly : Bool
+            If true show only open market hours. Else show pre- and post-market hours too
+        """
         # Convert to datetime
-        tickerDF['Datetime']= pd.to_datetime(tickerDF['Datetime'])
+        tickerDF['Datetime'] = pd.to_datetime(tickerDF['Datetime'])
+        # Sort dates old to new
+        tickerDF = tickerDF.sort_values(by='Datetime', ascending=True).reset_index()
+        # Replace missing date times
+        start = tickerDF['Datetime'].iloc[0]
+        end = tickerDF['Datetime'].iloc[-1]
+        # Set datetime to index
+        tickerDF = tickerDF.set_index('Datetime').drop(columns=['index'])
+        '''
+            Some data sources do not return rows where the volume is 0. To calculate accurate
+            moving averages etc,. all times need to be visible. Inserting rows is computationally
+            expense, thus we create an empty datarange and merge the two together.
+        '''
+        # Get all times between start and end date with a frequency of 5 minutes
+        dateDF = pd.date_range(start=start, end=end, freq='5min')
+        # Remove weekends
+        dateDF = dateDF[dateDF.dayofweek < 5]
+        # Remove out of hours (except pre and post market)
+        dateDF = dateDF[(dateDF.time > datetime.time(4, 0)) & (dateDF.time < datetime.time(20, 00))]
+        # Get a list of holidays between the start and end
+        USHolidays =  calendar().holidays(start=start, end=end)
+        # Remove public holidays
+        m = dateDF.isin(USHolidays) # TODO check this
+        dateDF = dateDF[~m].copy()
+        # Convert DatetimeIndex to dataframe
+        dateDF = pd.DataFrame(index=dateDF)
+        # Join dataframe to maintin all dates
+        tickerDF =  dateDF.join(tickerDF)
+        # Filter out if only market open hours
+        if marketOnly:
+            # Filter times
+            dateDF = dateDF[(dateDF > datetime.time(9, 30)) & (dateDF < datetime.time(16, 00))]
+            tickerDF = tickerDF[(tickerDF.index.time > datetime.time(9, 30)) & (tickerDF.index.time < datetime.time(16, 00))]
+            # Determine market hours (0 premarket, 1 open market, 2 postmarket)
+            tickerDF.loc[(tickerDF.between_time('09:30:01', '16:00:00').index), 'Market'] = 1
+        else:
+            # Filter times
+            dateDF = dateDF[(dateDF > datetime.time(4, 0)) & (dateDF < datetime.time(20,0))]
+            tickerDF = tickerDF[(tickerDF.index.time > datetime.time(4, 0)) & (tickerDF.index.time < datetime.time(20,0))]
+            # Determine market hours (0 premarket, 1 open market, 2 postmarket)
+            tickerDF.loc[(tickerDF.between_time('04:00:00', '09:30:01').index), 'Market'] = 0
+            tickerDF.loc[(tickerDF.between_time('09:30:01', '16:00:00').index), 'Market'] = 1
+            tickerDF.loc[(tickerDF.between_time('16:00:01', '20:00:00').index), 'Market'] = 2
         # Replace nan values previous value if price, or 0 if not
         tickerDF['close'] = tickerDF['close'].fillna(method='ffill')
         tickerDF['open'] = tickerDF['open'].fillna(tickerDF['close'])
@@ -125,12 +179,16 @@ class ComputeIndicators(object):
             tickerDF["BollingerMA"], tickerDF["BollingerUpper"], tickerDF["BollingerLower"] = self.ComputerBollinger(tickerDF.close, self.bollingerPeriod, self.bollingerStdDev)
         # Calculate VWAP
         if self.vWAP:
-            tickerDF = tickerDF.groupby(tickerDF['Datetime'].dt.date, group_keys=False).apply(self.ComputeVWAP)
+            tickerDF = tickerDF.groupby(tickerDF.index.date, group_keys=False).apply(self.ComputeVWAP)
+            tickerDF['vwap'] = tickerDF['vwap'].fillna(method='ffill')
+            tickerDF.loc[(tickerDF.between_time('16:00:01', '09:29:59').index), 'vwap'] = 0
         # Replace NaN with 0
         tickerDF = tickerDF.fillna(0)
+        # return indicators
         return tickerDF
 
-    def ComputeForFiles(self, source, destination=None):
+
+    def ComputeForFiles(self, source, marketOnly, destination):
         """
 	    Computer the specified indicators for each file within the source folder
 
@@ -138,12 +196,11 @@ class ComputeIndicators(object):
         ----------
         source : String
             A path to the directory containing the raw (downloaded) csv files. Files should contain columns for Datetime, open, close, high, low
-
         destination : String
             A path to the destination where files with computed indicators will be saved
-
+        marketOnly : Bool
+            If true show only open market hours. Else show pre- and post-market hours too
         """
-
         # Get file list
         files = list(Path(source).rglob('*.csv'))
         fileCount = len(files)
@@ -154,12 +211,13 @@ class ComputeIndicators(object):
             # File name
             fileName = Path(fileName).name
             PrintProgressBar(index, fileCount, prefix = '==> Progress: ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
-            tickerDF = self.Indicators(tickerDF)
+            tickerDF = self.Indicators(tickerDF, destination, marketOnly)
             # Save
             tickerDF.to_csv(destination + fileName, index=True)
         PrintProgressBar(fileCount, fileCount, prefix = '==> Indicators complete  ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
 
-    def ComputeForDF(self, dataframes, destination):
+
+    def ComputeForDF(self, dataframes, marketOnly, destination=None):
         """
 	    Computer the specified indicators for each file within the source folder
 
@@ -167,7 +225,10 @@ class ComputeIndicators(object):
         ----------
         dataframes : Dictionary
             A dictionary of pandas dataframes which should contain columns for Datetime, open, close, high, low
-
+        destination : String
+            A path to the destination where files with computed indicators will be saved
+        marketOnly : Bool
+            If true show only open market hours. Else show pre- and post-market hours too
         """
         dfCount = len(dataframes)
         indicatorDF = {}
@@ -178,7 +239,7 @@ class ComputeIndicators(object):
             # Get dataframe
             df = dataframes[value]
             # Calculate the indicators
-            indicatorDF[value] = self.Indicators(df)
+            indicatorDF[value] = self.Indicators(df, marketOnly)
             # If destination is specified, save the dataframe
             if destination:
                 indicatorDF[value].to_csv(destination + value + ".csv", index=True)
@@ -186,9 +247,10 @@ class ComputeIndicators(object):
 
         return indicatorDF
 
-    def Compute(self, source, destination=None):
+
+    def Compute(self, source, destination=None, marketOnly=False):
         """
-        Computer the indicators. Accepts either or a folder to the location of csv files
+        Computer the indicators. Accepts either a dictionary of stock data or a folder to the location of csv files
 
         Parameters
         ----------
@@ -196,15 +258,17 @@ class ComputeIndicators(object):
             A dictionary of pandas dataframes
             or
             A path to the directory containing the raw (downloaded) csv files. Files should contain columns for Datetime, open, close, high, low
-
         destination : String
             A path to the destination where files with computed indicators will be saved
-
+        marketOnly : Bool
+            If true show only open market hours. Else show pre- and post-market hours too
         """
         # Check if destination exists
         if destination and not os.path.exists(destination):
             os.makedirs(destination)
+
         if type(source) is dict:
-            return self.ComputeForDF(source, destination)
+            return self.ComputeForDF(source, destination, marketOnly)
         else:
-            self.ComputeForFiles(source, destination)
+            self.ComputeForFiles(source, marketOnly, destination)
+            return True

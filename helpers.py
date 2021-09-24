@@ -15,6 +15,8 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 import os
 import numpy as np
 import pandas as pd
+import datetime
+import time
 
 def PrintProgressBar (iteration, total, prefix = '', suffix = '', length = 20):
     """
@@ -24,19 +26,14 @@ def PrintProgressBar (iteration, total, prefix = '', suffix = '', length = 20):
     ----------
     iteration : Int
         The current interation
-
     total : Int
         Total number to iterate
-
     prefix : String
         The prefix to display
-
     suffix : String
         The suffix to display
-
     length : Int
         The length of the progress bar
-
     """
     percent = ("{0:.1f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
@@ -54,7 +51,6 @@ def ConfigParser(items):
     ----------
     items : List
         A list of the configuration settings
-
     """
     print(type(items))
     result = []
@@ -87,10 +83,8 @@ def MergeDataFolders(self, sourcePath, destinationPath):
     ----------
     sourcePath : String
         A directory containing the directories of symbols to merge
-
     destinationPath : String
         The location in which to store the merged files
-
     """
     folderList = [ f.path for f in os.scandir(sourcePath) if f.is_dir() ]
     if len(folderList) > 1:
@@ -123,10 +117,8 @@ def LoadTickerNames(filepath, column=0):
     ----------
     filepath : String
         Location of the csv file containing a list of symbol names
-
     column : Int
         The column in which the symbol is located, 0 by default.
-
     """
     # Symbol must be first column
     try:
@@ -135,3 +127,62 @@ def LoadTickerNames(filepath, column=0):
     except Exception as e:
         print("==> Error: invalid or missing ticker file %s. Exiting application." % filepath)
         exit(1)
+
+
+def SymbolIterator(fileList, function, arguments, prefix='Downloading', apiCap=150, functionCalls=1):
+    """
+    Iterate through the symbols in fileList and call the function using the arguments provided
+    The symbol is always the first argument passed to the function
+    Handles the maximum number of calls per minute and sleeps if limit has been reached
+
+    Parameters
+    ----------
+    fileList : String
+        Location of the csv file containing a list of symbol names
+    function : Object
+        The function to be called
+    arguments : List
+        A list of arguments to be passed to the function
+    prefix : String
+        (Optional) String for the progress bar reporting
+    apiCap : Int
+        (Optional) The number of calls that can be made per minute with your Alpha API key
+    functionCalls : Int
+        (Optional) The number of api calls the function makes for each invoke
+    """
+    start = time.time()
+    # Load in the ticker list
+    symbolList = pd.Series(dtype="float64")
+
+    # Iterate list and load csv if file list, or append string otherwise
+    for f in fileList:
+        symbolList = symbolList.append(LoadTickerNames(f, 0), ignore_index=True)
+    symbolList = symbolList.drop_duplicates()
+    symbolCount = len(symbolList)
+
+    # Dictionary to return data if not saving
+    symbolData = {}
+    # Iterate through symbolList and download data
+    print("==> Please be patient, this may take some time.")
+    apiCalls = 0
+    apiTime = time.time()
+    for index, symbol in symbolList.items():
+        # Determine seconds
+        duration = (time.time() - apiTime)
+        # Update number of API calls before it happens
+        apiCalls += functionCalls
+        # If minute cap is reached, then sleep, else continue
+        if duration < 60 and apiCalls > apiCap:
+            PrintProgressBar(index, symbolCount, prefix = '==> ' + ('API Limit Reached. Paused: ').ljust(20), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+            time.sleep((60-duration)+2)
+        elif duration > 60:
+            apiTime = time.time()
+            apiCalls = functionCalls
+        #
+        PrintProgressBar(index, symbolCount, prefix = '==> ' + (prefix + ': ').ljust(10) + symbol.ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+        calledAPI = function(symbol, *arguments)
+        # If the api wasn't called (i.e. data already exists), deduct call count
+        if not calledAPI:
+            apiCalls -= functionCalls
+        # Todo: May need to add sleep function in if making too many calls per minute.
+    PrintProgressBar(symbolCount, symbolCount, prefix = '==> ' + (prefix + ' Complete').ljust(20), suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))

@@ -17,11 +17,11 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 
-class VisualDisplay:
+class Display:
     def __init__(self, name, df):
         self.chartName = name
         self.df = df
-        self.figure = self.CandleStick()
+        self.CandleStick()
 
     def CandleStick(self):
         # Create candlestick
@@ -43,11 +43,27 @@ class VisualDisplay:
         }))
 
 
-    def AddMarker(self):
-        pass
+    def AddMarker(self, x, y, symbol, color, size=20):
+        self.figure.add_trace(
+            go.Scatter(
+                x=x,
+                y=y,
+                mode='markers',
+                marker=go.Marker(size=size,
+                                 symbol=symbol,
+                                 color=color)
+                )
+            )
+        )
 
-    def AddLine(self):
-        pass
+    def AddLine(self, column, color="black", width=1):
+        self.figure.add_trace(
+            go.Scatter(
+                x=self.df.index,
+                y=self.df[column],
+                line=dict(color=color, width=width)
+            )
+        )
 
     def TextConfig(self, chartTitle="Stock Prices", height=1600, yaxis="Price $ - US Dollars"):
         # Update figure
@@ -59,7 +75,7 @@ class VisualDisplay:
             xaxis=dict(type="category", rangeslider_visible=False)
         )
 
-    def Display(self):
+    def Show(self):
         self.figure.show()
 
     def Save(self):

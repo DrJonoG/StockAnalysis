@@ -16,6 +16,7 @@ import requests
 import pandas as pd
 import numpy as np
 from io import StringIO
+import os
 
 class Alpha:
     def __init__(self, apiPath='./docs/api.conf'):
@@ -27,27 +28,50 @@ class Alpha:
         # Use your own api key here. Read as a single line in a file api.conf
         self.apiKey = open(apiPath).readline().rstrip()
 
-    def GetDataFrame(self, dataAddress):
+    def GetRaw(self, dataAddress):
+        """
+	    Downloads the raw data from the data address specified
+        Returns: Raw response from address
+
+        Parameters
+        ----------
+        dataAddress : String
+            The url request for data from AlphaVantage
+        """
         try:
             # Open session and download
             with requests.Session() as session:
                 # Get data
-                rawData = session.get(dataAddress).text
-                # Load as pandas and set index
-                sessionDF = pd.read_csv(StringIO(rawData))
-                # Replace names in headers
-                sessionDF = sessionDF.rename(columns={'timestamp': 'Datetime', 'time': 'Datetime'})
-                sessionDF = sessionDF.set_index('Datetime')
-                # convert index to datetime
-                sessionDF.index = pd.to_datetime(sessionDF.index)
-                # Ensure ordering is consistent
-                sessionDF = sessionDF[["open","close","high","low","volume"]]
+                rawData = session.get(dataAddress)
+                return rawData
         except Exception as e:
             print("==> Error occured retrieving data from Alpha: ")
             print(rawData)
-            exit(0)
+            exit(1)
 
-        return sessionDF
+    def PriceDFSorter(self, rawData):
+        """
+	    Processes raw text data from request response into pandas dataframe
+        Returns: Dataframe
+
+        Parameters
+        ----------
+        rawData : String
+            Raw text response from AlphaVantage
+        """
+        try:
+            # Load as pandas and set index
+            sliceDF = pd.read_csv(StringIO(rawData))
+            # Replace names in headers
+            sliceDF = sliceDF.rename(columns={'timestamp': 'Datetime', 'time': 'Datetime'})
+            sliceDF = sliceDF.set_index('Datetime')
+            # convert index to datetime
+            sliceDF.index = pd.to_datetime(sliceDF.index)
+            # Ensure ordering is consistent and return
+            sliceDF = sliceDF[["open","close","high","low","volume"]]
+            return sliceDF
+        except Exception as e:
+            return None
 
     def Download(self, symbol, dataRange, dataInterval):
         """
@@ -64,14 +88,15 @@ class Alpha:
         dataInterval : String
             The time period for which to obtain data (i.e. 5m)
         """
-
         # Need to convert from (i.e.) 5m to 5min
         if 'min' not in dataInterval:
             dataInterval += 'in'
         # Address for session
         dataAddress = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=%s&interval=%s&outputsize=full&apikey=%s&datatype=csv&adjusted=false' % (symbol, dataInterval, self.apiKey)
         # Get the requested data
-        return self.GetDataFrame(dataAddress)
+        rawData = self.GetRaw(dataAddress)
+        # Extract and format data
+        sessionDF = self.PriceDFSorter(rawData.text)
 
 
     def DownloadExtended(self, symbol, destination, dataInterval, month='*', year='*', merge=True):
@@ -90,8 +115,9 @@ class Alpha:
             The month to obtain data for, '*' for all data.
         year : String
             The year to obtain data for, '*' for all data.
+        merge : Bool
+            Whether to merge the files if * is used, or save them individually
         """
-
         # Get the requested months and store in an array
         if month == '*':
             monthRequest = [m for m in range(1, 13)]
@@ -104,37 +130,91 @@ class Alpha:
         else:
             yearRequest = [year]
 
-        mergedArr = []
+        # Location of save path
+        saveFile = destination + '/%s.csv' % (symbol)
+        # If the file exists before iterating, return. Already have data
+        if os.path.isfile(saveFile):
+            return
         # Iterate through the yars and months to get data
         for y in yearRequest:
             for m in monthRequest:
                 dataAddress = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=%s&interval=%smin&slice=year%smonth%s&apikey=%s' % (symbol, dataInterval, str(y), str(m), self.apiKey)
-                sliceDF = self.GetDataFrame(dataAddress)
+                # Get data
+                rawData = self.GetRaw(dataAddress)
+                # Extract and format data
+                sliceDF = self.PriceDFSorter(rawData.text)
+                # Check if data was retrieved, if not, return.
+                if sliceDF is None:
+                    return False
+                # Merge or save
                 if merge:
-                    mergedArr.append(sliceDF)
+                    if not os.path.isfile(saveFile):
+                       sliceDF.to_csv(saveFile, index=True)
+                    else: # else it exists so append without writing the header
+                       sliceDF.to_csv(saveFile, mode='a', index=True, header=False)
                 else:
                     sliceDF.to_csv(destination + '/%s_year_%s_month_%s.csv' % (sym, str(y), str(m)))
 
-        # If merging the data, save here
-        if merge:
-            mergedDF = pd.concat(mergedArr)
-            mergedDF.to_csv(destination + '/%s_full.csv' % (symbol))
+        return True
 
 
-    def Downloadfundamental(self):
+    def Downloadfundamental(self, symbol, filePath):
         """
 	    https://www.alphavantage.co/documentation/#fundamentals
+        Downloads fundamental data for the symbol and saves as a csv.
+        It does not check for duplicates when writing
 
         Parameters
         ----------
-
+        symbol : String
+            The symbol in which to obtain quote data for
+        filePath : String
+            The location where the files should be saved
         """
+        dataAddress = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=%s&apikey=%s' % (symbol, self.apiKey)
+        # Get the requested data
+        rawData = self.GetRaw(dataAddress).json()
+        # If error message returned, or no data available, skip and append to error file
+        if 'Error Message' in rawData:
+            with open(filePath.replace(".csv", "_errors.csv"), "a") as file:
+                file.write(symbol + ', ' + rawData['Error Message'] + '\n')
+            return
+        if len(rawData) == 0:
+            with open(filePath.replace(".csv", "_errors.csv"), "a") as file:
+                file.write(symbol + ', No data found. \n')
+            return
+        # Transpose pandas series
+        df = pd.Series(rawData).to_frame().T
+        # Write to csv
+        if not os.path.isfile(filePath):
+           df.to_csv(filePath, index=False)
+        else: # else it exists so append without writing the header
+           df.to_csv(filePath, mode='a', index=False, header=False)
 
-    def DownloadIndicators(self):
+
+    def DownloadIndicators(self, symbol, indicator, interval, period, ohlc):
         """
 	    https://www.alphavantage.co/documentation/#technical-indicators
 
         Parameters
         ----------
+        symbol : String
+            The symbol in which to obtain quote data for
+        indicator : String
+            Indictator to download chosen from:
+                SMA, EMA, WMA, VWAP, MACD, RSI, ADX, BBANDS, ATR, OBV
 
         """
+        dataAddress = 'https://www.alphavantage.co/query?function=%s&symbol=%s&interval=%s&time_period=%s&series_type=%s&apikey=%s' % (indicator, symbol, interval, period, ohlc, self.apiKey)
+        # Get the requested data
+        rawData = self.GetRaw(dataAddress).text
+
+
+    def EarningDates(self, symbol=None):
+        # replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
+        if symbol:
+            dataAddress = 'https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&symbol=%s&horizon=3month&apikey=%s' % (symbol, self.apiKey)
+        else:
+            dataAddress = 'https://www.alphavantage.co/query?function=EARNINGS_CALENDAR&horizon=3month&apikey=%s' % self.apiKey
+        # Get the requested data
+        rawData = self.GetRaw(dataAddress).text
