@@ -36,8 +36,8 @@ if __name__ == '__main__':
     clear()
     # Download varialbles
     destinationPath = "../downloads/"
-    symbolFileList = ["../downloads/symbols.csv"]
-    alpha = A.Alpha('../docs/api.conf')
+    symbolFileList = ["../config/symbols.csv"]
+    alpha = A.Alpha('../config/api.conf')
 
     # If saving, make folders
     if destinationPath:

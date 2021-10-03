@@ -13,10 +13,21 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 #
 
 import os
+import configparser
 import numpy as np
 import pandas as pd
 import datetime
 import time
+
+def csvToPandas(path):
+    df = pd.read_csv(path)
+    # Convert to datetime
+    df['Datetime'] = pd.to_datetime(df['Datetime'])
+    # Sort dates old to new
+    df = df.sort_values(by='Datetime', ascending=True).reset_index()
+    # Set datetime to index
+    df = df.set_index('Datetime').drop(columns=['index'])
+    return df
 
 def PrintProgressBar (iteration, total, prefix = '', suffix = '', length = 20):
     """
@@ -43,7 +54,30 @@ def PrintProgressBar (iteration, total, prefix = '', suffix = '', length = 20):
     if total == iteration:
         print("\r")
 
-def ConfigParser(items):
+def LoadIndicators(filePath='./config/indicators.ini'):
+    """
+    Parse the configuration file for the indicators
+
+    Parameters
+    ----------
+    fielPath : String
+        Path to the indicator configuration file
+    """
+    parser = configparser.ConfigParser()
+    parser.read(filePath)
+    indicators = {
+        'expMovingAverage': np.fromstring(parser['indicators']['expMovingAverage'], dtype=int, sep=','),
+        'simpleMovingAverage': np.fromstring(parser['indicators']['simpleMovingAverage'], dtype=int, sep=','),
+        'rsiLength': parser['indicators'].getint('rsiLength'),
+        'bollingerPeriod': parser['indicators'].getint('bollingerPeriod'),
+        'bollingerStdDev': parser['indicators'].getfloat('bollingerStdDev'),
+        'vWAP': parser['indicators'].getboolean('vWAP'),
+        'precision': parser['indicators'].getint('precision')
+    }
+    return indicators
+
+
+def ConfigParserBacktesting(items):
     """
     Formats the configuration file into the correct types
 
@@ -111,7 +145,7 @@ def MergeDataFolders(self, sourcePath, destinationPath):
 
 def LoadTickerNames(filepath, column=0):
     """
-    Loads in a list of tickets from a csv file.
+    Loads in a list of tickers from a csv file.
 
     Parameters
     ----------
@@ -185,4 +219,40 @@ def SymbolIterator(fileList, function, arguments, prefix='Downloading', apiCap=1
         if not calledAPI:
             apiCalls -= functionCalls
         # Todo: May need to add sleep function in if making too many calls per minute.
+    PrintProgressBar(symbolCount, symbolCount, prefix = '==> ' + (prefix + ' Complete').ljust(20), suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+
+
+def SymbolIteratorFiles(fileList, function, arguments, prefix='Downloading'):
+    """
+    Iterate through the symbols in fileList and call the function using the arguments provided
+    The symbol is always the first argument passed to the function
+
+    Parameters
+    ----------
+    fileList : String
+        Location of the csv file containing a list of symbol names
+    function : Object
+        The function to be called
+    arguments : List
+        A list of arguments to be passed to the function
+    prefix : String
+        (Optional) String for the progress bar reporting
+    """
+    start = time.time()
+    # Load in the ticker list
+    symbolList = pd.Series(dtype="float64")
+
+    # Iterate list and load csv if file list, or append string otherwise
+    for f in fileList:
+        symbolList = symbolList.append(LoadTickerNames(f, 0), ignore_index=True)
+    symbolList = symbolList.drop_duplicates()
+    symbolCount = len(symbolList)
+
+    # Dictionary to return data if not saving
+    symbolData = {}
+    # Iterate through symbolList and download data
+    for index, symbol in symbolList.items():
+        # If minute cap is reached, then sleep, else continue
+        PrintProgressBar(index, symbolCount, prefix = '==> ' + prefix.ljust(20), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+        calledAPI = function(symbol, *arguments)
     PrintProgressBar(symbolCount, symbolCount, prefix = '==> ' + (prefix + ' Complete').ljust(20), suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))

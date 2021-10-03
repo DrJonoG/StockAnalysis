@@ -1,13 +1,6 @@
-testing.py
-downloads/
-master/
-processed/
-indicators/
 __pycache__/
-indicators/
-master/
+fonts/
 backtesting/results/
-README.md
-docs/api.conf
+config/api.conf
 .atomignore
 main.py

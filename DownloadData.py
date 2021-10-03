@@ -106,7 +106,8 @@ class DownloadData:
             except Exception as e:
                 # Can fail for numerous reasons including unavailable ticker, server down etc,.
                 PrintProgressBar(index, tickerCount, prefix = '==> Failed   : ' + symbol.ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
-            PrintProgressBar(tickerCount, tickerCount, prefix = '==> Downloading complete ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+        # Complete
+        PrintProgressBar(tickerCount, tickerCount, prefix = '==> Downloading complete ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
         return symbolData
 
 

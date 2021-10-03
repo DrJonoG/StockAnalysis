@@ -19,7 +19,7 @@ from io import StringIO
 import os
 
 class Alpha:
-    def __init__(self, apiPath='./docs/api.conf'):
+    def __init__(self, apiPath='./config/api.conf'):
         print("==> Datasource set to AlphaVantage")
         print("==> For personal use please set up your own free API key")
         print("==> For large scale downloads, a premium key is required.")
@@ -97,6 +97,7 @@ class Alpha:
         rawData = self.GetRaw(dataAddress)
         # Extract and format data
         sessionDF = self.PriceDFSorter(rawData.text)
+        return sessionDF
 
 
     def DownloadExtended(self, symbol, destination, dataInterval, month='*', year='*', merge=True):

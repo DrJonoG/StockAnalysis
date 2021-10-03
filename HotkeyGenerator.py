@@ -18,7 +18,7 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 # in a simulated environment
 #
 
-
+from PIL import Image, ImageDraw, ImageFont
 import pandas as pd
 
 class HotKeys:
@@ -39,7 +39,7 @@ class HotKeys:
         if stop:
             adjustStop = 'ROUTE=STOP;StopType=Market;StopPrice=AvgCost;Share=Pos-share;TIF=GTC;BUY=SEND'
         for i in range(0, len(percent)):
-            command = focus + clear + 'ROUTE=LIMIT;Price=ASK+0.01;Price=Round2;Share=Pos*' + str(percent[i]) + ';TIF=DAY+;BUY=' + send + ';'
+            command = '%s%sROUTE=LIMIT;Price=ASK+0.03;Price=Round2;Share=Pos*%s;TIF=DAY+;BUY=%s;' % (focus, clear, str(percent[i]), send)
             self.AddHotkey(keys[i], name + str(percent[i]*100) + '%.', command)
 
     def SellPosition(self, keys, percent, focus, clear, name, send, stop=False):
@@ -49,16 +49,22 @@ class HotKeys:
         if stop:
             adjustStop = 'ROUTE=STOP;StopType=Market;StopPrice=AvgCost;Share=Pos-share;TIF=DAY;SELL=SEND'
         for i in range(0, len(percent)):
-            command = focus + clear + 'ROUTE=LIMIT;Price=BID-0.01;Price=Round2;Share=Pos*' + str(percent[i]) + ';TIF=DAY;SELL=' + send + ';' + adjustStop
+            command = '%s%sROUTE=LIMIT;Price=BID-0.03;Price=Round2;Share=Pos*%s;TIF=DAY;SELL=%s;%s' % (focus, clear, str(percent[i]), send, adjustStop)
             self.AddHotkey(keys[i], name + str(percent[i]*100) + '%.', command)
 
-    def ShortLongHotkeys(self, longKeys, shortKeys, tradeQty, focus, send):
+    def TradeHotkeysRisk(self, longKeys, shortKeys, totalRisk, riskAmount, focus, slippage, send):
         for i in range(0, 10):
             if len(longKeys) >= i:
-                buyCommand = focus + 'ROUTE=SMRTL;Price=Ask+0.01;Share=%s;Price=%s;StopPrice=Ask-Price;Price=Ask+.01;TIF=DAY+;BUY=%s;TriggerOrder=RT:STOP STOPTYPE:MARKET STOPPRICE:StopPrice ACT:SELL QTY:POS TIF:DAY+' % (str(tradeQty[i]), str(round(riskValue/tradeQty[i], 2)), send)
+                buyCommand = '%sROUTE=SMRTL;Share=%s/%s;Price=Ask+%s;StopPrice=Ask-%s;TIF=DAY+;BUY=%s;TriggerOrder=RT:STOP STOPTYPE:MARKET STOPPRICE:StopPrice ACT:SELL QTY:POS TIF:DAY+' % (focus, totalRisk, riskAmount[i], slippage, riskAmount[i], send)
+                self.AddHotkey(longKeys[i], 'Risk %s' % str(riskAmount[i]), buyCommand)
+
+    def TradeHotkeysQuantity(self, longKeys, shortKeys, tradeQty, focus, slippage, send):
+        for i in range(0, 10):
+            if len(longKeys) >= i:
+                buyCommand = '%sROUTE=SMRTL;Price=Ask;Share=%s;Price=%s;StopPrice=Ask-Price;Price=Ask+%s;TIF=DAY+;BUY=%s;TriggerOrder=RT:STOP STOPTYPE:MARKET STOPPRICE:StopPrice ACT:SELL QTY:POS TIF:DAY+' % (focus, str(tradeQty[i]), str(round(riskValue/tradeQty[i], 2)), slippage, send)
                 self.AddHotkey(longKeys[i], 'Long %s' % str(tradeQty[i]), buyCommand)
             if len(shortKeys) >= i:
-                sellCommand = focus + 'ROUTE=SMRTL;Price=Ask+0.01;Share=%s;Price=%s;StopPrice=Ask+Price;Price=Ask-.01;TIF=DAY+;SELL=%s;TriggerOrder=RT:STOP STOPTYPE:MARKET STOPPRICE:StopPrice ACT:BUY QTY:POS TIF:DAY+' % (str(tradeQty[i]), str(round(riskValue/tradeQty[i], 2)), send)
+                sellCommand = '%sROUTE=SMRTL;Price=Ask;Share=%s;Price=%s;StopPrice=Ask+Price;Price=Ask-%s;TIF=DAY+;SELL=%s;TriggerOrder=RT:STOP STOPTYPE:MARKET STOPPRICE:StopPrice ACT:BUY QTY:POS TIF:DAY+' % (focus, str(tradeQty[i]), str(round(riskValue/tradeQty[i], 2)), slippage, send)
                 self.AddHotkey(shortKeys[i], 'Short %s' % str(tradeQty[i]), sellCommand)
 
     def Save(self, path):
@@ -70,48 +76,67 @@ class HotKeys:
 
 
 if __name__ == '__main__':
-    riskValue = 200
-    focus = 'FocusWindow Level2;'
+    # Adjust your risk value here to automatically increase the position sizes
+    riskValue = 275
+    focus = '' #'FocusWindow Level2;'
     clear = 'CXL ALLSYMB;'
     send = 'Send'
+    slippage = '0.03'
     # long and short hotkeys
-    longKeys = [1,2,3,4,5,6,7,8,9,0]
+    longKeys = ['Ctrl+1','Ctrl+2','Ctrl+3','Ctrl+4','Ctrl+5','Ctrl+6','Ctrl+7','Ctrl+8','Ctrl+9','Ctrl+0']
     shortKeys = ['F1', 'F2','F3', 'F4','F5', 'F6','F7', 'F8','F9', 'F10']
     tradeQty = [100, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 5000]
+    # Long risk keys
+    longKeysRisk = ['Shift+1','Shift+2','Shift+3','Shift+4','Shift+5','Shift+6','Shift+7','Shift+8','Shift+9','Shift+0']
+    riskAmount = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.75, 1.00]
     # Sell and cover positions
     coverKeys = ['Delete','End', 'PageDown']
     sellKeys = ['Insert','Home','PageUp']
     sellKeysStop = ['Ctrl+Insert','Ctrl+Home','Ctrl+PageUp']
     coversKeysStop = ['Ctrl+Delete','Ctrl+End', 'Ctrl+PageDown']
-    sellPercent = [.25, .5, 1]
+    sellPercent = [.33, .5, 1]
     # Initialise hotkeys config df
     hotkey = HotKeys()
     # trade
-    hotkey.ShortLongHotkeys(longKeys, shortKeys, tradeQty, focus, send)
-    hotkey.AddHotkey('Ctrl+B', 'Long Buy x Shares', focus + 'ROUTE=SMRTL;Price=Ask+0.01;Share=1000;TIF=DAY+;BUY=Load;')
+    hotkey.TradeHotkeysRisk(longKeysRisk, shortKeys, riskValue, riskAmount, focus, slippage, send)
+    hotkey.TradeHotkeysQuantity(longKeys, shortKeys, tradeQty, focus, slippage, send)
+    hotkey.AddHotkey('Ctrl+B', 'Long Buy x Shares', '%sROUTE=SMRTL;Price=Ask+%s;Share=1000;TIF=DAY+;BUY=Load;' % (focus, slippage))
     # exit
     hotkey.CoverShort(coverKeys, sellPercent, focus, clear, 'Cover Short ', send)
     hotkey.CoverShort(coversKeysStop, sellPercent, focus, clear, 'Cover Short and Adjust Stop', send, True)
     hotkey.SellPosition(sellKeys, sellPercent, focus, clear, 'Exit Long ', send)
     hotkey.SellPosition(sellKeysStop, sellPercent, focus, clear, 'Exit Long and Adjust Stop ', send, True)
     # news
-    hotkey.AddHotkey('Y', 'Yahoo News', 'https://uk.finance.yahoo.com/quote/%SYMB%/news?p=%SYMB%')
+    hotkey.AddHotkey('Ctrl+N', 'News', 'http://www.benzinga.com/quote/%SYMB%;https://stocktwits.com/symbol/%SYMB%;http://uk.finance.yahoo.com/quote/%SYMB%/news?p=%SYMB%;http://seekingalpha.com/symbol/%SYMB%')
+    hotkey.AddHotkey('Shift+P', 'Profile', 'http://uk.finance.yahoo.com/quote/%SYMB%/profile?p=%SYMB%')
     # Charting
+    hotkey.AddHotkey('Tab','Switch Montage', 'SwitchTWnd')
     hotkey.AddHotkey('NumPad+', 'Chart ZoomIn', 'ZoomIn')
     hotkey.AddHotkey('NumPad-', 'Chart ZoomOut', 'ZoomOut')
     hotkey.AddHotkey('Ctrl+R', 'Draw Rectangle', 'Rectangle')
     hotkey.AddHotkey('Ctrl+T', 'Draw Trendline', 'TrendLine')
-    hotkey.AddHotkey('/', 'Draw HorizontalLine', 'HorizontalLine')
+    hotkey.AddHotkey('\\', 'Draw HorizontalLine', 'HorizontalLine')
     hotkey.AddHotkey('Ctrl+D', 'Draw Delete Lines', 'RemoveALLLines')
     hotkey.AddHotkey('Ctrl+NumPad+', 'Chart Show Historic Data', 'GetMoreHistoricalData')
+    # Charting time frames
+    hotkey.AddHotkey('1', 'Chart 1', 'MinuteChart 1 1d; NumBar 36')
+    hotkey.AddHotkey('2', 'Chart 2', 'MinuteChart 2 1d; NumBar 36')
+    hotkey.AddHotkey('3', 'Chart 5', 'MinuteChart 5 3d; NumBar 78')
+    hotkey.AddHotkey('4', 'Chart 15', 'MinuteChart 15 5d; Zoomfit')
+    hotkey.AddHotkey('5', 'Chart 30', 'MinuteChart 30 10d; Zoomfit')
+    hotkey.AddHotkey('6', 'Chart 60', 'MinuteChart 60 20d; Zoomfit')
+    hotkey.AddHotkey('7', 'Chart D', 'DayChart 1d 60d; Zoomfit')
+    hotkey.AddHotkey('8', 'Chart D Large', 'DayChart 1d 120d; Zoomfit')
     # Alert hotkeys
     hotkey.AddHotkey('Ctrl+A', 'Long Alert', 'AlertName=PriceBroke;AlertType=LastPrice;PlaySound=no;AlertOperator=>=;AddAlert;')
     hotkey.AddHotkey('Shift+A', 'Short Alert', 'AlertName=PriceBroke;AlertType=LastPrice;PlaySound=no;AlertOperator=<=;AddAlert;')
     # Adjust stop
     hotkey.AddHotkey('=', 'Long / Short Break Even',focus + clear + 'Route=Stop;Price=AvgCost;StopType=MARKET;STOPPRICE=AvgCost;StopPrice=Round2;Share=Pos;TIF=DAY+;Send=Reverse;')
     hotkey.AddHotkey('Ctrl+S', 'Long Stop Loss Setup', 'Share=Pos;ROUTE=STOP;StopType=Market;StopPrice=Price;TIF=DAY+;SELL=LOAD')
+    # Profit Target
+    hotkey.AddHotkey('Ctrl+P', 'Profit Target 1.5', 'Route=LIMIT;Share=Pos*.5;Price=(%s/Pos)*1.5;Price=AvgCost+Price;NoRR=N;SELL;TIF=DAY' % (riskValue))
     # Panic
-    hotkey.AddHotkey('Ctrl+ESC', 'Cancel All', 'FocusWindow Level2;CXL ALLSYMB')
+    hotkey.AddHotkey('Ctrl+ESC', 'Cancel All', 'CXL ALLSYMB')
     # Montage
     hotkey.AddHotkey(',', 'Decrease Shares', focus + 'FOCUS Share;FShare=Share-50')
     hotkey.AddHotkey('.', 'Increase Shares', focus + 'FOCUS Share;FShare=Share+50')

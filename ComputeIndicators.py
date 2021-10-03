@@ -104,7 +104,7 @@ class ComputeIndicators(object):
         return round(df.assign(vwap=(close * volume).cumsum() / volume.cumsum()),2)
 
 
-    def Indicators(self, tickerDF, destination, marketOnly):
+    def Indicators(self, tickerDF, marketOnly):
         """
 	    Computer indicators on tickerDF
 
@@ -208,12 +208,13 @@ class ComputeIndicators(object):
         start = time.time()
         for index, fileName in enumerate(files):
             tickerDF = pd.read_csv(fileName)
-            # File name
-            fileName = Path(fileName).name
-            PrintProgressBar(index, fileCount, prefix = '==> Progress: ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
-            tickerDF = self.Indicators(tickerDF, destination, marketOnly)
-            # Save
-            tickerDF.to_csv(destination + fileName, index=True)
+            if len(tickerDF.index) > 0:
+                # File name
+                fileName = Path(fileName).name
+                PrintProgressBar(index, fileCount, prefix = '==> Progress: ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+                tickerDF = self.Indicators(tickerDF, marketOnly)
+                # Save
+                tickerDF.to_csv(destination + fileName, index=True, index_label="Datetime")
         PrintProgressBar(fileCount, fileCount, prefix = '==> Indicators complete  ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
 
 

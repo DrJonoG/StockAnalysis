@@ -29,8 +29,8 @@ if __name__ == '__main__':
     clear()
 
     # Inidcator varialbles
-    source = '../downloads/5m/'
-    destination = '../indicators/5m/'
+    source = 'D:/00.Stocks/data/alpha/5m/'
+    destination = 'D:/00.Stocks/indicators/alpha/5m/'
     indicators = {
         'expMovingAverage': [3, 5, 10, 20, 50, 100],
         'simpleMovingAverage': [5, 10, 20, 50, 100],

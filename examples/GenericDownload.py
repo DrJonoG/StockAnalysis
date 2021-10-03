@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # Download varialbles
     dataSource = 'yahoo' # Currently alpha or yahoo
     destinationPath = "../downloads/"
-    fileList = ["../downloads/symbols.csv"]
+    fileList = ["../config/symbols.csv"]
 
     # Create download instance
     symbolData = DL.DownloadData(dataSource)
