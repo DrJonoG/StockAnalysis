@@ -23,8 +23,8 @@ currentDir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentDir = os.path.dirname(currentDir)
 sys.path.insert(0, parentDir)
 # Import custom
-import DownloadData as DL
-import ComputeIndicators as CI
+import core.DownloadData as DL
+import core.ComputeIndicators as CI
 
 if __name__ == '__main__':
     # Download varialbles

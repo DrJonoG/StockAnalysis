@@ -21,7 +21,7 @@ currentDir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentDir = os.path.dirname(currentDir)
 sys.path.insert(0, parentDir)
 # Import custom
-import Display
+import core.Display
 
 if __name__ == '__main__':
     # Clear screen prior to execution

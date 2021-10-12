@@ -12,94 +12,90 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 # See the License for the specific language governing permissions and limitations under the License.
 #
 
-import pandas as pd
+# analysis of the impact of the previous day close, to the current day based on the opening bar
 
-class Gaps(object):
-    def __init__(self, change, prev, curr):
-        self.change = change
-        self.previousDF = prev
-        self.currentDF = curr
+import os
+import time
+import datetime
+import pandas as pd
+from pathlib import Path
+from helpers import csvToPandas, PrintProgressBar
 
 class Gappers:
-    def __init__(self, visual=False):
-        self.visual = visual
+    def __init__(self):
+        """
+        => Opening Price Signal looks at how the gap between open and close impacts the remainder of the day.
+        => Does a large gap up result in a closure of the gap in the day?
+        => If so, typically when is this gap closed and what happens next
+        """
+        pass
 
-    def GroupBy(self, df, group='D'):
-        groups = [g for n, g in df.groupby(pd.Grouper(freq=group))]
-        return [i for i in groups if len(i)>0]
+    def Analyse(self, df, barComparison=24, marketOnly=True):
+        """
+	    A function to calculate opening range, gaps, and the changes throughout the day
 
-    def Gaps(self, groups, percent):
-        # Error checking
-        if percent > 1 or percent < -1:
-            raise ValueError("==> Error: Invalid percent. Must be between 1 and -1")
-        if not groups:
-            self.GroupBy()
-
-        gaps = []
-        # Skip the first group so we can look back
-        for index, group in enumerate(groups[1:], start=1):
-            open = group['open'].iloc[0]
-            close = groups[index-1]['close'].iloc[-1]
-            change = ((open - close) / close)
-            if change >= percent or change <= percent * -1:
-                gaps.append(Gaps(round(change, 5), groups[index-1], group))
-        return gaps
-
-    def Analysis(self, gap):
-        if gap.change > 0:
-            # Get the close and open
-            prevDayClose = gap.previousDF['close'].iloc[-1]
-            currDayOpen = gap.currentDF['open'].iloc[0]
-            # The difference between the open in the current bar and close in the previous
-            openCloseChange = round(currDayOpen - prevDayClose, 2)
-            # Get the minimum and maximum close of the current day
-            closeMin =  round(min(gap.currentDF['close']),2)
-            closeMax = round(max(gap.currentDF['close']),2)
-            # Get the minimum and maximum  of the current day
-            highOfDay =  round(max(gap.currentDF['high']),2)
-            minOfDay = round(min(gap.currentDF['low']),2)
-            # Difference between high and low of day
-            HLDiff = round(closeMax - closeMin, 2)
-            # Different between the minimum of the day and open of the day
-            diffCurrDown = round(closeMin - currDayOpen, 2)
-            # Difference between the open today and close yesterday
-            diffCurrUp = round(currDayOpen - prevDayClose, 2)
-            # Difference between the min and max today and the close yesterday
-            diffDown = round(closeMin - prevDayClose, 2)
-            diffUp = round(closeMax - prevDayClose, 2)
-            # Has the gap been filled
-            gapFill = (diffDown < 0)
-            # The bar in which the gap was filled
-            barBroken = 'N/A'
-            if gapFill:
-                for j in range(len(gap.currentDF)):
-                    if gap.currentDF['close'].iloc[j] <= prevDayClose:
-                        barBroken = j
-                        break
-            # Output # Todo save to csv
-            print("------------------------------")
-            print("Close: $%s " % str(prevDayClose))
-            print("Open: $%s\n " % str(currDayOpen))
-            print("Gap Up ($): %s" % str(openCloseChange))
-            print("Gap Up: %s\n" % (str(round(gap.change*100, 2)) + '%'))
-            print("High of day $%s" % str(closeMax))
-            print("Diff to Prev Close: $%s " % str(diffUp))
-            print("Diff to Curr Open: $%s\n " % str(diffCurrUp))
-            print("Low of day: $%s" % str(closeMin))
-            print("Diff to Prev Close: $%s " % str(diffDown))
-            print("Diff to Curr Open: $%s\n " % str(diffCurrDown))
-            print("ATR Current Day: $%s" % str(HLDiff))
-            print("Gap filled: %s " % gapFill)
-            print("Gap filled at: %s" % str(barBroken))
-
-
-    def AnalyseGaps(self, path, group, minPercent):
-        df = pd.read_csv(path, index_col=0)
-        df.index = pd.to_datetime(df.index)
-        # Group the data by specified group (H, D, W, M, Y)
-        groupedDF = self.GroupBy(df, group)
-        # Store all gaps less than -1* percent and greater than 1*percent
-        gaps = self.Gaps(groupedDF, minPercent)
-        # Analyse gaps
-        for gap in gaps:
-            self.Analysis(gap)
+        Parameters
+        ----------
+        df : Dataframe
+            A dataframe for a single symbol
+        barComparison : Int
+            The number of bars to analyse at intraday i.e. if 5 is selected the first 5 bars are displayed
+        marketOnly : Bool
+            A boolean to use only market opening hours (if true) or all times (if false)
+        """
+        columns = ['Datetime', 'yOpen', 'yClose', 'yChange (%)', 'yChange($)', 'yClose RSI', 'Day Open', 'Gap (%)', 'Gap ($)']
+        # Empty dictionary list for storage
+        dictList = list()
+        # Group on date intraday analysis
+        groupedDF = df.groupby(df.index.date, group_keys=False)
+        # Number of days
+        totalDays = groupedDF.ngroups
+        # Daily statistics
+        dailyStats = groupedDF.close.agg(['max', 'min', 'count', 'median', 'mean'])
+        # Convert to list
+        groupedDF = list(groupedDF)
+        # Iterate through groups, skip first two groups for lookback
+        for index in range(2, len(groupedDF)):
+            # Get the days
+            currDay = groupedDF[index][1]
+            yDay = groupedDF[index-1][1]
+            # If only looking at open data, filter out the rest
+            if marketOnly:
+                currDay = currDay[currDay.Market == 1]
+                yDay = yDay[yDay.Market == 1]
+            # The change in the previous day between open and close
+            yClose = yDay.iloc[-1].close
+            yOpen = yDay.iloc[0].open
+            yChange = round(((yClose - yOpen) / yOpen)*100, 2)
+            # The gap between yesterday day close and market open
+            firstBarOpen = currDay.iloc[0].open
+            gap = round(((firstBarOpen - yClose) / yClose)*100, 2)
+            # Assignment
+            data = [currDay.index[0].strftime('%Y-%m-%d'), yOpen, yClose, yChange, (yClose - yOpen), yDay.iloc[-1].RSI14,firstBarOpen, gap, (firstBarOpen - yClose)]
+            # The change in the current day from start to end (not just one bar, but whole day)
+            lastBarClose = currDay.iloc[-1].close
+            dayChange = round(((lastBarClose - firstBarOpen) / firstBarOpen)*100, 2)
+            # Assignment
+            columns.append('Gap Filled')
+            # Check if gap has been filled and what time
+            gapFill = currDay[currDay.low <= yClose].head(1)
+            if gapFill.empty:
+                data.append("Not filled")
+            else:
+                data.append(gapFill.index[0].strftime('%H:%M'))
+            # High and lows of the day
+            columns.append('Day High')
+            data.append(max(currDay.high))
+            columns.append('Day Low')
+            data.append(min(currDay.low))
+            # The clsoe and entire day change
+            columns.append('Day Close')
+            data.append(lastBarClose)
+            columns.append('Day Change')
+            data.append(dayChange)
+            columns.append('Volume')
+            data.append(sum(currDay.volume))
+            # Append to list
+            dictList.append(dict(zip(columns, data)))
+        # Covnert to dataframe
+        return pd.DataFrame.from_dict(dictList), columns

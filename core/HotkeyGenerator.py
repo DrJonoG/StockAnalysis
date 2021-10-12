@@ -77,7 +77,7 @@ class HotKeys:
 
 if __name__ == '__main__':
     # Adjust your risk value here to automatically increase the position sizes
-    riskValue = 275
+    riskValue = 200
     focus = '' #'FocusWindow Level2;'
     clear = 'CXL ALLSYMB;'
     send = 'Send'

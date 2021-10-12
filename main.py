@@ -17,69 +17,45 @@ import sys
 import inspect
 import pandas as pd
 # Import custom
-import DownloadData as DL
-import ComputeIndicators as CI
+import core.DownloadData as DL
+import core.ComputeIndicators as CI
+from analysis import Analyse, Pullback, Gappers, AnalysisSummary
+from helpers import LoadIndicators, SymbolIteratorFiles
 
 if __name__ == '__main__':
+    fromSource = False
+    fromFiles = True
     # Clear screen prior to execution
     clear = lambda: os.system('cls')
     clear()
 
-    # Download varialbles
-    bulkDownload = False
-    dataSource = 'yahoo'
-    destinationPath = "./downloads/"
-    tickerList = ["./files/SymbolList.csv"]
+    '''
+    Example 1: From source
+    '''
+    if fromSource:
+        print("====> Example 1: From Source")
+        # initialise download class and specified alpha as source
+        # Download data for a single symbol
+        df = DL.DownloadData('alpha').Download(60, '5m', ['AMC', 'ALF'])
+        # Compute indicators on variable
+        df = CI.ComputeIndicators(**LoadIndicators()).Compute(df)
+        # Opening Price signal Analysis
+        opsDF = Analyse.Analyse().Run(Gappers.Gappers(), df)
 
-    # Create download instance
-    symbolData = DL.DownloadData(dataSource)
-    """
-    symbolData.Download
-
-    Parameters
-    ----------
-         symbolList
-            a list of file paths to CSVs which contain the symbol or a list of symbols as strings
-         destinationPath
-            if set saves the data obtained from the source in this directory, will create if it does not exist. If not specified data will be returned instead.
-    """
-    # Download data
-    if bulkDownload:
-        symbolData.Download(dataRange='60d', dataInterval='5m', symbolList=tickerList, destinationPath=destinationPath + '5m/')
-        symbolData.Download(dataRange='7d', dataInterval='1m', symbolList=tickerList, destinationPath=destinationPath + '1m/')
-        symbolData.Download(dataRange='60d', dataInterval='2m', symbolList=tickerList, destinationPath=destinationPath + '2m/')
-        symbolData.Download(dataRange='60d', dataInterval='15m', symbolList=tickerList, destinationPath=destinationPath + '15m/')
-        symbolData.Download(dataRange='365d', dataInterval='1d', symbolList=tickerList, destinationPath=destinationPath + '1d/')
-
-    # Single file download
-    symbolDF = symbolData.Download(dataRange='60d', dataInterval='5m', symbolList=["AMC"])
-    # Inidcator varialbles
-    indicatorDestination = "./indicators/"
-    indicators = {
-        'expMovingAverage': [3, 5, 10, 20, 50, 100],
-        'simpleMovingAverage': [5, 10, 20, 50, 100],
-        'rsiLength': 14,
-        'bollingerPeriod': 20,
-        'bollingerStdDev': 1.5,
-        'vWAP': True,
-        'precision': 2
-    }
-    # Indicator Initialise
-    symbolIndicators = CI.ComputeIndicators(**indicators)
-    # Compute indicators on variable
-    indicatorDF = symbolIndicators.Compute(symbolDF)
-    # Save
-    indicatorDF['AMC'].to_csv('./downloads/AMCExample.csv', index=False)
-    # Display
-    pd.set_option('display.max_rows', 50)
-    pd.set_option('display.max_columns', None)
-    # Output
-    print(indicatorDF['AMC'])
-
-    # Backtesting
-    #pbMA = PullbackToMA('./docs/backtesting.ini')
-    #pbMA.Run(indicatorDF["A"], "A")
-    # Visualise
-    #visualise = VD.VisualDisplay("Testing", indicatorDF["AMC"])
-    #visualise.CandleStick()
-    #visualise.Display()
+    '''
+    Example 2: From CSV, saves harddrive
+    '''
+    print("====> Example 2: From Files")
+    if fromFiles:
+        # input and output directories
+        input = r'D:\00.Stocks\testing\data'
+        out_indicators = r'D:\00.Stocks\testing\indicators\\'
+        out_analysis = r'D:\00.Stocks\testing\analysis\Gappers\\'
+        # Compute the indictators and save to indicators directory
+        #CI.ComputeIndicators(**LoadIndicators()).Compute(input, out_indicators)
+        # Compute the opening price signal and save to analysis
+        Analyse.Analyse().Run(Gappers.Gappers(), out_indicators, out_analysis)
+        #Analyse.Analyse().Run(Pullback.Pullback(), out_indicators, out_analysis)
+        # Summarise
+        summary = AnalysisSummary.AnalysisSummary()
+        summary.Gappers(out_analysis)

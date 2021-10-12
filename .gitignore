@@ -3,4 +3,3 @@ fonts/
 backtesting/results/
 config/api.conf
 .atomignore
-main.py

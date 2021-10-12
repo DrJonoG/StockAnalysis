@@ -47,7 +47,8 @@ class ComputeIndicators(object):
 
         Parameters
         ----------
-        diff : Series            First discrete difference of element
+        diff : Series
+            First discrete difference of element
         """
         # Preserve dimensions off diff values
         upChange = 0 * diff
