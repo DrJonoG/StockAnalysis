@@ -1,1 +1,1 @@
-__all__ = ["Gappers", "OpeningPriceSignal"]
+__all__ = ["Gappers", "OpeningRange"]

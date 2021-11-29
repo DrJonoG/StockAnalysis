@@ -1,7 +1,7 @@
 __author__ = 'DrJonoG'  # Jonathon Gibbs
 
 #
-# Copyright 2016-2020 Cuemacro - https://www.jonathongibbs.com / @DrJonoG
+# Copyright 2016-2020 https://www.jonathongibbs.com / @DrJonoG
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
 # License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -105,7 +105,7 @@ class ComputeIndicators(object):
         return round(df.assign(vwap=(close * volume).cumsum() / volume.cumsum()),2)
 
 
-    def Indicators(self, tickerDF, marketOnly):
+    def Indicators(self, tickerDF, marketOnly, frequency):
         """
 	    Computer indicators on tickerDF
 
@@ -115,6 +115,8 @@ class ComputeIndicators(object):
             Pandas dataframe for one symbol
         marketOnly : Bool
             If true show only open market hours. Else show pre- and post-market hours too
+        frequency : String
+            Frequency for the function date range, specifying the frequency of times
         """
         # Convert to datetime
         tickerDF['Datetime'] = pd.to_datetime(tickerDF['Datetime'])
@@ -131,11 +133,11 @@ class ComputeIndicators(object):
             expense, thus we create an empty datarange and merge the two together.
         '''
         # Get all times between start and end date with a frequency of 5 minutes
-        dateDF = pd.date_range(start=start, end=end, freq='5min')
+        dateDF = pd.date_range(start=start, end=end, freq=frequency)
         # Remove weekends
         dateDF = dateDF[dateDF.dayofweek < 5]
         # Remove out of hours (except pre and post market)
-        dateDF = dateDF[(dateDF.time > datetime.time(4, 0)) & (dateDF.time < datetime.time(20, 00))]
+        dateDF = dateDF[(dateDF.time > datetime.time(4, 0)) & (dateDF.time <= datetime.time(20, 00))]
         # Get a list of holidays between the start and end
         USHolidays =  calendar().holidays(start=start, end=end)
         # Remove public holidays
@@ -185,11 +187,13 @@ class ComputeIndicators(object):
             tickerDF.loc[(tickerDF.between_time('16:00:01', '09:29:59').index), 'vwap'] = 0
         # Replace NaN with 0
         tickerDF = tickerDF.fillna(0)
+        # Sort dates old to new
+        tickerDF = tickerDF.sort_index(ascending=False)
         # return indicators
         return tickerDF
 
 
-    def ComputeForFiles(self, source, marketOnly, destination):
+    def ComputeForFiles(self, source, marketOnly, destination, frequency):
         """
 	    Computer the specified indicators for each file within the source folder
 
@@ -201,6 +205,8 @@ class ComputeIndicators(object):
             A path to the destination where files with computed indicators will be saved
         marketOnly : Bool
             If true show only open market hours. Else show pre- and post-market hours too
+        frequency : String
+            Frequency for the function date range, specifying the frequency of times
         """
         # Get file list
         files = list(Path(source).rglob('*.csv'))
@@ -208,14 +214,25 @@ class ComputeIndicators(object):
         # Iterate through each of the csv files
         start = time.time()
         for index, fileName in enumerate(files):
-            tickerDF = pd.read_csv(fileName)
+            # Load small sample of csv to check for update
+            tickerDF = pd.read_csv(fileName, nrows=2)
+            # Skip if file does not contain datetime
+            if ('Datetime' not in tickerDF.columns): continue
+            # If update required, load full file:
+            tickerDF = pd.read_csv(fileName, sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False)
+            # Ensure more than 0 rows
             if len(tickerDF.index) > 0:
                 # File name
                 fileName = Path(fileName).name
                 PrintProgressBar(index, fileCount, prefix = '==> Progress: ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
-                tickerDF = self.Indicators(tickerDF, marketOnly)
-                # Save
-                tickerDF.to_csv(destination + fileName, index=True, index_label="Datetime")
+
+                # Check if already been updated, and skip if so.
+                if ('Market' not in tickerDF.columns) or (tickerDF.head(1).Market.values not in [0,1,2]):
+                    # Compute indicators
+                    tickerDF = self.Indicators(tickerDF, marketOnly, frequency)
+                    # Save
+                    tickerDF.to_csv(destination + fileName, index=True, index_label="Datetime")
+
         PrintProgressBar(fileCount, fileCount, prefix = '==> Indicators complete  ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
 
 
@@ -250,7 +267,7 @@ class ComputeIndicators(object):
         return indicatorDF
 
 
-    def Compute(self, source, destination=None, marketOnly=False):
+    def Compute(self, source, frequency, update=False, destination=None, marketOnly=False):
         """
         Computer the indicators. Accepts either a dictionary of stock data or a folder to the location of csv files
 
@@ -260,6 +277,10 @@ class ComputeIndicators(object):
             A dictionary of pandas dataframes
             or
             A path to the directory containing the raw (downloaded) csv files. Files should contain columns for Datetime, open, close, high, low
+        frequency : String
+            Frequency for the function date range, specifying the frequency of times
+        update : Bool
+            Whether the files should be udpated
         destination : String
             A path to the destination where files with computed indicators will be saved
         marketOnly : Bool
@@ -272,5 +293,8 @@ class ComputeIndicators(object):
         if type(source) is dict:
             return self.ComputeForDF(source, destination, marketOnly)
         else:
-            self.ComputeForFiles(source, marketOnly, destination)
+            if update:
+                self.ComputeForFilesUpdate(source, marketOnly, destination, frequency)
+            else:
+                self.ComputeForFiles(source, marketOnly, destination, frequency)
             return True

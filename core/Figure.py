@@ -1,7 +1,8 @@
+
 __author__ = 'DrJonoG'  # Jonathon Gibbs
 
 #
-# Copyright 2016-2020 Cuemacro - https://www.jonathongibbs.com / @DrJonoG
+# Copyright 2016-2020 https://www.jonathongibbs.com / @DrJonoG
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
 # License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +18,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-
 from plotly.subplots import make_subplots
 
 class Figure:
@@ -88,17 +88,6 @@ class Figure:
             xaxis=dict(type="category", rangeslider_visible=False)
         )
 
-    def LinearRegression(self, df, column, color="black", name="Undefined", width=1):
-        self.figure.add_trace(
-            go.Scatter(
-                x=df.index,
-                y=df[column],
-                opacity=0.65,
-                trendline='ols',
-                trendline_color_override='darkblue'
-            )
-        )
-
     def AddVerticalRect(self, x0, x1, color):
         self.figure.add_vrect(
             x0=x0,
@@ -107,7 +96,6 @@ class Figure:
             fillcolor=color,
             opacity=0.3
         )
-
 
     def Show(self):
         self.figure.show()

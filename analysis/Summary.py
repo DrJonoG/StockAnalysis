@@ -1,7 +1,8 @@
+
 __author__ = 'DrJonoG'  # Jonathon Gibbs
 
 #
-# Copyright 2016-2020 Cuemacro - https://www.jonathongibbs.com / @DrJonoG
+# Copyright 2016-2020 https://www.jonathongibbs.com / @DrJonoG
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
 # License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -35,7 +36,7 @@ class AnalysisSummary:
         # Timer
         start = time.time()
         # Define columns
-        summaryDFColumns = ['Symbol', '# Days', 'Avg. Vol', 'Min Vol.','Max Vol.', 'Avg. Gap (%)', 'Min Gap (%)', 'Max Gap (%)', '% Filled', 'Avg Fill Time', '% C > yC', '% C > O', '% yC = C', '% C < yC']
+        summaryDFColumns = ['Symbol', '# Days', 'Avg. Vol', 'Min Vol.','Max Vol.', 'Avg. Gap (%)', 'Min Gap (%)', 'Max Gap (%)', '% Filled', 'Avg Fill Time', '% Reached', 'Avg Reach Time', '% C > yC', '% C > O', '% yC = C', '% C < yC']
         summaryDFData = []
         gapperGroupedColumns = [ 'Gap %', 'Symbol', '# Occurances', '% Occurances', 'Avg. Vol', '% Filled Gap', '% C > yC', '% C > O', 'Avg. Fill Time']
         gapperGroupedData = []
@@ -49,7 +50,7 @@ class AnalysisSummary:
         for index, filePath in enumerate(files):
             fileName = Path(filePath).name
             if '00' in fileName: continue
-            PrintProgressBar(index, fileCount, prefix = '==> Analysing: ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+            PrintProgressBar(index, fileCount, prefix = '==> Analysing : ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
             symbolDF = csvToPandas(filePath)
             # Remove 0 volume days
             symbolDF = symbolDF[symbolDF.Volume > 0]
@@ -66,6 +67,8 @@ class AnalysisSummary:
                 max(symbolDF['Gap (%)']),
                 round((len(symbolDF[symbolDF['Gap Filled'] != 'Not filled']) / numRows)*100,2),
                 symbolDF['Gap Filled'].value_counts().nlargest(n=4).index.values,
+                round((len(symbolDF[symbolDF['Gap Reached'] != 'Not reached']) / numRows)*100,2),
+                symbolDF['Gap Reached'].value_counts().nlargest(n=4).index.values,
                 round((len(symbolDF[symbolDF['Day Close'] > symbolDF['yClose']]) / numRows)*100,2),
                 round((len(symbolDF[symbolDF['Day Close'] > symbolDF['Day Open']]) / numRows)*100,2),
                 round((len(symbolDF[symbolDF['Day Close'] == symbolDF['yClose']]) / numRows)*100,2),
@@ -99,3 +102,26 @@ class AnalysisSummary:
         # Covnert to dataframe
         pd.DataFrame.from_dict(dictListSummary).to_csv(directory + '00.gappers_summary.csv', index=False)
         pd.DataFrame.from_dict(dictListGaps).to_csv(directory + '00.gappers_grouped.csv', index=False)
+
+    def OpeningRange(self, directory):
+        # Timer
+        start = time.time()
+        # Define columns
+        summaryDFColumns = ['Symbol', '# Days', 'Avg. Vol', 'Min Vol.','Max Vol.', 'Avg. OR (%)', 'Min OR (%)', 'Max OR (%)', '% C in OR', '% C > OR', '% C < OR']
+        summaryDFData = []
+        gapperGroupedColumns = [ 'OR %', 'Symbol', '# Occurances', '% Occurances', 'Avg. Vol', '% Filled Gap', '% C > yC', '% C > O', 'Avg. Fill Time']
+        gapperGroupedData = []
+
+        # Get file list
+        files = list(Path(directory).rglob('*.csv'))
+        fileCount = len(files)
+        # Main df
+        dictListSummary = list()
+        dictListGaps = list()
+        # Iterate through each of the csv files
+        for index, filePath in enumerate(files):
+            fileName = Path(filePath).name
+            PrintProgressBar(index, fileCount, prefix = '==> Analysing :' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+            if '00' in fileName: continue
+
+        PrintProgressBar(fileCount, fileCount, prefix = '==> Analysis complete    ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))

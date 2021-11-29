@@ -1,7 +1,8 @@
+
 __author__ = 'DrJonoG'  # Jonathon Gibbs
 
 #
-# Copyright 2016-2020 Cuemacro - https://www.jonathongibbs.com / @DrJonoG
+# Copyright 2016-2020 https://www.jonathongibbs.com / @DrJonoG
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
 # License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -19,12 +20,13 @@ import pandas as pd
 import datetime
 import time
 
-def csvToPandas(path):
-    df = pd.read_csv(path)
-    # Convert to datetime
-    df['Datetime'] = pd.to_datetime(df['Datetime'])
+def csvToPandas(path, asc=True, unicode=False):
+    if unicode:
+        df = pd.read_csv(path, sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False, dtype='unicode')
+    else:
+        df = pd.read_csv(path, sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False)
     # Sort dates old to new
-    df = df.sort_values(by='Datetime', ascending=True).reset_index()
+    df = df.sort_values(by='Datetime', ascending=asc).reset_index()
     # Set datetime to index
     df = df.set_index('Datetime').drop(columns=['index'])
     return df
@@ -239,13 +241,17 @@ def SymbolIteratorFiles(fileList, function, arguments, prefix='Downloading'):
         (Optional) String for the progress bar reporting
     """
     start = time.time()
-    # Load in the ticker list
-    symbolList = pd.Series(dtype="float64")
 
-    # Iterate list and load csv if file list, or append string otherwise
-    for f in fileList:
-        symbolList = symbolList.append(LoadTickerNames(f, 0), ignore_index=True)
-    symbolList = symbolList.drop_duplicates()
+    if isinstance(fileList, list):
+        symbolList = pd.Series(fileList)
+    else:
+        print("not a list")
+        # Load in the ticker list
+        symbolList = pd.Series(dtype="float64")
+        # Iterate list and load csv if file list, or append string otherwise
+        for f in fileList:
+            symbolList = symbolList.append(LoadTickerNames(f, 0), ignore_index=True)
+        symbolList = symbolList.drop_duplicates()
     symbolCount = len(symbolList)
 
     # Dictionary to return data if not saving
@@ -253,6 +259,6 @@ def SymbolIteratorFiles(fileList, function, arguments, prefix='Downloading'):
     # Iterate through symbolList and download data
     for index, symbol in symbolList.items():
         # If minute cap is reached, then sleep, else continue
-        PrintProgressBar(index, symbolCount, prefix = '==> ' + prefix.ljust(20), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+        PrintProgressBar(index, symbolCount, prefix = '==> ' + (prefix + symbol).ljust(20), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
         calledAPI = function(symbol, *arguments)
     PrintProgressBar(symbolCount, symbolCount, prefix = '==> ' + (prefix + ' Complete').ljust(20), suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))

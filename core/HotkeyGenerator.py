@@ -1,7 +1,8 @@
+
 __author__ = 'DrJonoG'  # Jonathon Gibbs
 
 #
-# Copyright 2016-2020 Cuemacro - https://www.jonathongibbs.com / @DrJonoG
+# Copyright 2016-2020 https://www.jonathongibbs.com / @DrJonoG
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
 # License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -31,6 +32,11 @@ class HotKeys:
             'Name': name,
             'Command': command
         }, ignore_index=True)
+
+    def StopPosition(self, keys, amount, focus, clear, name, send):
+        for i in range(0, len(amount)):
+            command = '%s%sROUTE=STOP;StopType=Market;StopPrice=Ask-0.10;Share=Pos;TIF=DAY+;SELL=%s;' % (focus, clear, str(amount[i]), send)
+            self.AddHotkey(keys[i], name + str(amount[i]) + '%.', command)
 
     def CoverShort(self, keys, percent, focus, clear, name, send, stop=False):
         if len(keys) != len(percent):
@@ -82,6 +88,9 @@ if __name__ == '__main__':
     clear = 'CXL ALLSYMB;'
     send = 'Send'
     slippage = '0.03'
+    # risk
+    stopKeys = ['Shift+v','Shift+b','Shift+n','Shift+m']
+    stopValues [0.1, 0.2, 0.3, 0.5]
     # long and short hotkeys
     longKeys = ['Ctrl+1','Ctrl+2','Ctrl+3','Ctrl+4','Ctrl+5','Ctrl+6','Ctrl+7','Ctrl+8','Ctrl+9','Ctrl+0']
     shortKeys = ['F1', 'F2','F3', 'F4','F5', 'F6','F7', 'F8','F9', 'F10']
@@ -97,6 +106,8 @@ if __name__ == '__main__':
     sellPercent = [.33, .5, 1]
     # Initialise hotkeys config df
     hotkey = HotKeys()
+    # risk
+    hotkey.StopPosition(stopKeys, stopValues, focus, clear, 'Adjust Stop ', send):
     # trade
     hotkey.TradeHotkeysRisk(longKeysRisk, shortKeys, riskValue, riskAmount, focus, slippage, send)
     hotkey.TradeHotkeysQuantity(longKeys, shortKeys, tradeQty, focus, slippage, send)
@@ -142,3 +153,5 @@ if __name__ == '__main__':
     hotkey.AddHotkey('.', 'Increase Shares', focus + 'FOCUS Share;FShare=Share+50')
     # Save
     hotkey.Save('C:/DAS Trader Pro New/Auto_Hotkey.htk')
+
+    print("Hotkey file created. Saved to C:/DAS Trader Pro New/Auto_Hotkey.htk")

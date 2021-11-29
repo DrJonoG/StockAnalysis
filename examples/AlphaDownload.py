@@ -1,7 +1,8 @@
+
 __author__ = 'DrJonoG'  # Jonathon Gibbs
 
 #
-# Copyright 2016-2020 Cuemacro - https://www.jonathongibbs.com / @DrJonoG
+# Copyright 2016-2020 https://www.jonathongibbs.com / @DrJonoG
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
 # License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -30,7 +31,7 @@ if __name__ == '__main__':
     clear()
     # Download varialbles
     destinationPath = "../downloads/"
-    symbolFileList = ["../config/symbols.csv"]
+    symbolFileList = ["../data/symbols.csv"]
     alpha = A.Alpha('../config/api.conf')
 
     # If saving, make folders
@@ -39,4 +40,4 @@ if __name__ == '__main__':
             os.makedirs(destinationPath)
 
     # Download maximum data for each symbol
-    SymbolIterator(symbolFileList, alpha.DownloadExtended, [destinationPath + '5m/', 5, '*', '*', True], apiCap=150, functionCalls=24)
+    SymbolIterator(symbolFileList, alpha.DownloadExtended, [destinationPath + '2m/', 2, '*', '*', True], apiCap=150, functionCalls=24)
