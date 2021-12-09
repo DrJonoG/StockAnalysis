@@ -31,12 +31,12 @@ def Historic(dataPath, symbolFileList, alpha, timeFramesAlpha):
     for i in range(1, len(timeFramesAlpha)):
         print(f"==> Downloading for {timeFramesAlpha[i]}")
         # arguments [destination, timeframe, month, year, merge, skipExsiting]
-        SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:2], timeFramesAlpha[i], '*', '*', True, True], apiCap=150, functionCalls=24)
+        SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:2], timeFramesAlpha[i], '*', '*', True, True, False], apiCap=150, functionCalls=24)
 
     # Create timeframe data and compute indicators
     for i in range(1, len(timeFramesAlpha)):
         # Merge values to generate timeframes
-        path = f'D:/00.Stocks/data/alpha/{timeFramesAlpha[i][0:-2]}/'
+        path = dataPath + timeFramesAlpha[i][0:-2] + '/'
         # Compute the indictators and save to indicators directory if true
         if ComputeIndicators[i]:
             # This function call also fills in all missing data i.e. where volume is 0
@@ -53,6 +53,6 @@ if __name__ == '__main__':
     alpha = data.GetData('./config/api.conf')
 
     # Whether to download new data
-    timeFramesAlpha = ['1min', '5min', '15min', '30min', '60min']
+    timeFramesAlpha = ['1min']
 
     Historic(dataPath, symbolFileList, alpha, timeFramesAlpha)

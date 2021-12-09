@@ -19,7 +19,9 @@ import datetime
 import numpy as np
 import pandas as pd
 import os
+from threading import Thread
 import time
+
 
 class ComputeIndicators(object):
     """
@@ -193,6 +195,29 @@ class ComputeIndicators(object):
         return tickerDF
 
 
+    def ComputeThread(self, fileList, marketOnly, destination, frequency):
+        for index, fileName in enumerate(fileList):
+            # Load small sample of csv to check for update
+            tickerDF = pd.read_csv(fileName, nrows=2)
+            # Skip if file does not contain datetime
+            if ('Datetime' not in tickerDF.columns): continue
+            # If update required, load full file:
+            tickerDF = pd.read_csv(fileName, sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False, usecols=['Datetime','open', 'close', 'high', 'low', 'volume'])
+            # Ensure more than 0 rows
+            if len(tickerDF.index) > 0:
+                # File name
+                fileName = Path(fileName).name
+                # Check if already been updated, and skip if so.
+                if ('Market' not in tickerDF.columns) or (tickerDF.head(1).Market.values not in [0,1,2]):
+                    # Compute indicators
+                    tickerDF = self.Indicators(tickerDF, marketOnly, frequency)
+                    # Save
+                    tickerDF.to_csv(destination + fileName, index=True, index_label="Datetime")
+                else:
+                    # Copy file anyway so all files are in single location
+                    tickerDF.to_csv(destination + fileName, index=False)
+
+
     def ComputeForFiles(self, source, marketOnly, destination, frequency):
         """
 	    Computer the specified indicators for each file within the source folder
@@ -211,27 +236,23 @@ class ComputeIndicators(object):
         # Get file list
         files = list(Path(source).rglob('*.csv'))
         fileCount = len(files)
-        # Iterate through each of the csv files
-        start = time.time()
-        for index, fileName in enumerate(files):
-            # Load small sample of csv to check for update
-            tickerDF = pd.read_csv(fileName, nrows=2)
-            # Skip if file does not contain datetime
-            if ('Datetime' not in tickerDF.columns): continue
-            # If update required, load full file:
-            tickerDF = pd.read_csv(fileName, sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False)
-            # Ensure more than 0 rows
-            if len(tickerDF.index) > 0:
-                # File name
-                fileName = Path(fileName).name
-                PrintProgressBar(index, fileCount, prefix = '==> Progress: ' + str(fileName).ljust(10), suffix = 'Complete. Runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
+        # Split files for multi threaded
+        cores = 12
+        fileSplit = np.array_split(np.array(files),cores)
+        # multi thread
+        threads = []
+        for i in range(0, cores):
+            threads.append(Thread(target=self.ComputeThread, args=([fileSplit[i],marketOnly, destination, frequency])))
 
-                # Check if already been updated, and skip if so.
-                if ('Market' not in tickerDF.columns) or (tickerDF.head(1).Market.values not in [0,1,2]):
-                    # Compute indicators
-                    tickerDF = self.Indicators(tickerDF, marketOnly, frequency)
-                    # Save
-                    tickerDF.to_csv(destination + fileName, index=True, index_label="Datetime")
+        print(f"==> Processing indicators over {cores} cores. Please be patient.")
+        start = time.time()
+        # Start all threads
+        for x in threads:
+            x.start()
+
+        # Wait for all of them to finish
+        for x in threads:
+            x.join()
 
         PrintProgressBar(fileCount, fileCount, prefix = '==> Indicators complete  ', suffix = 'Complete. Total runtime: ' + str(datetime.timedelta(seconds = (time.time() - start))))
 

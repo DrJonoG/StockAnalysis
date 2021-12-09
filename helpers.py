@@ -22,13 +22,11 @@ import time
 
 def csvToPandas(path, asc=True, unicode=False):
     if unicode:
-        df = pd.read_csv(path, sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False, dtype='unicode')
+        df = pd.read_csv(path, sep=',', index_col = 0, parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False, dtype='unicode')
     else:
-        df = pd.read_csv(path, sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False)
+        df = pd.read_csv(path, sep=',', index_col = 0, parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False)
     # Sort dates old to new
-    df = df.sort_values(by='Datetime', ascending=asc).reset_index()
-    # Set datetime to index
-    df = df.set_index('Datetime').drop(columns=['index'])
+    df = df.sort_index(ascending=asc)
     return df
 
 def PrintProgressBar (iteration, total, prefix = '', suffix = '', length = 20):

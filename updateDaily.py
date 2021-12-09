@@ -37,22 +37,21 @@ if __name__ == '__main__':
 
     # Whether to download new data
     downloadData = True
-    timeFramesAlpha = ['1min'] # , '5min', '15min', '30min', '60min'
+    timeFramesAlpha = ['1min','5min', '15min', '30min', '60min'] # , '5min', '15min', '30min', '60min'
     # Whether to create custom time frames
-    customTimes = False
+    customTimes = True
     customTimeFrames = ['2min']
     # Timeframes
     # Whether to compute the indicators for the corresponding timeframe
-    ComputeIndicators = [True, True, True, True, True, True]
+    computeIndicators = True
 
 
     if downloadData:
         for i in range(0, len(timeFramesAlpha)):
             print(f"==> Downloading for {timeFramesAlpha[i]}")
             # arguments [destination, timeframe, month, year, merge, skipExsiting]
-            SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:2], timeFramesAlpha[i], 1, 1, True, False], apiCap=150, functionCalls=1)
+            SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1, True, False], apiCap=150, functionCalls=1)
 
-    exit()
     if customTimes:
         # Create other timeframes
         for custom in customTimeFrames:
@@ -62,13 +61,12 @@ if __name__ == '__main__':
                 os.mkdir(destination)
             # Iterate through files and create corresponding custom time frame csvs
             # arguments [timeframe, destination path, source path]
-            SymbolIteratorFiles(symbolFileList, alpha.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')
+            SymbolIterator(symbolFileList, alpha.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')
 
-    # Create timeframe data and compute indicators
-    for i in range(1, len(timeFrames)):
-        # Merge values to generate timeframes
-        path = f'D:/00.Stocks/data/alpha/{timeFrames[i][0:-2]}/'
-        # Compute the indictators and save to indicators directory if true
-        if ComputeIndicators[i]:
+    if computeIndicators:
+        # Create timeframe data and compute indicators
+        for i in range(0, len(timeFramesAlpha)):
+            # Merge values to generate timeframes
+            path = f'D:/00.Stocks/data/alpha/{timeFramesAlpha[i][0:-2]}_ind/'
             # This function call also fills in all missing data i.e. where volume is 0
-            CI.ComputeIndicators(**LoadIndicators()).Compute(source=dataPath, frequency=timeFrames[i], update=False, destination=dataPath)
+            CI.ComputeIndicators(**LoadIndicators()).Compute(source=dataPath, frequency=timeFramesAlpha[i], update=False, destination=path )

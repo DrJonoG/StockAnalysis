@@ -108,7 +108,7 @@ class GetData:
         return sessionDF
 
 
-    def DownloadExtended(self, symbol, destination, dataInterval, month='*', year='*', merge=True, skipExisting=False):
+    def DownloadExtended(self, symbol, destination, dataInterval, month='*', year='*', merge=True, skipExisting=False, dateFilter=True):
         """
 	    https://www.alphavantage.co/documentation/#intraday-extended
 
@@ -171,9 +171,10 @@ class GetData:
                         loadDF = csvToPandas(saveFile, asc=False, unicode=True)
                         if len(loadDF) == 0:
                             continue
-                        # Get latest date and filter
-                        maxDate = max(loadDF.index)
-                        sliceDF = sliceDF[sliceDF.index > maxDate]
+                        if dateFilter:
+                            # Get latest date and filter
+                            maxDate = max(loadDF.index)
+                            sliceDF = sliceDF[sliceDF.index > maxDate]
                         # If new data, then save
                         if len(sliceDF) > 0:
                             # Join
@@ -250,6 +251,9 @@ class GetData:
         rawData = self.GetRaw(dataAddress).text
 
 
+    def TimeFrame(self, group):
+        pass
+
     # Alphavantage does not offer extended data for all time frames
     # Function to create specific minute data from downloaded 1 minute intraday
     def CalculateMinutes(self, symbol, timeFrame, destinationPath, path):
@@ -261,24 +265,18 @@ class GetData:
         # Skip if file does not contain datetime
         if ('Datetime' not in tickerDF.columns): return
         # If update required, load full file:
-        tickerDF = pd.read_csv(filePath, index_col=0) # sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False
-        # Select only the columns we need
-        tickerDF = tickerDF[['open', 'close', 'high', 'low', 'volume']]
-        tickerDF.index = pd.to_datetime(tickerDF.index)
-        # variable
-        newDF = pd.DataFrame(columns = ['open', 'close', 'high', 'low', 'volume'])
-        tempList = []
+        tickerDF = pd.read_csv(filePath, sep=',',index_col = 0, parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True,  engine='c', na_filter=False, usecols=['Datetime','open', 'close', 'high', 'low', 'volume']) # sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False
+        # New time frame
+        newTF = []
         start = time.time()
         # Group
-        tickerGroups = tickerDF.groupby(pd.Grouper(freq=timeFrame, offset='1min'))#.apply(list)
+        tickerGroups = tickerDF.groupby(pd.Grouper(freq=timeFrame, offset='1min'))#.apply(your_function)
 
         for name, group in tickerGroups:
             if len(group) <= 1:
                 continue
 
-            first = group.iloc[0]
-            last = group.iloc[-1]
-            tempList.append([max(group.index), first[0], last[1], max(group.high), min(group.low), sum(group.volume)])
+            row = [max(group.index), group.iloc[0][0], group.iloc[-1][1], max(group.high), min(group.low), sum(group.volume)]
+            newTF.append(row)
 
-        #newDF.to_csv(destinationPath + symbol + '.csv')
-        exit();
+        newTF.to_csv(destinationPath + symbol + '.csv')
