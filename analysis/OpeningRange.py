@@ -96,5 +96,4 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
         # Append to list
         dictList.append(dict(zip(columns, data)))
     # Covnert to dataframe
-    pd.DataFrame.from_dict(dictList).to_csv(destination + symbol.replace('.csv', '_OR.csv'), index=False)
-    exit()
+    pd.DataFrame.from_dict(dictList).to_csv(destination + symbol.replace('.csv', '_OR_' + str(openingRange) + 'bars.csv'), index=False)

@@ -30,10 +30,10 @@ def stockDirection(candle):
     return sum(candle)/len(candle)
 
 def MinMaxStats(df):
-    min = min(df.low)
-    max = max(df.high)
+    minLow = min(df.low)
+    maxHigh = max(df.high)
     avgVol = sum(df.volume) / len(df.volume)
-    return min, max, avgVol
+    return minLow, maxHigh, avgVol
 
 def Overview(df, frequency):
     # Group by blocks of frequency minutes

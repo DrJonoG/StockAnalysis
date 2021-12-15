@@ -32,6 +32,8 @@ if __name__ == '__main__':
 
     # Update 1 minute files
     dataPath = 'D:/00.Stocks/data/alpha/'
+
+    # Config
     symbolFileList = ['./config/symbols.csv']
     alpha = data.GetData('./config/api.conf')
 
@@ -50,6 +52,7 @@ if __name__ == '__main__':
         for i in range(0, len(timeFramesAlpha)):
             print(f"==> Downloading for {timeFramesAlpha[i]}")
             # arguments [destination, timeframe, month, year, merge, skipExsiting]
+            SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 2, 1, True, False], apiCap=150, functionCalls=1)
             SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1, True, False], apiCap=150, functionCalls=1)
 
     if customTimes:

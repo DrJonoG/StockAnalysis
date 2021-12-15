@@ -30,7 +30,7 @@ from helpers import LoadIndicators, SymbolIteratorFiles
 
 def Analyse(dataPath, timeFrames):
     for tf in timeFrames:
-        source = dataPath + "/" + tf[:2] + "/"
+        source = dataPath + "/" + tf[:-2] + "/"
         destination = source + "/analysis/"
         # Create folder if not exists
         if not os.path.exists(destination):
@@ -38,9 +38,23 @@ def Analyse(dataPath, timeFrames):
         # Obtain all file names without path
         fileList = [os.path.basename(x) for x in glob.glob(source + "*.csv")]
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
-        SymbolIteratorFiles(fileList, patterns.Analyse, [source, destination, True], prefix='Analysing Stats ')
-        SymbolIteratorFiles(fileList, stats.Analyse, [source, destination, True], prefix='Analysing Stats ')
-        #SymbolIteratorFiles(fileList, OR.Analyse, [source, destination, 15, True], prefix='Analysing Stats ')
+        #SymbolIteratorFiles(fileList, patterns.Analyse, [source, destination, True], prefix='Analysing Stats ')
+        # Don't need stats.Analyse until trading regularly, provides more of an overview of last month
+        #SymbolIteratorFiles(fileList, stats.Analyse, [source, destination, True], prefix='Analysing Stats ')
+
+        # Arguments: [source, destination, openingRange=3, marketOnly=True]
+        minute = int(tf[:-3])
+        if minute == 1:
+            openRangeBars = 30
+        elif minute == 2:
+            openRangeBars = 15
+        elif minute == 15:
+            openRangeBars = 2
+        elif minute == 30:
+            openRangeBars = 1
+        elif minute == 60:
+            openRangeBars = 1
+        SymbolIteratorFiles(fileList, OR.Analyse, [source, destination, openRangeBars, True], prefix='Analysing Stats ')
 
 if __name__ == '__main__':
     # Clear screen prior to execution
@@ -50,7 +64,7 @@ if __name__ == '__main__':
     # Source of all data
     dataPath = 'D:/00.Stocks/data/alpha/'
     # Timeframes
-    timeFrames = ['1min']
+    timeFrames = ['1min','2min','5min', '15min', '30min', '60min']
     # Symbol list
     symbolFileList = ['./config/symbols.csv']
 
