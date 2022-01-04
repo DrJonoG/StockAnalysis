@@ -19,6 +19,7 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 import os
 import sys
 import inspect
+import configparser
 import pandas as pd
 # Import custom
 import core.GetIndicators as CI
@@ -47,9 +48,16 @@ if __name__ == '__main__':
     clear = lambda: os.system('cls')
     clear()
 
-    # Update 1 minute files
-    dataPath = 'D:/00.Stocks/data/alpha/'
-    symbolFileList = ['./config/symbols.csv']
+    # Config
+    config = configparser.ConfigParser()
+    config.read('./config/source.ini')
+
+    # Source of all data
+    dataPath = config['filepath']['dataSource']
+
+    # Config
+    symbolFileList = config['filepath']['symbolList']
+
     alpha = data.GetData('./config/api.conf')
 
     # Whether to download new data

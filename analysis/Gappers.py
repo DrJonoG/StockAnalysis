@@ -34,8 +34,10 @@ def Analyse(symbol, source, destination, marketOnly=True):
     Parameters
     ----------
     symbol : String
-        The path to the csv file to analyse
-    destinationPath : String
+        The filename of the csv file to analyse
+    source : String
+        The location of the symbol csv files
+    destination : String
         Path to where to save the analysis
     marketOnly : Bool
         A boolean to use only market opening hours (if true) or all times (if false)
@@ -105,5 +107,5 @@ def Analyse(symbol, source, destination, marketOnly=True):
         data.append(sum(currDay.volume))
         # Append to list
         dictList.append(dict(zip(columns, data)))
-    # Covnert to dataframe
-    return pd.DataFrame.from_dict(dictList).sort_index(ascending=False)
+    # Covnert to dataframe and save appending 'GAP' to file name
+    pd.DataFrame.from_dict(dictList).to_csv(destination + symbol.replace('.csv', '_GAP.csv'), index=False)

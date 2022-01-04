@@ -35,6 +35,10 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
     ----------
     df : Dataframe
         A dataframe for a single symbol
+    source : String
+        The location of the symbol csv files
+    destination : String
+        Path to where to save the analysis
     openingRange : Int
         The number of bars, in your chosen time frame, that defines the opening range
     marketOnly : Bool

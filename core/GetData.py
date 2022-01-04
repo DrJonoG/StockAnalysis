@@ -269,6 +269,9 @@ class GetData:
         # New time frame
         newTF = []
         start = time.time()
+        # check length
+        if len(tickerDF) < 3:
+            return
         # Group
         tickerGroups = tickerDF.groupby(pd.Grouper(freq=timeFrame, offset='1min'))#.apply(your_function)
 
@@ -279,4 +282,5 @@ class GetData:
             row = [max(group.index), group.iloc[0][0], group.iloc[-1][1], max(group.high), min(group.low), sum(group.volume)]
             newTF.append(row)
 
-        newTF.to_csv(destinationPath + symbol + '.csv')
+        df = pd.DataFrame(newTF, columns = ['Datetime','open','close','high','low','volume'])
+        df.to_csv(destinationPath + symbol + '.csv')

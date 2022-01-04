@@ -21,26 +21,32 @@ import os
 import sys
 import glob
 import inspect
+import configparser
 import pandas as pd
 # Import custom
 import analysis.Stats as stats
 import analysis.OpeningRange as OR
 import analysis.Patterns as patterns
+import analysis.Gappers as gappers
+import analysis.Summary as summary
 from helpers import LoadIndicators, SymbolIteratorFiles
 
 def Analyse(dataPath, timeFrames):
     for tf in timeFrames:
         source = dataPath + "/" + tf[:-2] + "/"
         destination = source + "/analysis/"
+
         # Create folder if not exists
         if not os.path.exists(destination):
             os.makedirs(destination)
+
         # Obtain all file names without path
         fileList = [os.path.basename(x) for x in glob.glob(source + "*.csv")]
+
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
-        #SymbolIteratorFiles(fileList, patterns.Analyse, [source, destination, True], prefix='Analysing Stats ')
-        # Don't need stats.Analyse until trading regularly, provides more of an overview of last month
-        #SymbolIteratorFiles(fileList, stats.Analyse, [source, destination, True], prefix='Analysing Stats ')
+        SymbolIteratorFiles(fileList, gappers.Analyse, [source, destination, True], prefix='Analysing Patterns ')
+        # Summarise gapper results
+        summary.Gappers(destination)
 
         # Arguments: [source, destination, openingRange=3, marketOnly=True]
         minute = int(tf[:-3])
@@ -54,18 +60,34 @@ def Analyse(dataPath, timeFrames):
             openRangeBars = 1
         elif minute == 60:
             openRangeBars = 1
-        SymbolIteratorFiles(fileList, OR.Analyse, [source, destination, openRangeBars, True], prefix='Analysing Stats ')
+
+        # Iterate all files and analyse Arguments [source, destination, numberOfBars, marketOnly]
+        SymbolIteratorFiles(fileList, OR.Analyse, [source, destination, openRangeBars, True], prefix='Analysing Opening Range ')
+        # Summarise opening range
+        summary.OpeningRange(destination)
+
+        # Iterate all files and analyse Arguments [source, destination, marketOnly]
+        #SymbolIteratorFiles(fileList, patterns.Analyse, [source, destination, True], prefix='Analysing Patterns ')
+
+        # Don't need stats.Analyse until trading regularly, provides more of an overview of last month
+        #SymbolIteratorFiles(fileList, stats.Analyse, [source, destination, True], prefix='Analysing Stats ')
 
 if __name__ == '__main__':
     # Clear screen prior to execution
     clear = lambda: os.system('cls')
     clear()
 
+    # Config
+    config = configparser.ConfigParser()
+    config.read('./config/source.ini')
+
     # Source of all data
-    dataPath = 'D:/00.Stocks/data/alpha/'
+    dataPath = config['filepath']['indicatorDestination']
+
     # Timeframes
     timeFrames = ['1min','2min','5min', '15min', '30min', '60min']
+
     # Symbol list
-    symbolFileList = ['./config/symbols.csv']
+    symbolFileList = config['filepath']['symbolList']
 
     Analyse(dataPath, timeFrames)

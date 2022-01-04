@@ -202,7 +202,7 @@ class ComputeIndicators(object):
             # Skip if file does not contain datetime
             if ('Datetime' not in tickerDF.columns): continue
             # If update required, load full file:
-            tickerDF = pd.read_csv(fileName, sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False, usecols=['Datetime','open', 'close', 'high', 'low', 'volume'])
+            tickerDF = pd.read_csv(fileName, sep=',', parse_dates=["Datetime"], encoding= 'unicode_escape', dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False, usecols=['Datetime','open', 'close', 'high', 'low', 'volume'])
             # Ensure more than 0 rows
             if len(tickerDF.index) > 0:
                 # File name

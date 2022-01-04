@@ -74,10 +74,10 @@ def Analyse(symbol, source, destination, marketOnly=True, pattern=[1, 1, -1, 1])
     incremental = [True, False]
 
     ''' Stop limit is the limit willing to risk per share '''
-    stopLimits = [0.2,0.3,0.5,1.0,2.0]
+    stopLimits = [0.1,0.2,0.3,0.5,1.0,2.0]
 
     # Average minimum volume
-    minVolume = 5000
+    minVolume = 15000
     # How much room to give stop loss from low of pullback
     perShareAdjustment = 0.10
     # Trade costs
@@ -107,7 +107,6 @@ def Analyse(symbol, source, destination, marketOnly=True, pattern=[1, 1, -1, 1])
                                         for stopLimit in stopLimits:
                                             runAnalysis(df, destination, sym, riskPercent, pattern, profitTarget, priceAboveMA, maAboveMA, vwap, RSI, entryVol, increm,  stopLimit, perShareAdjustment, costPerTrade, minVolume)
 
-    exit()
 
 def runAnalysis(df, destination, symbol, riskPercent, pattern, profitTarget, priceAboveMA, maAboveMA, vwap, rsi, entryVol, incremental, stopLimit, perShareAdjustment, costPerTrade, minVolume):
     tradeLog = []
@@ -303,6 +302,8 @@ def runAnalysisSingle(symbol, source, destination, marketOnly, pattern):
     ----------
     symbol : String
         The path to the csv file to analyse
+    source : String
+        The location of the symbol csv files
     destinationPath : String
         Path to where to save the analysis
     marketOnly : Bool

@@ -19,6 +19,7 @@ import os
 import sys
 import inspect
 import pandas as pd
+import configparser
 # Import custom
 import core.GetIndicators as CI
 import core.GetData as data
@@ -30,11 +31,15 @@ if __name__ == '__main__':
     clear = lambda: os.system('cls')
     clear()
 
-    # Update 1 minute files
-    dataPath = 'D:/00.Stocks/data/alpha/'
+    # Config
+    config = configparser.ConfigParser()
+    config.read('./config/source.ini')
+
+    # Source of all data
+    dataPath = config['filepath']['dataSource']
 
     # Config
-    symbolFileList = ['./config/symbols.csv']
+    symbolFileList = config['filepath']['symbolList']
     alpha = data.GetData('./config/api.conf')
 
     # Whether to download new data
