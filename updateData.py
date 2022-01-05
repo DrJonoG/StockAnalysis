@@ -22,7 +22,8 @@ import pandas as pd
 import configparser
 # Import custom
 import core.GetIndicators as CI
-import core.GetData as data
+import core.GetData as D
+import core.GetUpdate as Update
 from helpers import LoadIndicators, SymbolIteratorFiles, SymbolIterator
 
 
@@ -40,7 +41,7 @@ if __name__ == '__main__':
 
     # Config
     symbolFileList = config['filepath']['symbolList']
-    alpha = data.GetData('./config/api.conf')
+    data = D.GetData('./config/api.conf')
 
     # Whether to download new data
     downloadData = True
@@ -53,13 +54,19 @@ if __name__ == '__main__':
     computeIndicators = True
 
 
+    # update
+    update = Update(**LoadIndicators())
+
+    exit()
+
+    # Update data and download most recent
     if downloadData:
         for i in range(0, len(timeFramesAlpha)):
-            print(f"==> Downloading for {timeFramesAlpha[i]}")
+            print(f"==> Updating data for {timeFramesAlpha[i]}")
             # arguments [destination, timeframe, month, year, merge, skipExsiting]
-            SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 2, 1, True, False], apiCap=150, functionCalls=1)
-            SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1, True, False], apiCap=150, functionCalls=1)
+            SymbolIterator(symbolFileList, data.DownloadExtended, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1, True, False], apiCap=150, functionCalls=1)
 
+    # Update custom time frames
     if customTimes:
         # Create other timeframes
         for custom in customTimeFrames:
@@ -69,7 +76,7 @@ if __name__ == '__main__':
                 os.mkdir(destination)
             # Iterate through files and create corresponding custom time frame csvs
             # arguments [timeframe, destination path, source path]
-            SymbolIterator(symbolFileList, alpha.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')
+            SymbolIterator(symbolFileList, data.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')
 
     if computeIndicators:
         # Create timeframe data and compute indicators

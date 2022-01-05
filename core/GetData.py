@@ -108,6 +108,8 @@ class GetData:
         return sessionDF
 
 
+    
+
     def DownloadExtended(self, symbol, destination, dataInterval, month='*', year='*', merge=True, skipExisting=False, dateFilter=True):
         """
 	    https://www.alphavantage.co/documentation/#intraday-extended
@@ -158,14 +160,14 @@ class GetData:
                         file.write(symbol + ', No data found. \n')
                     continue
                 # Extract and format data
-                sliceDF = self.PriceDFSorter(rawData.text)
+                newData = self.PriceDFSorter(rawData.text)
                 # Check if data was retrieved, if not, return.
-                if sliceDF is None:
+                if newData is None:
                     continue
                 # Merge or save
                 if merge:
                     if not os.path.isfile(saveFile):
-                        sliceDF.to_csv(saveFile, index=True)
+                        newData.to_csv(saveFile, index=True)
                     else:
                         # Read existing and convert datetime
                         loadDF = csvToPandas(saveFile, asc=False, unicode=True)
@@ -174,18 +176,18 @@ class GetData:
                         if dateFilter:
                             # Get latest date and filter
                             maxDate = max(loadDF.index)
-                            sliceDF = sliceDF[sliceDF.index > maxDate]
+                            newData = newData[newData.index > maxDate]
                         # If new data, then save
-                        if len(sliceDF) > 0:
+                        if len(newData) > 0:
                             # Join
-                            sliceDF = pd.concat([sliceDF,loadDF], axis=0)
+                            newData = pd.concat([newData,loadDF], axis=0)
                             # Drop duplicates and sort
-                            sliceDF = sliceDF[~sliceDF.index.duplicated(keep='first')]
-                            sliceDF = sliceDF.sort_index(ascending=False)
+                            newData = newData[~newData.index.duplicated(keep='first')]
+                            newData = newData.sort_index(ascending=False)
                             # Overwrite file
-                            sliceDF.to_csv(saveFile, index=True)
+                            newData.to_csv(saveFile, index=True)
                 else:
-                    sliceDF.to_csv(destination + '/%s_year_%s_month_%s.csv' % (symbol, str(y), str(m)))
+                    newData.to_csv(destination + '/%s_year_%s_month_%s.csv' % (symbol, str(y), str(m)))
 
         return True
 
@@ -272,6 +274,7 @@ class GetData:
         # check length
         if len(tickerDF) < 3:
             return
+
         # Group
         tickerGroups = tickerDF.groupby(pd.Grouper(freq=timeFrame, offset='1min'))#.apply(your_function)
 

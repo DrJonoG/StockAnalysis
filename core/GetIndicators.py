@@ -106,7 +106,6 @@ class ComputeIndicators(object):
         close = df.close
         return round(df.assign(vwap=(close * volume).cumsum() / volume.cumsum()),2)
 
-
     def Indicators(self, tickerDF, marketOnly, frequency):
         """
 	    Computer indicators on tickerDF
@@ -134,7 +133,7 @@ class ComputeIndicators(object):
             moving averages etc,. all times need to be visible. Inserting rows is computationally
             expense, thus we create an empty datarange and merge the two together.
         '''
-        # Get all times between start and end date with a frequency of 5 minutes
+        # Get all times between start and end date with a frequency of freq
         dateDF = pd.date_range(start=start, end=end, freq=frequency)
         # Remove weekends
         dateDF = dateDF[dateDF.dayofweek < 5]

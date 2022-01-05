@@ -58,54 +58,65 @@ def Analyse(symbol, source, destination, marketOnly=True):
     groupedDF = list(groupedDF)
     # Iterate through groups, skip first two groups for lookback
     for index in range(2, len(groupedDF)):
-        # Get the days
-        currDay = groupedDF[index][1]
-        yDay = groupedDF[index-1][1]
-        # If only looking at open data, filter out the rest
-        if marketOnly:
-            currDay = currDay[currDay.Market == 1]
-            yDay = yDay[yDay.Market == 1]
-        # The change in the previous day between open and close
-        yClose = yDay.iloc[-1].close
-        yOpen = yDay.iloc[0].open
-        yChange = round(((yClose - yOpen) / yOpen), 5)
-        # The gap between yesterday day close and market open
-        firstBarOpen = currDay.iloc[0].open
-        gap = round(((firstBarOpen - yClose) / yClose), 5)
-        # Assignment
-        data = [currDay.index[0].strftime('%Y-%m-%d'), yOpen, yClose, yChange, (yClose - yOpen), yDay.iloc[-1].RSI14,firstBarOpen, gap, (firstBarOpen - yClose)]
-        # The change in the current day from start to end (not just one bar, but whole day)
-        lastBarClose = currDay.iloc[-1].close
-        dayChange = round(((lastBarClose - firstBarOpen) / firstBarOpen), 5)
-        # Assignment
-        columns.append('Gap Filled')
-        # Check if gap has been filled and what time
-        gapFill = currDay[currDay.low < yClose].head(1)
-        if gapFill.empty:
-            data.append("Not filled")
-        else:
-            data.append(gapFill.index[0].strftime('%H:%M'))
-        # Check if gap has been reached and what time:
-        columns.append('Gap Reached')
-        currDayRemainder = currDay[1:] # We exclude the first bar (the gap) as in theory this will always be touched
-        gapTouched = currDayRemainder[currDayRemainder.low < firstBarOpen].head(1)
-        if gapTouched.empty:
-            data.append("Not touched")
-        else:
-            data.append(gapTouched.index[0].strftime('%H:%M'))
-        # High and lows of the day
-        columns.append('Day High')
-        data.append(max(currDay.high))
-        columns.append('Day Low')
-        data.append(min(currDay.low))
-        # The clsoe and entire day change
-        columns.append('Day Close')
-        data.append(lastBarClose)
-        columns.append('Day Change')
-        data.append(dayChange)
-        columns.append('Volume')
-        data.append(sum(currDay.volume))
-        # Append to list
-        dictList.append(dict(zip(columns, data)))
+        try:
+            # Get the days
+            currDay = groupedDF[index][1]
+            yDay = groupedDF[index-1][1]
+            # If only looking at open data, filter out the rest
+            if marketOnly:
+                currDay = currDay[currDay.Market == 1]
+                yDay = yDay[yDay.Market == 1]
+            # Check if days exist
+            if (len(yDay.index) < 1 or len(currDay.index) < 1):
+                continue
+            # The change in the previous day between open and close
+            yClose = yDay.iloc[-1].close
+            yOpen = yDay.iloc[0].open
+            # Ensure data is available
+            if (yOpen == 0 or yClose == 0):
+                continue
+            # Calculate change
+            yChange = round(((yClose - yOpen) / yOpen), 5)
+            # The gap between yesterday day close and market open
+            firstBarOpen = currDay.iloc[0].open
+            gap = round(((firstBarOpen - yClose) / yClose), 5)
+            # Assignment
+            data = [currDay.index[0].strftime('%Y-%m-%d'), yOpen, yClose, yChange, (yClose - yOpen), yDay.iloc[-1].RSI14,firstBarOpen, gap, (firstBarOpen - yClose)]
+            # The change in the current day from start to end (not just one bar, but whole day)
+            lastBarClose = currDay.iloc[-1].close
+            dayChange = round(((lastBarClose - firstBarOpen) / firstBarOpen), 5)
+            # Assignment
+            columns.append('Gap Filled')
+            # Check if gap has been filled and what time
+            gapFill = currDay[currDay.low < yClose].head(1)
+            if gapFill.empty:
+                data.append("Not filled")
+            else:
+                data.append(gapFill.index[0].strftime('%H:%M'))
+            # Check if gap has been reached and what time:
+            columns.append('Gap Reached')
+            currDayRemainder = currDay[1:] # We exclude the first bar (the gap) as in theory this will always be touched
+            gapTouched = currDayRemainder[currDayRemainder.low < firstBarOpen].head(1)
+            if gapTouched.empty:
+                data.append("Not touched")
+            else:
+                data.append(gapTouched.index[0].strftime('%H:%M'))
+            # High and lows of the day
+            columns.append('Day High')
+            data.append(max(currDay.high))
+            columns.append('Day Low')
+            data.append(min(currDay.low))
+            # The clsoe and entire day change
+            columns.append('Day Close')
+            data.append(lastBarClose)
+            columns.append('Day Change')
+            data.append(dayChange)
+            columns.append('Volume')
+            data.append(sum(currDay.volume))
+            # Append to list
+            dictList.append(dict(zip(columns, data)))
+        except Exception:
+            print(f"\n ==> Error processing {symbol}\n")
+            continue
     # Covnert to dataframe and save appending 'GAP' to file name
     pd.DataFrame.from_dict(dictList).to_csv(destination + symbol.replace('.csv', '_GAP.csv'), index=False)

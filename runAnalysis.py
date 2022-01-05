@@ -44,7 +44,7 @@ def Analyse(dataPath, timeFrames):
         fileList = [os.path.basename(x) for x in glob.glob(source + "*.csv")]
 
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
-        SymbolIteratorFiles(fileList, gappers.Analyse, [source, destination, True], prefix='Analysing Patterns ')
+        SymbolIteratorFiles(fileList, gappers.Analyse, [source, destination, True], prefix='Analysing Gappers ')
         # Summarise gapper results
         summary.Gappers(destination)
 
