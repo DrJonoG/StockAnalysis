@@ -94,8 +94,7 @@ class GetData:
 
         # Address for session
         dataAddress = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=%s&interval=%s&outputsize=full&apikey=%s&datatype=csv&adjusted=false' % (symbol, dataInterval, self.apiKey)
-        print(dataAddress)
-        exit()
+
         # Get the requested data
         rawData = self.GetRaw(dataAddress)
         # Ensure there is a return
@@ -108,7 +107,7 @@ class GetData:
         return sessionDF
 
 
-    
+
 
     def DownloadExtended(self, symbol, destination, dataInterval, month='*', year='*', merge=True, skipExisting=False, dateFilter=True):
         """

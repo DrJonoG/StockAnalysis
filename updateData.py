@@ -22,7 +22,7 @@ import pandas as pd
 import configparser
 # Import custom
 import core.GetIndicators as CI
-import core.GetData as D
+import core.GetData as getData
 import core.GetUpdate as Update
 from helpers import LoadIndicators, SymbolIteratorFiles, SymbolIterator
 
@@ -40,8 +40,7 @@ if __name__ == '__main__':
     dataPath = config['filepath']['dataSource']
 
     # Config
-    symbolFileList = config['filepath']['symbolList']
-    data = D.GetData('./config/api.conf')
+    symbolFileList = [config['filepath']['symbolList']]
 
     # Whether to download new data
     downloadData = True
@@ -53,21 +52,18 @@ if __name__ == '__main__':
     # Whether to compute the indicators for the corresponding timeframe
     computeIndicators = True
 
-
     # update
-    update = Update(**LoadIndicators())
-
-    exit()
-
+    update = Update.UpdateData(**LoadIndicators())
     # Update data and download most recent
     if downloadData:
         for i in range(0, len(timeFramesAlpha)):
             print(f"==> Updating data for {timeFramesAlpha[i]}")
-            # arguments [destination, timeframe, month, year, merge, skipExsiting]
-            SymbolIterator(symbolFileList, data.DownloadExtended, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1, True, False], apiCap=150, functionCalls=1)
+            # (symbol, destination, dataInterval, month, year)
+            SymbolIterator(symbolFileList, update.Update, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1], apiCap=150, functionCalls=1)
 
     # Update custom time frames
-    if customTimes:
+    if customTimes:        
+        data = getData.GetData('./config/api.conf')
         # Create other timeframes
         for custom in customTimeFrames:
             # Destination path and creation of folder
@@ -77,11 +73,3 @@ if __name__ == '__main__':
             # Iterate through files and create corresponding custom time frame csvs
             # arguments [timeframe, destination path, source path]
             SymbolIterator(symbolFileList, data.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')
-
-    if computeIndicators:
-        # Create timeframe data and compute indicators
-        for i in range(0, len(timeFramesAlpha)):
-            # Merge values to generate timeframes
-            path = f'D:/00.Stocks/data/alpha/{timeFramesAlpha[i][0:-2]}_ind/'
-            # This function call also fills in all missing data i.e. where volume is 0
-            CI.ComputeIndicators(**LoadIndicators()).Compute(source=dataPath, frequency=timeFramesAlpha[i], update=False, destination=path )

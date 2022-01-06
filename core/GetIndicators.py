@@ -42,7 +42,8 @@ class ComputeIndicators(object):
     def __init__(self, **argd):
         self.__dict__.update(argd)
 
-
+    """TODO: RSI needs to use adjusted close and therefore is incorrect,
+    the calculation is right however"""
     def ComputeRSI(self, diff):
         """
 	    Computers the relative strength idnex
@@ -52,6 +53,8 @@ class ComputeIndicators(object):
         diff : Series
             First discrete difference of element
         """
+
+
         # Preserve dimensions off diff values
         upChange = 0 * diff
         downChange = 0 * diff
