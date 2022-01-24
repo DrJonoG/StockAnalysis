@@ -1,5 +1,5 @@
 Symbol,Name,Description,Exchange,Sector,Industry,MarketCapitalization,SharesFloat
-DJIA,Dow Jones Industrial Average,The Dow Jones Industrial Average Dow Jones or simply the Dow is a price-weighted measurement stock market index of 30 prominent companies listed on stock exchanges in the United States,NASDAQ,All,All,1.084E+13,1
+DJIA,Dow Jones Industrial Average,The Dow Jones Industrial Average Dow Jones or simply the Dow is a price-weighted measurement stock market index of 30 prominent companies listed on stock exchanges in the United States,NASDAQ,All,All,1.08E+13,1
 SPX,Standard & Poors 500 Index,The Standard and Poors 500 or simply the S&P 500 is a stock market index tracking the performance of 500 large companies listed on stock exchanges in the United States. It is one of the most commonly followed equity indices.,NYSE,All,All,4.03E+13,1
 A,Agilent Technologies Inc,Agilent Technologies  Inc. is an American analytical instrumentation development and manufacturing company that offers its products and services to markets worldwide. Its global headquarters is located in Santa Clara  California.,NYSE,Life Sciences,Instruments For Meas & Testing Of Electricity & Elec Signals,52655580000,301781000
 AA,Alcoa Corporation,Alcoa Corporation produces and sells bauxite  alumina  and aluminum products in the United States  Spain  Australia  Brazil  Canada  and internationally. The company is headquartered in Pittsburgh  Pennsylvania.,NYSE,Manufacturing,Primary Production Of Aluminum,9124675000,185521000
@@ -6767,3 +6767,550 @@ JBK,Corporate Backed Trust Certificates Goldman Sachs Capital I Securities-Backe
 KNL,Knoll Inc,Knoll  Inc. designs  manufactures  markets  and sells commercial and residential furniture  fixtures  and coatings for the workplace and residential markets in the United States  Canada  Europe  and internationally. The company is headquartered in East Greenville  Pennsylvania.,NYSE,Manufacturing,Miscellaneous Furniture & Fixtures,1273064000,39444200
 NSR,Nomad Royalty Company Ltd.,None,NYSE,Technology,General,365075000,11157200
 STAR,iStar Inc,iStar Inc. (NYSE: STAR) is focused on reinventing the land leasing industry  unlocking value for real estate owners nationwide by providing modern and more efficient land leases on all types of properties. ,NYSE,Real Estate & Construction,Real Estate Investment Trusts,1836718000,68678000
+AACI,Armada Acquisition Corp. I Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,205231000,20709500
+AADI,Aadi Bioscience Inc,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,511694000,20894000
+ACAQ,Athena Consumer Acquisition Corp.,Athena Consumer Acquisition Corp. The company is headquartered in New York  New York.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,222456000,17250000
+ACHR,Archer Aviation Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1421613000,157268000
+ACRO,Acropolis Infrastructure Acquisition Corp,Acropolis Infrastructure Acquisition Corp. The company is headquartered in New York  New York.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,419175000,34500000
+ADAL,Anthemis Digital Acquisitions I Corp Class A Ordinary Shares,Anthemis Digital Acquisitions I Corp intends to effect a merger  equity exchange  asset acquisition  share purchase  reorganization or similar business combination with one or more companies. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,297951000,23000000
+ADSE,ADS-TEC ENERGY PLC Ordinary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,446104000,48807900
+ADTH,AdTheorent Holding Company Inc,None,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER PROGRAMMING  DATA PROCESSING  ETC.,539399000,89750000
+AEAE,AltEnergy Acquisition Corp. Class A Common Stock,AltEnergy Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+AEHA,Aesther Healthcare Acquisition Corp Class A Common Stock,Aesther Healthcare Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,132118000,10600000
+AERC,AeroClean Technologies  Inc. Common Stock,Aeroclean Technologies Inc.  an indoor air purification technology company  offers air purification solutions for hospitals and other healthcare facilities. The company is headquartered in Palm Beach Gardens  Florida.,NASDAQ,TECHNOLOGY,GENERAL,147786000,13863600
+AFTR,Afternext Healthtech Acquisition Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,303438000,25000000
+AGIL,AgileThought Inc,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,273021000,50280000
+AHG,Akso Health Group,None,NASDAQ,FINANCE,FINANCE LESSORS,125802000,48850600
+AHI,Advanced Human Imaging Limited. American Depositary Shares,Avadim Health  Inc.  a health and wellness company  develops  manufactures and markets topical products for institutional care and consumer markets. The company is headquartered in Asheville  North Carolina.,NASDAQ,TECHNOLOGY,GENERAL,118154000,23212900
+AHPA,Avista Public Acquisition Corp. II Class A Ordinary Shares,Avista Public Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,18000000
+AIP,Arteris Inc. Common Stock,None,NASDAQ,MANUFACTURING,SEMICONDUCTORS & RELATED DEVICES,616659000,31254900
+AIRS,AirSculpt Technologies Inc. Common Stock,None,NASDAQ,LIFE SCIENCES,SERVICES-OFFICES & CLINICS OF DOCTORS OF MEDICINE,885236000,55640000
+AKA,A.K.A. BRANDS HOLDING CORP.,also known as Brands Holding Corp. The company is headquartered in San Francisco  California.,NYSE,TRADE & SERVICES,RETAIL-CATALOG & MAIL-ORDER HOUSES,1220870000,128648000
+ALLR,Allarity Therapeutics  Inc. Common Stock,Allarity Therapeutics A / S develops various therapeutic candidates for the treatment of cancer using complementary drug-specific diagnostics (cDx) generated by its drug response prediction technology. The company is headquartered in Horsholm  Denmark.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,86290000,8075800
+ALPA,Alpha Healthcare Acquisition Corp. III Class A Common Stock,Alpha Healthcare Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,190178000,15908000
+ALPP,Alpine 4 Holdings Inc. Class A Common Stock,Alpine 4 Holdings  Inc.  a technology holding company  offers electronic contract manufacturing solutions in the United States. The company is headquartered in Phoenix  Arizona.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,349029000,157896000
+AMAO,American Acquisition Opportunity Inc,American Acquisition Opportunity Inc. intends to enter into a merger  stock exchange  asset acquisition  stock purchase  recapitalization  reorganization  or other similar business combination with one or more target businesses. The company is headquartered in Fishers  Indiana.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,135619000,13481000
+AMCI,AMCI Acquisition Corp. II Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,237122000,9061100
+AMPL,Amplitude Inc. Class A Common Stock,None,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,5489397000,53880000
+AMPS,Altus Power Inc.,None,NYSE,ENERGY & TRANSPORTATION,ELECTRIC SERVICES,1632761000,155058000
+APAC,StoneBridge Acquisition Corporation,StoneBridge Acquisition Corporation intends to effect a merger  share exchange  asset acquisition  share purchase  reorganization or similar business combination with one or more companies. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,247250000,20000000
+APCX,AppTech Payments Corp. Common Stock,AppTech Corp. The company is headquartered in Carlsbad  California.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,260797000,113390000
+APMI,AxonPrime Infrastructure Acquisition Corporation Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,182803000,15000000
+APN,Apeiron Capital Investment Corp.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+APTM,Alpha Partners Technology Merger Corp,Alpha Partners Technology Merger Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,350560000,29115000
+ARBE,Arbe Robotics Ltd. Ordinary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,589044000,62136000
+ARBK,Argo Blockchain plc American Depositary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,582762000,46808200
+ARCK,Arbor Rapha Capital Bioholdings Corp. I Class A Common Stock,Arbor Rapha Capital Bioholdings Corp. The company is headquartered in Uniondale  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,214547000,17250000
+ARGU,Argus Capital Corp. Class A Common Stock,Argus Capital Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,377501000,30475000
+ARHS,Arhaus Inc. Class A Common Stock,None,NASDAQ,TRADE & SERVICES,RETAIL-FURNITURE STORES,2756651000,136946000
+ARIS,Aris Water Solutions Inc.,ARI Network Services  Inc. provides software as a service (SaaS)  data as a service (DaaS)  and other solutions to equipment manufacturers  distributors  and dealers. The company is headquartered in Milwaukee  Wisconsin.,NYSE,ENERGY & TRANSPORTATION,OIL & GAS FIELD SERVICES  NEC,269348000,20297500
+ARIZ,Arisz Acquisition Corp. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,86878000,8901400
+ARQQ,Arqit Quantum Inc,Arqit Limited develops and offers a quantum key distribution network. The company is headquartered in London  United Kingdom.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,2375044000,120073000
+ARTE,Artemis Strategic Investment Corporation Class A Common Stock,Artemis Strategic Investment Corporation intends to effect a merger  share exchange  asset acquisition  share purchase  reorganization or similar business combination with one or more companies. The company is headquartered in Phoenix  Arizona.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,249046000,20125000
+ASPA,ABRI SPAC I INC. Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,73426000,7462000
+ASTL,Algoma Steel Group Inc. Common Shares,Algoma Steel Group Inc. produces and sells steel products in Canada and the United States. ,NASDAQ,TECHNOLOGY,GENERAL,1207037000,112074000
+ATMH,All Things Mobile Analytic Inc,All Things Mobile Analytic Inc. is a healthcare technology company. The company is headquartered in Tucson  Arizona.,NASDAQ,TECHNOLOGY,GENERAL,2974400,3718000
+ATXS,Astria Therapeutics Inc,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,81309000,13009500
+AUGX,Augmedix Inc. Common Stock,Augmedix  Inc. provides remote medical documentation solutions and live clinical support services in the United States. The company is headquartered in San Francisco  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,118535000,37158400
+AUID,Ipsidy Inc. Common Stock,Ipsidy Inc. operates an Identity as a Service (IDaaS) platform that offers a suite of secure  mobile and biometric identity solutions globally. The company is headquartered in Long Beach  New York.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,319549000,23206200
+AUR,Aurora Innovation Inc,None,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN,12127744000,642870000
+AURA,Aura Biosciences Inc. Common Stock,None,NASDAQ,LIFE SCIENCES,BIOLOGICAL PRODUCTS  (NO DISGNOSTIC SUBSTANCES),553247000,29210500
+AVAC,Avalon Acquisition Inc. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,256918000,20855200
+AVDX,AvidXchange Holdings Inc. Common Stock,AvidXchange Holdings  Inc. provides accounts payable (AP) automation software and payment solutions for middle market businesses and vendors in North America. The company is headquartered in Charlotte  North Carolina.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,3088392000,196213000
+AVHI,Achari Ventures Holdings Corp. I Common Stock,AV Homes  Inc. participates in the home construction and community development businesses in the Florida  Carolinas  Arizona and Texas markets. The company is headquartered in Scottsdale  Arizona.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,443652000,3000000
+AVTX,Avalo Therapeutics Inc,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,190941000,112318000
+AXH,Industrial Human Capital Inc.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+AZTA,Azenta Inc,None,NASDAQ,TECHNOLOGY,SPECIAL INDUSTRY MACHINERY  NEC,7767740000,74913000
+BACA,Berenson Acquisition Corp. I,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,333215000,27510000
+BAFN,BayFirst Financial Corp. Common Stock,BayFirst Financial Corp. The company is headquartered in Saint Petersburg  Florida.,NASDAQ,FINANCE,STATE COMMERCIAL BANKS,90120000,3920000
+BBAI,BigBear.ai Holdings Inc,None,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,816107000,135566000
+BBLG,Bone Biologics Corp Common Stock,Bone Biologics Corporation  a medical device company  focuses on bone regeneration in spinal fusion using recombinant human protein. The company is headquartered in Burlington  Massachusetts.,NASDAQ,LIFE SCIENCES,ORTHOPEDIC  PROSTHETIC & SURGICAL APPLIANCES & SUPPLIES,36537600,10350600
+BBLN,Babylon Holdings Ltd,None,NYSE,TECHNOLOGY,GENERAL,2754494000,330257000
+BEAT,Heartbeam  Inc. Common Stock,BioTelemetry  Inc.  a remote medical technology company  provides remote heart monitoring  remote blood glucose monitoring  centralized central laboratory services for clinical trials  and original equipment manufacturing services for healthcare and clinical research clients throughout the world. The company is headquartered in Malvern  Pennsylvania.,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,28428100,7809900
+BEPI,BEPI,None,NYSE,ENERGY & TRANSPORTATION,ELECTRIC SERVICES,None,0
+BFRI,Biofrontera Inc. Common Stock,Biofrontera Inc.  a biopharmaceutical company  develops and supplies dermatological products for the treatment of skin conditions in the United States. The company is headquartered in Woburn  Massachusetts.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,97262000,15056000
+BHAC,Crixus BH3 Acquisition Company Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+BHIL,Benson Hill Inc,None,NYSE,MANUFACTURING,FOOD AND KINDRED PRODUCTS,1313943000,178041000
+BIRD,Allbirds Inc. Class A Common Stock,None,NASDAQ,MANUFACTURING,APPAREL & OTHER FINISHD PRODS OF FABRICS & SIMILAR MATL,2289329000,25162900
+BJDX,Bluejay Diagnostics  Inc. Common Stock,None,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,55190000,19501700
+BKKT,Bakkt Holdings Inc,None,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,430447000,57164000
+BKSY,Blacksky Technology Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,574774000,116116000
+BLBX,Blackboxstocks Inc. Common Stock,Blackboxstocks Inc. develops and markets financial technology and hybrid social media platform. The company is headquartered in Dallas  Texas.,NASDAQ,TRADE & SERVICES,WHOLESALE-DRUGS  PROPRIETARIES & DRUGGISTS' SUNDRIES,43170500,12925300
+BLNG,Belong Acquisition Corp,It belongs to Acquisition Corp. The company is headquartered in Philadelphia  Pennsylvania.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,188738000,15550000
+BLZE,Backblaze  Inc. Class A Common Stock,Backblaze  Inc.  a cloud storage platform  provides businesses and consumers with solutions to store  use  and protect data globally. The company is headquartered in San Mateo  California.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,522978000,7900000
+BMAC,Black Mountain Acquisition Corp.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,236160000,24000000
+BMAQ,Blockchain Moon Acquisition Corp. Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,144204000,14775000
+BNIX,Bannix Acquisition Corp. Common Stock,Bannix Acquisition Corp. The company is headquartered in Woodcliff Lake  New Jersey.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,92449000,9424000
+BNNR,Banner Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,195722000,15700000
+BNOX,Bionomics Limited American Depository Shares,None,NASDAQ,TECHNOLOGY,GENERAL,98473000,7275300
+BOWL,Isos Acquisition Corporation,None,NYSE,TRADE & SERVICES,SERVICES-AMUSEMENT & RECREATION SERVICES,1983773000,175349000
+BOXD,Boxed Inc,None,NYSE,TRADE & SERVICES,RETAIL-CATALOG & MAIL-ORDER HOUSES,912688000,68417000
+BRAG,Bragg Gaming Group Inc. Common Shares,Bragg Gaming Group Inc. provides global business-to-business online gaming solutions. The company is headquartered in Toronto  Canada.,NASDAQ,TECHNOLOGY,GENERAL,97984000,19956000
+BRDS,Bird Global Inc.,None,NYSE,MANUFACTURING,MOTORCYCLES  BICYCLES & PARTS,1720175000,239815000
+BRLI,Brilliant Acquisition Corporation,Brilliant Acquisition Corporation is a blank check company. The company is headquartered in Shanghai  China.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,62210000,6111000
+BRLT,Brilliant Earth Group Inc. Class A Common Stock,None,NASDAQ,MANUFACTURING,JEWELRY  SILVERWARE & PLATED WARE,177196000,9583300
+BROS,Dutch Bros Inc.,Dutch Bros Inc. operates and franchises convenience stores. The company is headquartered in Grants Pass  Oregon.,NYSE,TRADE & SERVICES,RETAIL-EATING & DRINKING PLACES,2539533000,34431800
+BRTX,BioRestorative Therapies  Inc. Common Stock,BioRestorative Therapies  Inc.  a life sciences company  focuses on the development of regenerative medicine products and therapies using cell and tissue protocols that primarily involve adult stem cells. The company is headquartered in Melville  New York.,NASDAQ,LIFE SCIENCES,SERVICES-MISC HEALTH & ALLIED SERVICES  NEC,13867100,3493000
+BRZE,Braze  Inc. Class A Common Stock,None,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,5977913000,9943100
+BSAQ,Black Spade Acquisition Co,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,204701000,16900000
+BSFC,Blue Star Foods Corp. Common Stock,Blue Star Foods Corp. The company is headquartered in Miami  Florida.,NASDAQ,MANUFACTURING,PREPARED FRESH OR FROZEN FISH & SEAFOODS,41164500,24575800
+BTBD,BT Brands  Inc. Common Stock,None,NASDAQ,TRADE & SERVICES,RETAIL-EATING PLACES,18891200,6447500
+BTCS,BTCS Inc. Common Stock,BTCS Inc. focuses on blockchain technologies and digital currency ecosystems. The company is headquartered in Silver Spring  Maryland.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,44800300,10275300
+BTTX,Better Therapeutics Inc.,None,NASDAQ,LIFE SCIENCES,SERVICES-HEALTH SERVICES,115875000,23599700
+BWC,Blue Whale Acquisition Corp I,Blue Whale Acquisition Corp I intends to effect a merger  equity share exchange  asset acquisition  share purchase  reorganization or similar business combination with one or more companies or entities. The company is headquartered in Grand Cayman  the Cayman Islands.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,296701000,22940800
+BWNB,Babcock & Wilcox Enterprises  Inc.,None,NYSE,MANUFACTURING,HEATING EQUIPMENT  EXCEPT ELECTRIC & WARM AIR FURNACES,None,0
+BXSL,Blackstone Secured Lending Fund,None,NYSE,TECHNOLOGY,GENERAL,5237357000,168947000
+BZFD,BuzzFeed,None,NASDAQ,TECHNOLOGY,COMMUNICATIONS SERVICES  NEC,704311000,110790000
+CBL,CBL & Associates Properties Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,REAL ESTATE INVESTMENT TRUSTS,600058000,196425000
+CBO,NYSE LISTED TEST STOCK FOR CTS AND CQS,NYSE LISTED TEST STOCK FOR CTS AND CQS,NYSE,TECHNOLOGY,GENERAL,None,0
+CBX,NYSE LISTED TEST,,NYSE,TECHNOLOGY,GENERAL,None,0
+CCAI,Cascadia Acquisition Corp. Class A Common Stock,Cascadia Acquisition Corp. The company is headquartered in Seattle  Washington.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,182625000,15000000
+CCEL,Cryo-Cell International Inc. Common Stock,Cryo-Cell International  Inc. is dedicated to cell processing and cryogenic cell storage with a focus on collecting and preserving umbilical cord blood stem cells for family use. The company is headquartered in Oldsmar  Florida.,NASDAQ,TRADE & SERVICES,SERVICES-SERVICES  NEC,98347000,8529700
+CCRD,Intelligent Systems Corporation,CoreCard Corporation  through its subsidiary  CoreCard Software  Inc.  provides technology solutions and processing services to the financial technology and services market in the United States and the European Union. The company is headquartered in Norcross  Georgia.,NYSE,TECHNOLOGY,GENERAL,327924000,8700600
+CCSI,Consensus Cloud Solutions Inc.,Consensus Cloud Solutions  Inc. provides information delivery services with a worldwide software-as-a-service platform. The company is headquartered in Los Angeles  California.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,1153373000,19902900
+CDAQ,Compass Digital Acquisition Corp. Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,248230000,20000000
+CDRE,Cadre Holdings Inc.,Cadre Holdings  Inc. manufactures and distributes safety and survival equipment that provides protection to users in dangerous or life-threatening situations. The company is headquartered in Jacksonville  Florida.,NYSE,LIFE SCIENCES,ORTHOPEDIC  PROSTHETIC & SURGICAL APPLIANCES & SUPPLIES,847207000,34383400
+CDRO,Codere Online Luxembourg  S.A. Ordinary Shares,Codere Online Luxembourg  SA  operator of online games and sports betting in Latin America. The company is headquartered in Luxembourg.,NASDAQ,TECHNOLOGY,GENERAL,316305000,45122000
+CELZ,Creative Medical Technology Holdings  Inc. Common Stock,Creative Medical Technology Holdings  Inc.  a biotechnology company  focuses on immunology  urology  orthopedics  and neurology using adult stem cell treatments. The company is headquartered in Phoenix  Arizona.,NASDAQ,LIFE SCIENCES,BIOLOGICAL PRODUCTS  (NO DISGNOSTIC SUBSTANCES),19171900,6327400
+CENQ,CENAQ Energy Corp. Class A Ordinary Shares,CENAQ Energy Corp. The company is headquartered in Houston  Texas.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,215891000,17439800
+CFVI,CF Acquisition Corp. VI,CF Acquisition Corp. ,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,438536000,30700000
+CGTX,COGNITION THERAPEUTICS INC,Cognition Therapeutics  Inc.  a clinical-stage biopharmaceutical company  is dedicated to the discovery and development of small molecule therapies targeting age-related degenerative diseases and disorders of the central nervous system and retina. The company is headquartered in Purchase  New York.,NASDAQ,LIFE SCIENCES,BIOLOGICAL PRODUCTS  (NO DISGNOSTIC SUBSTANCES),151831000,22036400
+CHRB,CHRB,None,NYSE,ENERGY & TRANSPORTATION,HAZARDOUS WASTE MANAGEMENT,None,0
+CHWA,CHW Acquisition Corporation Ordinary Share,CHW Acquisition Corporation intends to effect a merger  share exchange  asset acquisition  share purchase  reorganization or similar business combination with one or more businesses. The company is headquartered in Purchase  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,153424000,15687500
+CIAN,Cian PLC,None,NYSE,TECHNOLOGY,GENERAL,829890000,69042000
+CIFR,Cipher Mining Inc,Cipher Mining Inc. is a bitcoin mining company. The company is headquartered in Houston  Texas.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1091468000,246381000
+CIIG,CIIG Capital Partners II  Inc. Class A Common Stock,Color Imaging  Inc. manufactures and sells OEM and aftermarket toners primarily in the United States. The company is headquartered in Norcross  Georgia.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,356500000,28750000
+CING,Cingulate Inc. Common Stock,Cingulate Inc.  a clinical-stage biopharmaceutical company  is focused on developing candidate products for the treatment of neurobiological and central nervous system disorders. The company is headquartered in Kansas City  Kansas.,NASDAQ,TECHNOLOGY,GENERAL,31779400,11309400
+CINT,CI&T Inc,CI&T Inc  provides strategy  design and software engineering services to enable digital transformation for companies worldwide. The company is headquartered in Campinas  Brazil.,NYSE,TECHNOLOGY,GENERAL,1579766000,13043500
+CION,Cion Investment Corp,None,NYSE,TECHNOLOGY,GENERAL,731346000,56958000
+CISO,Cerberus Cyber Sentinel Corporation Common Stock,Cerberus Cyber Sentinel Corporation is a security services company in the United States. ,NASDAQ,TRADE & SERVICES,SERVICES-MANAGEMENT CONSULTING SERVICES,2944750000,117790000
+CIVI,Civitas Resources Inc.,Civitas Solutions  Inc. provides health and human services in the home and community to individuals who must care for individuals with intellectual  developmental  behavioral  and / or medically complex challenges in the United States. ,NYSE,ENERGY & TRANSPORTATION,CRUDE PETROLEUM & NATURAL GAS,4629900000,84456000
+CLAY,Chavant Capital Acquisition Corp.,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,98400000,10000000
+CLBT,Cellebrite DI,Cellebrite DI Ltd. provides digital intelligence solutions for the public and private sectors globally. The company is headquartered in Petah Tikva  Israel.,NASDAQ,TECHNOLOGY,GENERAL,1432547000,187261000
+CLOE,Clover Leaf Capital Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,180667000,14645100
+CLST,Catalyst Bancorp Inc. Common Stock,Catalyst Bancorp  Inc. is focused on operating as a holding company of the St Landry Homestead Federal Savings Bank providing various banking services to individual and corporate clients in Louisiana. The company is headquartered in Opelousas  Louisiana.,NASDAQ,FINANCE,SAVINGS INSTITUTION  FEDERALLY CHARTERED,72738000,5290000
+CMPO,CompoSecure Inc,None,NASDAQ,TECHNOLOGY,GENERAL,114189000,15024900
+CMPX,Compass Therapeutics Inc. Common Stock,Compass Therapeutics  Inc. is a clinical-stage oncology-focused biopharmaceutical company developing proprietary antibody-based therapies to treat multiple human diseases. The company is headquartered in Boston  Massachusetts.,NASDAQ,LIFE SCIENCES,BIOLOGICAL PRODUCTS  (NO DISGNOSTIC SUBSTANCES),338209000,98032000
+CMTG,Claros Mortgage Trust Inc.,None,NYSE,REAL ESTATE & CONSTRUCTION,REAL ESTATE,2248346000,133433000
+CNDA,Concord Acquisition Corp II,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,341369000,28009800
+CNDB,Concord Acquisition Corp III,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,426506000,34500000
+CNTQ,Chardan NexTech Acquisition 2 Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,157809000,15812500
+CNTX,Context Therapeutics Inc. Common Stock,Centrexion Therapeutics Corporation  a late-stage biopharmaceutical company  focuses on identifying  developing  and commercializing novel  non-opioid  and non-addictive therapies to address the unmet medical need for the treatment of chronic pain. The company is headquartered in Boston  Massachusetts.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,30041400,10964000
+COCO,The Vita Coco Company Inc. Common Stock,Vita Coco Company  Inc. develops  markets  and distributes coconut water products under the Vita Coco brand in the United States  Canada  Europe  the Middle East  and Asia Pacific. The company is headquartered in New York  New York.,NASDAQ,MANUFACTURING,BEVERAGES,666178000,55515000
+CORS,Corsair Partnering Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,288522000,28090000
+CPAA,Conyers Park III Acquisition Corp. Class A Common Stock,Conyers Park III Acquisition Corp. The company is headquartered in Naples  Florida.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,435094000,35700000
+CRDL,Cardiol Therapeutics Inc. Class A Common Shares,Cardiol Therapeutics Inc.  a clinical-phase biotechnology company  focuses on the research and development of anti-inflammatory therapies for the treatment of cardiovascular diseases (CVD). The company is headquartered in Oakville  Canada.,NASDAQ,TECHNOLOGY,GENERAL,107920000,59297000
+CRGY,Crescent Energy Company,None,NYSE,TECHNOLOGY,GENERAL,600801000,43099100
+CRXT,Clarus Therapeutics Holdings Inc,None,NASDAQ,LIFE SCIENCES,BIOLOGICAL PRODUCTS  (NO DISGNOSTIC SUBSTANCES),52857000,24025800
+CTRA,Coterra Energy Inc,Coterra Energy Inc.  an independent oil and gas company  explores  exploits  develops  produces and markets oil and gas properties in the United States. The company is headquartered in Houston  Texas.,NYSE,ENERGY & TRANSPORTATION,CRUDE PETROLEUM & NATURAL GAS,17028187000,813578000
+CTV,Innovid Corp.,Qwest Corporation  an integrated communications company  provides communications services to business and residential customers in Arizona  Colorado  Idaho  Iowa  Minnesota  Montana  Nebraska  New Mexico  North Dakota  Oregon  South Dakota  Utah  Washington and Wyoming. The company is headquartered in Monroe  Louisiana.,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,769555000,118942000
+CVT,Cvent Holding Corp.,None,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,4402054000,507149000
+CWAN,Clearwater Analytics Holdings Inc.,None,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,3761940000,47366100
+CYN,Cyngn Inc. Common Stock,Cyngn  Inc.  an autonomous vehicle (AV) technology company  develops autonomous driving software. The company is headquartered in Menlo Park  California.,NASDAQ,TECHNOLOGY,GENERAL,123448000,26434300
+CZOO,Cazoo Group Ltd,None,NYSE,TRADE & SERVICES,RETAIL-AUTO DEALERS & GASOLINE STATIONS,4392574000,111229000
+DATS,DatChat Inc. Common Stock,None,NASDAQ,TECHNOLOGY,TELEGRAPH & OTHER MESSAGE COMMUNICATIONS,62516000,19597400
+DAVE,BBQ Holdings Inc,None,NASDAQ,TECHNOLOGY,GENERAL,43587300,0
+DCGO,DocGo Inc,None,NASDAQ,ENERGY & TRANSPORTATION,LOCAL & SUBURBAN TRANSIT & INTERURBAN HWY PASSENGER TRANS,928640000,100069000
+DCRD,Decarbonization Plus Acquisition Corporation IV Class A Ordinary Share,Decarbonization Plus Acquisition Corporation IV intends to effect a merger  merger  share exchange  asset acquisition  share purchase  reorganization or similar business combination with one or more businesses. The company is headquartered in Menlo Park  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,389382000,31625000
+DERM,Journey Medical Corporation Common Stock,Dermira  Inc.  a biopharmaceutical company  develops and markets therapies for patients with dermatological diseases in the United States. ,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,81632000,10659600
+DGHI,Digihost Technology Inc. Common Subordinate Voting Shares,None,NASDAQ,TECHNOLOGY,GENERAL,119141000,25029600
+DH,Definitive Healthcare Corp. Class A Common Stock,None,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,2689043000,99263000
+DHBC,DHB Capital Corp,DHB Capital Corp. The company is headquartered in Glen Cove  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,350060000,28750000
+DICE,Dice Molecules Holdings LLC,DICE Therapeutics  Inc.  a biopharmaceutical company  creates several oral therapeutic candidates to treat chronic diseases in immunology and other therapeutic areas. The company is headquartered in South San Francisco  California.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,886586000,38231400
+DMAQ,Deep Medicine Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,162196000,0
+DMYS,dMY Technology Group Inc. VI,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,296743000,24150000
+DNA,Ginkgo Bioworks Holdings,None,NYSE,LIFE SCIENCES,BIOLOGICAL PRODUCTS  (NO DISGNOSTIC SUBSTANCES),11864105000,1188710000
+DNZ,D and Z Media Acquisition Corp,D and Z Media Acquisition Corp. The company is headquartered in Atlanta  Georgia.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,350391000,28750000
+DOUG,Douglas Elliman Inc.,None,NYSE,TECHNOLOGY,GENERAL,817621000,77721000
+DRAY,Macondray Capital Acquisition Corp. I Class A Ordinary Shares,Macondray Capital Acquisition Corp. The company is headquartered in Woodside  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,351828000,28750000
+DRMA,Dermata Therapeutics Inc. Common Stock,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,14242000,8328600
+DRUG,Bright Minds Biosciences Inc. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,38502400,11846900
+DSAQ,Direct Selling Acquisition Corp.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,285488000,23000000
+DTC,Solo Brands Inc.,Solo Brands  Inc. operates a direct-to-consumer platform offering branded outdoor lifestyle products in the United States. The company is headquartered in Southlake  Texas.,NYSE,MANUFACTURING,SPORTING & ATHLETIC GOODS  NEC,971251000,63398000
+DTG,Dollar Thrifty Automotive Group Inc,None,NYSE,ENERGY & TRANSPORTATION,ELECTRIC SERVICES,23158160000,0
+DTRT,DTRT Health Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,287788000,23000000
+DWAC,Digital World Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1909114000,30027200
+DWIN,Delwinds Insurance Acquisition Corp.,Delwinds Insurance Acquisition Corp. The company is headquartered in Houston  Texas.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,254793000,20757500
+DXLG,Destination XL Group Inc. Common Stock,Destination XL Group  Inc.  is a specialty retailer of large and tall men's clothing and shoes in the United States and Canada. The company is headquartered in Canton  Massachusetts.,NASDAQ,TRADE & SERVICES,RETAIL-FAMILY CLOTHING STORES,379524000,63254000
+ECAT,BlackRock ESG Capital Allocation Trust,None,NYSE,TECHNOLOGY,GENERAL,94700,5000
+EDNC,Endurance Acquisition Corp. Class A Ordinary Shares,Endurance Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,250805000,20000000
+EFTR,Effector Therapeutics Inc,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,322974000,40371700
+EICA,Eagle Point Income Company Inc.,None,NYSE,TECHNOLOGY,GENERAL,None,0
+ELC,Entergy Louisiana LLC,Entergy Louisiana  LLC generates  transmits  distributes and sells electrical power to retail and wholesale customers in Louisiana. ,NYSE,TECHNOLOGY,GENERAL,None,0
+ELYM,Eliem Therapeutics Inc Common Stock,Eliem Therapeutics  Inc.  a clinical-stage biotechnology company  focuses on developing novel therapies for neuronal excitability disorders to address unmet needs in chronic pain  psychiatry  epilepsy  and other central nervous system disorders. and peripheral in the United States. The company is headquartered in Redmond  Washington.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,252531000,26554300
+EMBK,Embark Technology  Inc. Common Stock,None,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN,3933589000,362474000
+ENER,Accretion Acquisition Corp. Common Stock,Accretion Acquisition Corp. ,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,253451000,25995000
+ENFN,Enfusion Inc.,Enfusion Inc. provides software as a service for the investment management industry in the United States  Europe  the Middle East  Africa  and Asia Pacific. The company is headquartered in Chicago  Illinois.,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,1299861000,65583000
+ENJY,Enjoy Technology Inc,Enjoy Technology  Inc. operates mobile retail stores in the United States  the United Kingdom  and Canada. The company is headquartered in Palo Alto  California.,NASDAQ,TRADE & SERVICES,SERVICES-BUSINESS SERVICES  NEC,480880000,119622000
+ENTF,Enterprise 4.0 Technology Acquisition Corp. Class A Ordinary Shares,Company 4. The company is headquartered in Burlingame  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+EOCW,Elliott Opportunity II Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,745114000,60950000
+EPWR,Empowerment & Inclusion Capital I Corp,Empowerment and inclusion Capital I Corp. The company is headquartered in New York  New York.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,336720000,27600000
+EQHA,EQ Health Acquisition Corp,EQ Health Acquisition Corp. The company is headquartered in Austin  Texas.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,267850000,22000000
+EQRX,EQRx Inc,EQRx  Inc.  a pharmaceutical company  is engaged in the development of drugs primarily for the treatment of cancer and immuno-inflammatory diseases in the United States. The company is headquartered in Cambridge  Massachusetts.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,3267141000,487633000
+ESAC,ESGEN Acquisition Corporation Class A Ordinary Shares,ESGEN Acquisition Corporation is a blank checking company focused on effecting a merger  stock exchange  asset acquisition  stock purchase  reorganization  or similar business combination with one or more companies. The company is headquartered in Dallas  Texas.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+ESMT,EngageSmart LLC,EngageSmart  LLC. The company is headquartered in Braintree  Massachusetts.,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,3547523000,161692000
+ETD,Ethan Allen Interiors Inc,Ethan Allen Interiors Inc. is an interior design company and home furnishings manufacturer and retailer in the United States and internationally. The company is headquartered in Danbury  Connecticut.,NYSE,MANUFACTURING,WOOD HOUSEHOLD FURNITURE  (NO UPHOLSTERED),682525000,25260000
+EVO,Evotec SE American Depositary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,7883062000,347829000
+EVTL,Vertical Aerospace Ltd,None,NYSE,TECHNOLOGY,GENERAL,1466036000,209135000
+EXAI,Exscientia Limited American Depositary Shares,Exscientia Limited  an artificial intelligence-powered pharmaceutical technology company  is dedicated to drug discovery  design and development. The company is headquartered in Oxford  the United Kingdom.,NASDAQ,TECHNOLOGY,GENERAL,2481197000,120388000
+EXFY,Expensify  Inc. Class A Common Stock,Expensify  Inc. provides a cloud-based expense management software platform for individuals  small businesses  and corporations in the United States and internationally. The company is headquartered in Portland  Oregon.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,3079285000,67520000
+EZFL,EzFill Holdings Inc. Common Stock,EZFill Holdings Inc. provides on-demand mobile fuel and gas delivery services to consumers and businesses in South Florida. The company is headquartered in Miami  Florida.,NASDAQ,TRADE & SERVICES,RETAIL-AUTO DEALERS & GASOLINE STATIONS,37863700,26112900
+FATH,Fathom Digital Manufacturing Corporation,None,NYSE,TECHNOLOGY,GENERAL,317391000,51608000
+FATP,Fat Projects Acquisition Corp Class A Ordinary Share,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,141712000,11615000
+FBRT,Franklin BSP Realty Trust Inc,Franklin BSP Realty Trust  Inc. is a real estate investment trust that originates  acquires and manages a portfolio of commercial real estate debt investments secured by properties located in the United States and internationally. The company is headquartered in New York  New York.,NYSE,REAL ESTATE & CONSTRUCTION,REAL ESTATE INVESTMENT TRUSTS,674214000,43951400
+FCUV,Focus Universal Inc. Common Stock,Focus Universal Inc. develops and manufactures smart instrumentation platforms and devices. The company is headquartered in Ontario  California.,NASDAQ,LIFE SCIENCES,INDUSTRIAL INSTRUMENTS FOR MEASUREMENT  DISPLAY  AND CONTROL,384146000,43259700
+FHLT,Future Health ESG Corp. Common stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+FIAC,Focus Impact Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,283762000,23000000
+FICV,Frontier Investment Corp Class A Ordinary Shares,Frontier Investment Corp focuses on effecting a merger  capital stock  asset acquisition  stock purchase  reorganization or business combination related to one or more companies. The company is headquartered in Grand Cayman  Cayman Islands.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,435150000,20000000
+FINW,FinWise Bancorp Common Stock,FinWise Bancorp is FinWise Bank's banking holding company that offers various banking services to individual and corporate clients. The company is headquartered in Murray  Utah.,NASDAQ,TECHNOLOGY,GENERAL,188481000,12247000
+FLAG,First Light Acquisition Group Inc.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,282325000,23000000
+FLNC,Fluence Energy Inc. Class A Common Stock,Fluence Energy  Inc. provides energy storage products and services and digital applications for renewable energy and storage applications globally. ,NASDAQ,TECHNOLOGY,GENERAL,1886894000,54143000
+FLYA,SOAR Technology Acquisition Corp.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,310037000,23000000
+FNA,Paragon 28 Inc.,Paragon 28  Inc. designs  develops  distributes  and sells foot and ankle surgical systems in the United States and internationally. The company is headquartered in Englewood  Colorado.,NYSE,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,1337324000,76375000
+FNGR,FingerMotion  Inc. Common Stock,FingerMotion  Inc.  a specialist mobile data company  provides mobile payment and top-up platform solutions in China. The company is headquartered in New York  New York.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,225355000,42201300
+FNVT,Finnovate Acquisition Corp. Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,214085000,17400000
+FNWD,Finward Bancorp Common Stock,Finward Bancorp is the Peoples Bank holding company offering a variety of banking products and services. The company is headquartered in Munster  Indiana.,NASDAQ,FINANCE,SAVINGS INSTITUTION  FEDERALLY CHARTERED,162024000,3479100
+FORG,ForgeRock Inc.,ForgeRock  Inc. operates a digital identity platform to protect  manage  and govern the identities of customers  employees  partners  application programming interfaces (APIs)  microservices  devices  and the Internet of Things globally. The company is headquartered in San Francisco  California.,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,1870559000,12650000
+FOUN,Founder SPAC Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,393731000,31625000
+FRLA,Fortune Rise Acquisition Corporation Class A Common Stock,Fortune Rise Acquisition Corporation intends to enter into a merger  stock exchange  asset acquisition  stock purchase  reorganization  or similar business combination with one or more companies. The company is headquartered in Metuchen  New Jersey.,NASDAQ,TECHNOLOGY,GENERAL,127940000,10440500
+FRSH,Freshworks Inc. Class A Common Stock,Papa Murphy's Holdings  Inc. owns  operates and franchises Take? The company is headquartered in Vancouver  Washington.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,6341361000,34470200
+FTNW,FTE Networks Inc,FTE Networks  Inc. provides technology-oriented solutions for smart platforms  network infrastructure  and buildings in the United States. The company is headquartered in New York  New York.,NYSE,TECHNOLOGY,TELEPHONE COMMUNICATIONS (NO RADIOTELEPHONE),31298000,6000000
+FTVI,FinTech Acquisition Corp. VI Class A Common Stock,FinTech Acquisition Corp. The company is headquartered in Philadelphia  Pennsylvania.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,335682000,25690000
+FWBI,First Wave BioPharma Inc,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,23379700,14797300
+FWRG,First Watch Restaurant Group Inc. Common Stock,None,NASDAQ,TRADE & SERVICES,RETAIL-EATING PLACES,1003232000,59048000
+GATE,Marblegate Acquisition Corp. Class A Common Stock,Marblegate Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,417809000,30910000
+GBLL,Global Indemnity Group  LLC,Green Ballast  Inc. develops  markets and distributes electronic ballasts for fluorescent lamps in the commercial lighting industry. The company is headquartered in Memphis  Tennessee.,NYSE,TECHNOLOGY,GENERAL,263140,75183000
+GDEV,Nexters Inc. Ordinary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,1611489000,196523000
+GFAI,Guardforce AI Co. Limited Ordinary Shares,None,NASDAQ,TRADE & SERVICES,SERVICES-DETECTIVE  GUARD & ARMORED CAR SERVICES,24382100,21201800
+GFS,GlobalFoundries Inc. Ordinary Shares,GLOBALFOUNDRIES Inc. is a global semiconductor foundry. The company is headquartered in Malta  New York.,NASDAQ,TECHNOLOGY,GENERAL,34947600000,531846000
+GGGV,G3 VRM Acquisition Corp. Class A Common Stock,G3 VRM Acquisition Corp. The company is headquartered in Boston  Massachusetts.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,139722000,11301700
+GGMC,Glenfarne Merger Corp,Glenfarne Merger Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,340324000,28109300
+GIA,GigCapital 5 Inc.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,292200000,29545000
+GIAC,Gesher I Acquisition Corp. Class A Ordinary Shares,Gesher I Acquisition Corp. The company is headquartered in Tel Aviv  Israel.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,142252000,14575000
+GIPR,Generation Income Properties Inc. Common Stock,Generation Income Properties (GIP) is a Tampa  Florida-based Real Estate Investment Trust that specializes in acquiring a diversified portfolio of high-quality single-tenant properties. ,NASDAQ,REAL ESTATE & CONSTRUCTION,REAL ESTATE INVESTMENT TRUSTS,13393200,2160200
+GLAQ,Globis Acquisition Corp,Globis Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,153217000,15050800
+GLEE,Gladstone Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,132721000,10702300
+GLLI,Globalink Investment Inc. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,146461000,14945000
+GNTA,Genenta Science S.p.A. American Depositary Shares,Genenta Science SpA  a clinical-stage biotechnology company  is dedicated to the development of hematopoietic stem cell gene therapies for the treatment of solid tumors in Italy. The company is headquartered in Milan  Italy.,NASDAQ,TECHNOLOGY,GENERAL,197147000,18120100
+GOGN,GoGreen Investments Corporation,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,359783000,28935000
+GRAB,Grab Holdings Limited Class A Ordinary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,27272546000,3618210000
+GRCY,Greencity Acquisition Corporation,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,54441000,5260000
+GREE,Greenidge Generation Holdings Inc,Greenidge Generation Holdings Inc. owns and operates bitcoin mining and power generation facilities in New York. The company is headquartered in Dresden  New York.,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER PROCESSING & DATA PREPARATION,704381000,11605200
+GTAC,Global Technology Acquisition Corp. I Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+GTLB,GitLab Inc. Class A Common Stock,GitLab Inc.  develops software for the software development life cycle. The company is headquartered in San Francisco  California.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,11292952000,12600000
+GUG,Guggenheim Active Allocation Fund,None,NYSE,TECHNOLOGY,GENERAL,None,0
+GWH,ESS Tech Inc,ESS Inc. develops and markets iron flow batteries for utility and commercial energy storage needs globally. The company is headquartered in Wilsonville  Oregon.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1636286000,144676000
+GWII,Good Works II Acquisition Corp. Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,288414000,29400000
+HCP,HashiCorp  Inc. Class A Common Stock,Healthpeak Properties  Inc. is a fully integrated real estate investment trust (REIT) and an S&P 500 company. ,NASDAQ,TECHNOLOGY,GENERAL,14101742000,15300000
+HCTI,Healthcare Triangle Inc. Common Stock,Healthcare Triangle  Inc. is a healthcare information technology company. The company is headquartered in Pleasanton  California.,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN,64257000,35113300
+HCVI,Hennessy Capital Investment Corp. VI Class A Common Stock,Hennessy Capital Investment Corp. The company is headquartered in Wilson  Wyoming.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,10000000
+HGTY,Hagerty Inc,None,NYSE,FINANCE,INSURANCE AGENTS  BROKERS & SERVICE,5497123000,82328000
+HHGC,HHG Capital Corporation Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,73948000,7477000
+HLBZ,Helbiz Inc,None,NASDAQ,LIFE SCIENCES,SERVICES-MISC HEALTH & ALLIED SERVICES  NEC,180775000,16259000
+HLTH,Cue Health Inc. Common Stock,Nobilis Health Corp. The company is headquartered in Houston  Texas.,NASDAQ,LIFE SCIENCES,LABORATORY ANALYTICAL INSTRUMENTS,1852956000,146363000
+HPLT,Home Plate Acquisition Corporation Class A Common Stock,Home Plate Acquisition Corporation focuses on effecting a merger  capital stock exchange  asset acquisition  stock purchase  reorganization or business combination related to one or more businesses. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,249517000,20000000
+HRT,HireRight Holdings Corporation,Arrhythmia Research Technology  Inc. (ART) through its wholly owned Massachusetts subsidiary  Micron Products  Inc. (Micron and together with ART  the Company) is a diversified manufacturer specializing in plastic molding  precision machining of metals and plastics and precious metal coating. ,NYSE,TRADE & SERVICES,SERVICES-BUSINESS SERVICES  NEC,1265484000,79390000
+HTAQ,Hunt Companies Acquisition Corp. I,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,287500000,23000000
+HUMA,Humacyte Inc,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,746772000,103003000
+HWEL,Healthwell Acquisition Corp. I Class A Common Stock,Healthwell Acquisition Corp. The company is headquartered in Winnetka  Illinois.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,302187000,25000000
+HWKZ,Hawks Acquisition Corp,Hawks Acquisition Corp focuses on effecting a merger  stock exchange  asset acquisition  stock purchase  reorganization or similar business combination with one or more companies. The company is headquartered in New York  New York.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,278587000,23000000
+HYPR,HealthCor Catalio Acquisition Corp,None,NASDAQ,LIFE SCIENCES,X-RAY APPARATUS & TUBES & RELATED IRRADIATION APPARATUS,509136000,54977000
+HYW,Hywin Holdings Ltd.,None,NASDAQ,FINANCE,INVESTMENT ADVICE,157640000,28000000
+ICCM,Icecure Medical,IceCure Medical Ltd develops and markets minimally invasive cryoablation therapies for the women's health and oncology markets. The company is headquartered in Caesarea  Israel.,NASDAQ,TECHNOLOGY,GENERAL,111500000,35780300
+ICNC,Iconic Sports Acquisition Corp.,Iconic Sports Acquisition Corp. The company is headquartered in George Town  the Cayman Islands.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,427800000,34500000
+IFBD,Infobird Co. Ltd,Infobird Co.  Ltd is a software as a service (SaaS) provider of artificial intelligence (AI) enabled customer interaction solutions in the People's Republic of China. The company is headquartered in Beijing  the People's Republic of China.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,30552500,25250000
+IGAP,Integrity Applications  Inc. Common Stock,GlucoTrack  Inc.  a medical device company  designs  develops and markets non-invasive glucose monitoring devices for use by people with diabetes and prediabetics in Europe and Asia Pacific. The company is headquartered in Or Yehuda  Israel.,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,69606000,15447500
+IHS,IHS Holding Limited,IHS Holding Limited owns  operates and develops shared telecommunications infrastructure in Africa  Latin America  Europe and the Middle East. The company is headquartered in London  the United Kingdom.,NYSE,TECHNOLOGY,GENERAL,4432010000,328054000
+IMAQ,International Media Acquisition Corp. Class A Common Stock,International Media Acquisition Corp. The company is headquartered in North Brunswick  New Jersey.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,234043000,23796900
+IMMX,Immix Biopharma  Inc. Common Stock,Immix Biopharma  Inc.  a clinical-stage biopharmaceutical company  is dedicated to the development of various tissue-specific therapies in oncology and inflammation in the United States and Australia. The company is headquartered in Los Angeles  California.,NASDAQ,TECHNOLOGY,GENERAL,49161700,7575000
+IMPP,Imperial Petroleum Inc,None,NASDAQ,TECHNOLOGY,GENERAL,None,0
+IMRN,Immuron Limited,Immuron Limited  a biopharmaceutical company  researches and develops oral immunotherapy polyclonal antibodies for the treatment and prevention of infectious and immunomodulated diseases in Australia  the United States and internationally. The company is headquartered in Carlton  Australia.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,17740700,5681200
+INAQ,Insight Acquisition Corp.,INSU Acquisition Corp. The company is headquartered in Philadelphia  Pennsylvania.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,574681000,23540000
+INCR,Intercure Ltd. Ordinary Shares,Syneos Health  Inc.  a contract research organization  provides various clinical development services for the medical device and biopharmaceutical industries in North America  Europe  the Middle East and Africa  Asia-Pacific  and Latin America. The company is headquartered in Raleigh  North Carolina.,NASDAQ,TECHNOLOGY,GENERAL,315408000,44994000
+INFA,Informatica Inc.,Informatica Inc. is dedicated to developing a software platform powered by artificial intelligence. The company is headquartered in Redwood City  California.,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,9545042000,234150000
+INKT,MiNK Therapeutics Inc. Common Stock,MiNK Therapeutics  Inc. is a clinical-stage biopharmaceutical company dedicated to the discovery  development  and commercialization of allogeneic  ready-to-use  invariant natural killer T-cell therapies for treating cancer and other immune-mediated diseases. The company is headquartered in New York  New York.,NASDAQ,LIFE SCIENCES,BIOLOGICAL PRODUCTS  (NO DISGNOSTIC SUBSTANCES),144739000,33504400
+INTE,Integral Acquisition Corporation 1 Class A Common Stock,The Comprehensive Acquisition Corporation 1 intends to effect a merger  capital stock exchange  asset acquisition  stock purchase  reorganization or similar business combination with one or more businesses. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,112930000,11500000
+IOBT,IO Biotech  Inc. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,205453000,28815300
+IONM,Assure Holdings Corp. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,70119000,12818900
+IONQ,IONQ Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,3164486000,192487000
+IOT,Samsara Inc.,Income Opportunity Realty Investors  Inc. (IOT) is dedicated to investing in real estate. ,NYSE,TECHNOLOGY,GENERAL,12524287000,465371000
+IPAX,Inflection Point Acquisition Corp. Class A Ordinary Share,Inflection Point Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,TECHNOLOGY,GENERAL,319528000,32975000
+IQMD,Intelligent Medicine Acquisition Corp. Class A Common Stock,Smart Medicine Acquisition Corporation The company is headquartered in Bethesda  Maryland.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,280665000,23175000
+IREN,Iris Energy Limited Ordinary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,838200000,55036000
+IRNT,Ironnet Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,368182000,88719000
+ISO,IsoPlexis Corp,IsoPlexis Corporation  a life sciences company  offers solutions for the development of curative medicines and personalized therapies in the United States and Europe. The company is headquartered in Branford  Connecticut.,NASDAQ,LIFE SCIENCES,LABORATORY ANALYTICAL INSTRUMENTS,361891000,38954900
+ITQ,Itiquira Acquisition Corp,Itiquira Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,280600000,23000000
+IVT,Inventrust Properties Corp,InvenTrust Properties Corp. ,NYSE,REAL ESTATE & CONSTRUCTION,REAL ESTATE INVESTMENT TRUSTS,2023111000,71261000
+IXAQ,IX Acquisition Corp. Class A Ordinary Share,IX Acquisition Corp. The company is headquartered in London  United Kingdom.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,279162000,23000000
+JAQC,Jupiter Acquisition Corporation Common stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,195059000,16357100
+JATT,JATT Acquisition Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,170258000,13800000
+JMAC,Maxpro Capital Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,135646000,10840000
+JOBY,Joby Aviation,None,NYSE,MANUFACTURING,AIRCRAFT,4517127000,603894000
+JSPR,Jasper Therapeutics Inc,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,301311000,37853200
+JUGG,Jaws Juggernaut Acquisition Corporation Class A Ordinary Share,Jaws Juggernaut Acquisition Corporation  a blank checking company  intends to effect a merger  stock exchange  asset acquisition  stock purchase  reorganization or business combination involving one or more companies or entities. The company is headquartered in Miami Beach  Florida.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,338445000,27600000
+JUN,Juniper II Corp.,None,NYSE,TECHNOLOGY,GENERAL,368517000,29900000
+JXN,JACKSON FINANCIAL INC CLASS A,None,NYSE,FINANCE,LIFE INSURANCE,4261285000,93100000
+KCGI,Kensington Capital Acquisition Corp V,Kensington Capital Acquisition Corp. The company is headquartered in Westbury  New York.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,339825000,27600000
+KD,Kyndryl Holdings Inc.,None,NYSE,TECHNOLOGY,SERVICES-COMPUTER PROCESSING & DATA PREPARATION,4231687000,224136000
+KIND,Nextdoor Holdings  Inc.,None,NYSE,TECHNOLOGY,SERVICES-COMPUTER PROGRAMMING  DATA PROCESSING  ETC.,2967925000,78954000
+KORE,KORE Group Holdings Inc,None,NYSE,TECHNOLOGY,TELEPHONE COMMUNICATIONS (NO RADIOTELEPHONE),501766000,71989000
+KPRX,Kiora Pharmaceuticals Inc,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,14298000,12653100
+KTTA,Pasithea Therapeutics Corp.,Pasithea Therapeutics Corp. The company is headquartered in Miami Beach  Florida.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,38304700,21888400
+LAX,8i Acquisition 2 Corp. Ordinary Shares,8i Acquisition 2 Corp. The company is headquartered in Singapore.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,107967000,11073500
+LCW,Learn CW Investment Corporation,Learn CW Investment Corporation focuses on effecting a merger  stock exchange  asset acquisition  stock purchase  reorganization  or other similar business combination with one or more companies. The company is headquartered in Los Angeles  California.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,282613000,23000000
+LFG,Archaea Energy Inc,None,NYSE,ENERGY & TRANSPORTATION,GAS & OTHER SERVICES COMBINED,1124955000,58077000
+LGTO,Legato Merger Corp. II Common Stock,Legato Merger Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,353005000,35911000
+LIAN,LianBio American Depositary Shares,Lianbio operates in the healthcare industry with a focus on the pharmaceutical business. The company is headquartered in Camana Bay  Cayman Islands.,NASDAQ,TECHNOLOGY,GENERAL,645579000,107239000
+LIBY,Liberty Resources Acquisition Corp. Class A Common Stock,Liberty Resources Acquisition Corp. ,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,146966000,12030300
+LICY,Li-Cycle Holdings Corp,None,NYSE,TECHNOLOGY,GENERAL,1643223000,163180000
+LIDR,Aeye Inc,None,NASDAQ,MANUFACTURING,MOTOR VEHICLE PARTS & ACCESSORIES,813215000,154898000
+LILM,Lilium NV,Lilium GmbH designs  develops and operates an on-demand air taxi service for urban and suburban mobility. The company is headquartered in Wessling  Germany with the additional locations worldwide.,NASDAQ,TECHNOLOGY,GENERAL,2247310000,259697000
+LION,Lionheart III Corp Class A Common Stock,Fidelity Southern Corporation is the banking holding company of Fidelity Bank that provides financial products and services primarily to individuals and small and medium-sized businesses in the United States. The company is headquartered in Atlanta  Georgia.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,856550000,0
+LITM,Snow Lake Resources Ltd. Common Shares,None,NASDAQ,TECHNOLOGY,GENERAL,104556000,16210200
+LITT,Logistics Innovation Technologies Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,412910000,34089600
+LLL,JX Luxventure Ltd,L3 Technologies  Inc. provides aircraft maintenance  simulation  and training  night vision and image intensification equipment  and security and detection systems used on military  national security  and commercial platforms in the United States and internationally. The company is headquartered in New York  New York.,NASDAQ,TRADE & SERVICES,WHOLESALE-APPAREL  PIECE GOODS & NOTIONS,10107900,4433300
+LMDX,LumiraDx Limited Common Shares,None,NASDAQ,TECHNOLOGY,GENERAL,2238922000,207458000
+LOCC,Live Oak Crestview Climate Acquisition Corp.,Live Oak Crestview Climate Acquisition Corp. The company is headquartered in Memphis  Tennessee.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,251062000,20000000
+LOCL,Local Bounti Corporation,None,NYSE,LIFE SCIENCES,AGRICULTURAL PRODUCTION-CROPS,602687000,86345000
+LTH,Life Time Group Holdings Inc.,Life Time Group Holdings  Inc. offers health  fitness and wellness experiences to a community of individual members in the United States and Canada. The company is headquartered in Chanhassen  Minnesota.,NYSE,TRADE & SERVICES,SERVICES-MEMBERSHIP SPORTS & RECREATION CLUBS,3567749000,193060000
+LTRY,Lottery.com Inc.,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,311351000,50381000
+LUCD,Lucid Diagnostics Inc. Common Stock,Lucid Diagnostics Inc. is a commercial stage medical diagnostic technology company. The company is headquartered in New York  New York.,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,185883000,36808600
+LVAC,LAVA Medtech Acquisition Corp. Class A Common Stock,LAVA Medtech Acquisition Corp. ,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+LVLU,Lulu's Fashion Lounge Holdings  Inc. Common Stock,None,NASDAQ,TRADE & SERVICES,RETAIL-CATALOG & MAIL-ORDER HOUSES,387669000,38421100
+LVO,LiveOne Inc,LiveOne  Inc.  a digital media company  is engaged in the acquisition  distribution  and monetization of live music  Internet radio  podcasting / vodcasting  and music-related streaming and video content. ,NASDAQ,TRADE & SERVICES,RETAIL-EATING PLACES,93561000,79289000
+LWLG,Lightwave Logic Inc. Common Stock,Lightwave Logic  Inc.  a development-stage company  focuses on the development of photonic devices and non-linear optical polymer material systems for fiber optic data communications and optical computing markets in the United States. The company is headquartered in Englewood  Colorado.,NASDAQ,MANUFACTURING,MISCELLANEOUS PLASTICS PRODUCTS,1705005000,108117000
+LYLT,Loyalty Ventures Inc,None,NASDAQ,TRADE & SERVICES,SERVICES-BUSINESS SERVICES  NEC,801478000,24585200
+MAQC,Maquia Capital Acquisition Corporation Class A Common Stock,Maquia Capital Acquisition Corporation focuses on effecting a merger  capital stock exchange  asset acquisition  stock purchase  reorganization or similar business combination with one or more businesses. The company is headquartered in Miami  Florida.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,225060000,17893500
+MBSC,M3-Brigade Acquisition III Corp.,M3-Brigade Acquisition III Corp. ,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,366000000,30000000
+MCAA,Mountain & Co. I Acquisition Corp. Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,287644000,23000000
+MCAG,Mountain Crest Acquisition Corp. V Common Stock,Mountain Crest Acquisition Corp. ,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,88093000,9025900
+MDVA,Modiv Inc Preferred Series A,Modiv Inc.  (the? ,NYSE,REAL ESTATE & CONSTRUCTION,REAL ESTATE INVESTMENT TRUSTS,None,0
+MDXH,MDxHealth SA American Depositary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,156263000,15596900
+MEAC,Mercury Ecommerce Acquisition Corp Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,222813000,18041500
+MEGI,MainStay CBRE Global Infrastructure Megatrends Fund,None,NYSE,TECHNOLOGY,GENERAL,None,0
+MEKA,MELI Kaszek Pioneer Corp Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,343026000,29725000
+MEOA,Minority Equality Opportunities Acquisition Inc. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,159067000,12808100
+MIGI,Mawson Infrastructure Group Inc. Common Stock,Mawson Infrastructure Group Inc.  a digital infrastructure provider  operates cryptocurrency mining and digital asset infrastructure activities in the United States and Australia. The company is headquartered in North Sydney  Australia.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,415387000,69001000
+MIR,Mirion Technologies Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,2195286000,199523000
+MITA,Coliseum Acquisition Corp. Class A Ordinary Share,Coliseum Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,182250000,15000000
+ML,MoneyLion Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,855602000,229384000
+MLAI,McLaren Technology Acquisition Corp. Class A Common Stock,McLaren Technology Acquisition Corp. The company is headquartered in Irvine  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,249298000,20125000
+MLKN,MillerKnoll Inc,None,NASDAQ,MANUFACTURING,OFFICE FURNITURE,2969567000,75774000
+MNDT,Mandiant Inc.,Mandiant  Inc. is dedicated to providing cyber defense solutions. The company is headquartered in Milpitas  California.,NASDAQ,TECHNOLOGY,COMPUTER PERIPHERAL EQUIPMENT  NEC,4002983000,239987000
+MNTS,Momentus Inc,None,NASDAQ,MANUFACTURING,GUIDED MISSILES & SPACE VEHICLES & PARTS,279171000,73855000
+MOBQ,Mobiquity Technologies  Inc. Common Stock,Mobiquity Technologies  Inc.  is a marketing and advertising technology and data intelligence company in the United States. The company is headquartered in Shoreham  New York.,NASDAQ,TRADE & SERVICES,SERVICES-ADVERTISING,14432200,6167600
+MPRA,Mercato Partners Acquisition Corporation Class A Common Stock,Mercato Partners Acquisition Corporation intends to acquire assets and businesses through a merger  stock exchange  stock purchase  reorganization or similar business combination. The company is headquartered in Cottonwood Heights  Utah.,NASDAQ,TECHNOLOGY,GENERAL,283188000,23000000
+MRAI,Marpai Inc. Class A Common Stock,Marpai  Inc.  a technology-driven healthcare payer  focuses on serving the self-insured employer market. The company is headquartered in Tampa  Florida.,NASDAQ,LIFE SCIENCES,SERVICES-MISC HEALTH & ALLIED SERVICES  NEC,88106000,20347900
+MTAL,Metals Acquisition Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,319503000,26514800
+MTRY,Monterey Bio Acquisition Corporation Common Stock,Monterey Bio Acquisition Corporation focuses on effecting a merger  capital stock exchange  asset acquisition  stock purchase  reorganization or business combination related to one or more businesses. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,141594000,14375000
+MULG,MULIANG VIAGOO TECHNOLOGY INC.,Muliang Viagoo Technology Inc.  develops  manufactures and sells organic fertilizers and bio-organic fertilizers for use in the agricultural industry in the People's Republic of China. The company is headquartered in Shanghai  China.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,269521000,38503000
+MULN,Mullen Automotive Inc,None,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER PROCESSING & DATA PREPARATION,131180000,23383200
+MYNA,Mynaric AG American Depository Shares,None,NASDAQ,TECHNOLOGY,GENERAL,267181000,20971800
+MYNZ,Mainz Biomed B.V. Ordinary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,121667000,11710000
+NCAC,Newcourt Acquisition Corp Class A Ordinary Share,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,323809000,26140000
+NFYS,Enphys Acquisition Corp.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,416587000,34500000
+NHIC,NewHold Investment Corp. II Class A Common Stock,NewHold Investment Corp. The company is headquartered in Houston  Texas.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,205922000,17250000
+NLIT,Northern Lights Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,149330000,12028200
+NMAI,Nuveen Multi-Asset Income Fund,None,NYSE,TECHNOLOGY,GENERAL,None,0
+NN,NextNav Inc. Common Stock,None,NASDAQ,MANUFACTURING,SEARCH  DETECTION  NAVAGATION  GUIDANCE  AERONAUTICAL SYS,858323000,95475000
+NOVV,Nova Vision Acquisition Corp. Ordinary share,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,74579000,7518000
+NPAB,New Providence Acquisition Corp. II Class A Common Stock,New Providence Acquisition Corp. The company is headquartered in Austin  Texas.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,298438000,25000000
+NPFD,Nuveen Various Rate Preferred & Income Fund,None,NYSE,TECHNOLOGY,GENERAL,None,0
+NRDS,NerdWallet Inc. Class A Common Stock,NerdWallet  Inc. operates a digital platform that provides consumer-oriented advice on personal finance by connecting individuals and small and medium-sized businesses with providers of financial products. The company is headquartered in San Francisco  California.,NASDAQ,TECHNOLOGY,GENERAL,1001347000,34149200
+NRDY,Nerdy Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,356470000,83875000
+NRSN,NeuroSense Therapeutics Ltd. Ordinary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,29875800,10943500
+NTRB,Nutriband Inc. Common Stock,Nutriband Inc. develops a portfolio of transdermal pharmaceuticals. The company is headquartered in Orlando  Florida.,NASDAQ,LIFE SCIENCES,ORTHOPEDIC  PROSTHETIC & SURGICAL APPLIANCES & SUPPLIES,69888000,7774000
+NU,Nu Holdings Ltd.,Nu Holdings Ltd. operates in the technology industry. The company is headquartered in Grand Cayman  Cayman Islands.,NYSE,TECHNOLOGY,GENERAL,44888543000,3458440000
+NVEI,Nuvei Corporation Subordinate Voting Shares,Nuvei Corporation provides payment technology solutions to merchants and partners in North America  Europe  Asia Pacific  and Latin America. The company is headquartered in Montreal  Canada.,NASDAQ,TECHNOLOGY,GENERAL,9062695000,66824000
+NVNO,enVVeno Medical Corp,None,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,65900000,9468300
+NVTS,Navitas Semiconductor Corporation Common Stock,None,NASDAQ,MANUFACTURING,SEMICONDUCTORS & RELATED DEVICES,1837828000,117734000
+NXDT,NexPoint Strategic Opportunities Fund,None,NYSE,TECHNOLOGY,GENERAL,501990000,36992600
+NXGL,NEXGEL  INC.,NEXGEL  Inc. manufactures aqueous  electron beam crosslinked  high water content hydrogels and polymeric gels. The company is headquartered in Langhorne  Pennsylvania.,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,15860400,5565100
+NXMD,NXMD,None,NASDAQ,TECHNOLOGY,GENERAL,None,0
+OHAA,OPY Acquisition Corp. I Class A Common Stock,OPY Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,154962000,12650000
+OHPA,Orion Acquisition Corp,Orion Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,506633000,41400000
+OLPX,OLAPLEX HOLDINGS INC.,None,NASDAQ,LIFE SCIENCES,PERFUMES  COSMETICS & OTHER TOILET PREPARATIONS,17978986000,648125000
+OMQS,OMNIQ Corp. Common Stock,OMNIQ Corp. The company is headquartered in Salt Lake City  Utah.,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER INTEGRATED SYSTEMS DESIGN,46620600,7459300
+ONL,Orion Office REIT Inc.,Orion REIT Inc. (NYSE: ONL. ,NYSE,REAL ESTATE & CONSTRUCTION,REAL ESTATE INVESTMENT TRUSTS,1061164000,56626000
+ONON,On Holding AG,On Holding AG develops and distributes sports products worldwide. The company is headquartered in Zurich  Switzerland.,NYSE,TECHNOLOGY,GENERAL,11279710000,274998000
+ONYX,Onyx Acquisition Co. I Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,327649000,26450000
+OP,OceanPal Inc. Common Stock,OceanPal Inc. is focused on providing ocean freight services. ,NASDAQ,TECHNOLOGY,GENERAL,18963500,8820200
+OPAD,Offerpad Solutions Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1604062000,223529000
+OTMO,Otonomo Technologies Ltd. Ordinary shares,Otonomo Technologies Ltd. provides an automotive data services marketplace and platform that enables automakers  drivers  and service providers to be part of a connected ecosystem. The company is headquartered in Herzeliya Pituach  Israel.,NASDAQ,TECHNOLOGY,GENERAL,518200000,132194000
+OXAC,Oxbridge Acquisition Corp. Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,143596000,11615000
+OXUS,Oxus Acquisition Corp. Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,215564000,17550000
+OZ,Belpointe PREP LLC Unit,Belpointe PREP  LLC focuses on identifying  acquiring  developing or remodeling and managing commercial real estate in the United States. The company is headquartered in Greenwich  Connecticut.,NYSE,REAL ESTATE & CONSTRUCTION,REAL ESTATE,None,0
+PAFO,Pacifico Acquisition Corp. Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,73826000,7495000
+PBAX,Phoenix Biotech Acquisition Corp. Class A Common Stock,Phoenix Biotech Acquisition Corp. The company is headquartered in Oakland  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,227974000,18385000
+PCCT,Perception Capital Corp. II Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,284625000,23000000
+PCX,Parsec Capital Acquisitions Corp Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,106950000,8625000
+PEAR,Pear Therapeutics Inc,None,NASDAQ,LIFE SCIENCES,SERVICES-HEALTH SERVICES,923253000,137799000
+PEGR,Project Energy Reimagined Acquisition Corp. Class A Ordinary Share,Project Energy Reimagined Acquisition Corp. The company is headquartered in Redwood City  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,319170000,26377700
+PEPL,PepperLime Health Acquisition Corporation Class A Ordinary Share,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,168300000,0
+PETV,PetVivo Holdings Inc. Common Stock,PetVivo Holdings  Inc.  a veterinary biotechnology and biomedical devices company  is dedicated to the licensing and commercialization of medical devices and biomaterials for the treatment of diseases and afflictions in animals. The company is headquartered in Minneapolis  Minnesota.,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,38049500,9731300
+PFTA,Portage Fintech Acquisition Corp,Portage Fintech Acquisition Corporation intends to effect a merger  share exchange  asset acquisition  share purchase  reorganization or similar business combination with one or more companies or entities. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,314823000,25911400
+PGSS,Pegasus Digital Mobility Acquisition Corp.,Pegasus Digital Mobility Acquisition Corp. The company is headquartered in George Town  Cayman Islands.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,279675000,22500000
+PHYT,Pyrophyte Acquisition Corp.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,248292000,20125000
+PICC,Pivotal Investment Corporation III,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,336720000,27600000
+PIII,P3 Health Partners Inc.,None,NASDAQ,LIFE SCIENCES,SERVICES-HEALTH SERVICES,259868000,41578900
+PIK,Kidpik Corp. Common Stock,None,NASDAQ,TRADE & SERVICES,RETAIL-CATALOG & MAIL-ORDER HOUSES,52258000,7617800
+PL,Planet Labs PBC,None,NYSE,MANUFACTURING,RADIO & TV BROADCASTING & COMMUNICATIONS EQUIPMENT,1484255000,241543000
+POND,Angel Pond Holdings Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,321937000,26551500
+PONO,Pono Capital Corp Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,143319000,11500000
+POPM,PopMail.com Inc,PopMail.com  Inc. is an Internet marketing company that connects people with their passions. The company is headquartered in Irving  Texas.,NASDAQ,TECHNOLOGY,GENERAL,1212000,10180000
+PPHP,PHP Ventures Acquisition Corp. Class A Common Stock,PHP Ventures Acquisition Corp. The company is headquartered in Subang Jaya  Malaysia.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,74285000,6043400
+PRBM,Parabellum Acquisition Corp.,Parabellum Acquisition Corp. The company is headquartered in Dallas  Texas.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,175555000,4909300
+PRCT,PROCEPT BioRobotics Corporation Common Stock,PROCEPT BioRobotics Corporation  a surgical robotics company  develops transformative solutions in urology. The company is headquartered in Redwood City  California.,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,1119608000,43496800
+PRDS,Pardes Biosciences Inc,None,NASDAQ,TECHNOLOGY,GENERAL,865821000,62379000
+PRM,Perimeter Solutions  SA,None,NYSE,LIFE SCIENCES,CHEMICALS & ALLIED PRODUCTS,2239216000,157138000
+PROC,Procaps Group S.A. Ordinary Shares,None,NASDAQ,TECHNOLOGY,GENERAL,1111316000,112824000
+PRSO,Peraso Inc,Peraso  Inc. is primarily engaged in the development and manufacture of 5G mmWave silicon devices. The company is headquartered in San Jose  California.,NASDAQ,MANUFACTURING,SEMICONDUCTORS & RELATED DEVICES,75657000,19753700
+PTLO,Portillo's Inc. Class A Common Stock,Portillo's Inc.  participates in the ownership and operation of informal and quick service restaurants in the United States. The company is headquartered in Oak Brook  Illinois.,NASDAQ,TRADE & SERVICES,RETAIL-EATING PLACES,1300159000,35807200
+PX,P10 Inc.,Praxair  Inc. produces and distributes industrial gases. The company is headquartered in Danbury  Connecticut.,NYSE,FINANCE,INVESTMENT ADVICE,1455073000,0
+PYXS,Pyxis Oncology Inc.,Pyxis Oncology  Inc.  a preclinical biotechnology company  is dedicated to developing antibody-drug conjugate (ADC) and monoclonal antibody (mAb) immunotherapies for treating cancers. The company is headquartered in Cambridge  Massachusetts.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,356799000,32763900
+QNRX,Quoin Pharmaceuticals Ltd DRC,None,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,15774100,8346100
+RBOT,Vicarious Surgical Inc.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1206406000,98834000
+RDBX,Redbox Entertainment Inc,Redbox Entertainment Inc. operates a network of self-service kiosks offering DVD and Blu-ray discs of first-run movies and video game rentals. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,323702000,12600000
+RDW,Redwire Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,409277000,59661000
+REFI,Chicago Atlantic Real Estate Finance  Inc. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,298806000,17453600
+RELY,Remitly Global Inc. Common Stock,Real Industry  Inc. engages in aluminum smelting  processing  recycling  and alloying activities in the United States and internationally. The company is headquartered in Sherman Oaks  California.,NASDAQ,TRADE & SERVICES,SERVICES-BUSINESS SERVICES  NEC,3045807000,164106000
+RENO,Renovare Environmental Inc.,Renovare Environmental  Inc. provides global environmental management solutions. The company is headquartered in Chestnut Ridge  New York.,NASDAQ,TRADE & SERVICES,SERVICES-EDUCATIONAL SERVICES,22375300,29441200
+RENT,Rent the Runway Inc. Class A Common Stock,Rent the Runway  Inc. rents women's designer dresses  clothing and accessories through its stores and online platform. ,NASDAQ,TRADE & SERVICES,RETAIL-RETAIL STORES  NEC,500508000,60096000
+REVE,Alpine Acquisition Corporation Common Stock,Alpine Acquisition Corporation intends to enter into a merger  share exchange  asset acquisition  share purchase  recapitalization  reorganization or other similar business combination with one or more target businesses. The company is headquartered in Fountain Hills  Arizona.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,135886000,13575000
+RGF,The Real Good Food Company  Inc. Class A Common Stock,None,NASDAQ,MANUFACTURING,FOOD AND KINDRED PRODUCTS,39240400,6169900
+RICO,Agrico Acquisition Corp. Class A Ordinary Shares,Agrico Acquisition Corp. The company is headquartered in Grand Cayman  the Cayman Islands.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,181850000,14518800
+RIVN,Rivian Automotive  Inc. Class A Common Stock,None,NASDAQ,MANUFACTURING,MOTOR VEHICLES & PASSENGER CAR BODIES,89567928000,883400000
+RKLB,Rocket Lab USA Inc.,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,5233238000,449205000
+RKLY,Rockley Photonics Holdings Ltd,None,NYSE,MANUFACTURING,SEMICONDUCTORS & RELATED DEVICES,582984000,127289000
+RNW,Renew Energy Global PLC,None,NASDAQ,ENERGY & TRANSPORTATION,ELECTRIC SERVICES,3029519000,282367000
+RNXT,RenovoRx Inc. Common Stock,RenovoRx  Inc.  a clinical-stage biopharmaceutical company  focuses on developing therapies for the treatment of solid tumors. The company is headquartered in Los Altos  California.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,43650800,8908200
+ROC,ROC Energy Acquisition Corp. Common Stock,ROC Energy Acquisition Corp. The company is headquartered in Dallas  Texas.,NASDAQ,TECHNOLOGY,GENERAL,None,0
+ROCC,Ranger Oil Corporation,None,NASDAQ,ENERGY & TRANSPORTATION,CRUDE PETROLEUM & NATURAL GAS,631805000,21088300
+ROCG,Roth CH Acquisition IV Co. Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,145991000,14836500
+ROIV,Roivant Sciences Ltd. Common Shares,None,NASDAQ,TECHNOLOGY,GENERAL,6512344000,684789000
+ROSE,Rose Hill Acquisition Corporation Class A Ordinary Shares,Rose Hill Acquisition Corporation focuses on effecting a merger  stock exchange  asset acquisition  stock purchase  reorganization or similar combination with one or more businesses or assets. The company is headquartered in Atlanta  Georgia.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,16208600,28944000
+RRAC,Rigel Resource Acquisition Corp.,None,NYSE,TECHNOLOGY,GENERAL,369750000,30000000
+RRX,Regal Beloit Corporation,Regal Beloit Corporation designs  manufactures and sells electric motors  electric motion controls  and power generation and transmission products worldwide. The company is headquartered in Beloit  Wisconsin.,NYSE,MANUFACTURING,MOTORS & GENERATORS,11908696000,67759000
+RVAC,Riverview Acquisition Corp. Class A Common Stock,Riverview Acquisition Corp. The company is headquartered in Memphis  Tennessee.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,305313000,25000000
+RWAY,Runway Growth Finance Corp. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,545810000,41380600
+SABS,SAB Biotherapeutics Inc,SAB Biotherapeutics  Inc.  a biopharmaceutical company  develops immunotherapies against infectious diseases  autoimmune diseases  and oncology. The company is headquartered in Sioux Falls  South Dakota with an additional office in Cambridge  Massachusetts.,NASDAQ,LIFE SCIENCES,BIOLOGICAL PRODUCTS  (NO DISGNOSTIC SUBSTANCES),349103000,43474800
+SAMA,Schultze Special Purpose Acquisition Corp. II Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,149705000,11741600
+SANB,Sanaby Health Acquisition Corp. I Class A Common Stock,Sanaby Health Acquisition Corp. The company is headquartered in Palo Alto  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,5000000
+SAND,Sandstorm Gold Ltd,Sandstorm Gold Ltd. is a gold royalty company. The company is headquartered in Vancouver  Canada.,NYSE,ENERGY & TRANSPORTATION,GOLD AND SILVER ORES,1125626000,191433000
+SANG,Sangoma Technologies Corporation Common Shares,Sangoma Technologies Corporation develops  manufactures  distributes and supports voice and data connectivity components for software-based communication applications worldwide. The company is headquartered in Markham  Canada.,NASDAQ,TECHNOLOGY,GENERAL,330895000,19028000
+SCMA,Seaport Calibre Materials Acquisition Corp. Class A Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,164864000,13000000
+SDIG,Stronghold Digital Mining Inc. Class A Common Stock,Stronghold Digital Mining  Inc.  a crypto asset mining company  focuses on mining Bitcoin in the United States. The company is headquartered in New York  New York.,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER PROCESSING & DATA PREPARATION,268016000,20016100
+SEAT,Vivid Seats Inc. Class A Common Stock,None,NASDAQ,TRADE & SERVICES,SERVICES-MISCELLANEOUS AMUSEMENT & RECREATION,911069000,76948000
+SEDA,SDCL EDGE Acquisition Corporation,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,None,0
+SEV,Sono Group N.V. Common Shares,Sevcon  Inc. designs and sells motor controllers under the Sevcon name in the United States  the United Kingdom  France  South Korea  Japan  and China. The company is headquartered in Southborough  Massachusetts.,NASDAQ,TECHNOLOGY,GENERAL,686179000,69078000
+SG,Sweetgreen  Inc.,Sirius International Insurance Group  Ltd.  offers insurance and reinsurance products globally. The company is headquartered in Hamilton  Bermuda.,NYSE,TECHNOLOGY,GENERAL,3243140000,93522000
+SGII,Seaport Global Acquisition II Corp. Class A Common Stock,Seaport Global Acquisition II Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,176993000,14375000
+SGML,Sigma Lithium Corporation Common Shares,Sigma Lithium Corporation is engaged in the exploration and development of lithium deposits in Brazil. The company is headquartered in Vancouver  Canada.,NASDAQ,TECHNOLOGY,GENERAL,951413000,99002000
+SHCA,Spindletop Health Acquisition Corp. Class A Common Stock,Spindletop Health Acquisition Corp. The company is headquartered in Austin  Texas.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,285200000,23000000
+SHPW,Shapeways Holdings Inc.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,167106000,48296500
+SHQA,Shelter Acquisition Corporation I Class A Common Stock,Shelter Acquisition Corporation I focuses on effecting a merger  capital stock exchange  asset acquisition  stock purchase  reorganization or similar business combination with one or more businesses. The company is headquartered in Quogue  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,269578000,22164700
+SIDU,Sidus Space  Inc. Class A Common Stock,Sidus Space  Inc.  a space-as-a-service company  is dedicated to the design  manufacture  launch and data collection of commercial satellites worldwide. The company is headquartered in Merritt Island  Florida.,NASDAQ,TECHNOLOGY,GENERAL,167508000,6200000
+SIER,Sierra Lake Acquisition Corp. Class A Common Stock,Sierra Lake Acquisition Corp. The company is headquartered in Chicago  Illinois.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,378525000,30000000
+SISI,Shineco Inc,Shineco  Inc. produces  distributes and sells plant products focused on health and wellness in China. The company is headquartered in Beijing  China.,NASDAQ,LIFE SCIENCES,AGRICULTURAL PRODUCTION-CROPS,49434800,9087300
+SKE,Skeena Resources Limited,None,NYSE,TECHNOLOGY,GENERAL,681332000,65339000
+SLDP,Solid Power Inc,None,NASDAQ,MANUFACTURING,MISCELLANEOUS ELECTRICAL MACHINERY  EQUIPMENT & SUPPLIES,1534831000,167558000
+SLGC,Somalogic Inc,None,NASDAQ,TRADE & SERVICES,SERVICES-COMMERCIAL PHYSICAL & BIOLOGICAL RESEARCH,2059937000,181173000
+SLNH,Soluna Holdings Inc,None,NASDAQ,LIFE SCIENCES,MEASURING & CONTROLLING DEVICES  NEC,143410000,13132800
+SLVM,Sylvamo Corporation,None,NYSE,MANUFACTURING,PAPER MILLS,1315652000,44105000
+SLVR,SilverSPAC Inc. Class A Ordinary Share,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,311897000,25000000
+SMAP,SportsMap Tech Acquisition Corp. Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,147942000,15050000
+SMLR,Semler Scientific Inc. Common Stock,Semler Scientific  Inc. develops  manufactures  and markets proprietary products that help healthcare providers evaluate and treat patients with chronic conditions in the United States. The company is headquartered in Santa Clara  California.,NASDAQ,LIFE SCIENCES,ELECTROMEDICAL & ELECTROTHERAPEUTIC APPARATUS,608870000,6757700
+SNCE,Science 37 Holdings Inc,Science 37  Inc. is a technology-enabled clinical trials company dedicated to developing networked patient-centered models for clinical research to accelerate biomedical discovery. The company is headquartered in Los Angeles  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1479720000,114707000
+SNDA,Sonida Senior Living Inc.,Sonida Senior Living  Inc. develops  owns  operates and manages senior living communities in the United States. The company is headquartered in Dallas  Texas.,NYSE,LIFE SCIENCES,SERVICES-NURSING & PERSONAL CARE FACILITIES,183703000,6445700
+SNT,Senstar Technologies Ltd.,None,NASDAQ,MANUFACTURING,COMMUNICATIONS EQUIPMENT  NEC,64425000,23258300
+SONX,Sonendo Inc.,None,NYSE,LIFE SCIENCES,DENTAL EQUIPMENT & SUPPLIES,142205000,26334200
+SOPA,Society Pass Incorporated Common Stock,Society Pass Incorporated is dedicated to the acquisition and operation of e-commerce platforms for consumers and merchants in Southeast Asia. The company is headquartered in Carson City  Nevada.,NASDAQ,TRADE & SERVICES,SERVICES-BUSINESS SERVICES  NEC,185304000,19182600
+SOTK,Sono-Tek Corporation Common Stock,Sono-Tek Corporation designs and manufactures ultrasonic coating systems for application to parts and components for the global microelectronics / electronics  alternative energy  medical  industrial  and research and development / other markets. The company is headquartered in Milton  New York.,NASDAQ,MANUFACTURING,MISCELLANEOUS ELECTRICAL MACHINERY  EQUIPMENT & SUPPLIES,115330000,15543100
+SOVO,Sovos Brands Inc. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,1540636000,100893000
+SPIR,Spire Corporation,Spire Global  Inc. develops a hardware and smart analytics platform that tracks oceans  skies  and weather. The company is headquartered in San Francisco  California with additional offices in Boulder  Colorado; Washington  D.C.; Glasgow  United Kingdom; Luxembourg; and Singapore.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,489495000,139061000
+SPRC,SciSparc Ltd. Ordinary Shares,SciSparc Ltd.  a specialized clinical-stage pharmaceutical company  develops drugs based on cannabinoid molecules. The company is headquartered in Tel Aviv  Israel.,NASDAQ,TECHNOLOGY,GENERAL,14375000,0
+SQL,SeqLL Inc. Common stock,None,NASDAQ,LIFE SCIENCES,LABORATORY ANALYTICAL INSTRUMENTS,24961400,11886400
+SRAD,Sportradar Group AG Class A Ordinary Shares,Sportradar Group AG is focused on operating as a portfolio company of Sportradar Holding AG providing integrated sports data and technology platforms to the sports betting industry in the UK  Malta  Switzerland and internationally. The company is headquartered in St. Gallen  Switzerland.,NASDAQ,TECHNOLOGY,GENERAL,5404668000,205455000
+SRZN,Surrozen Inc. Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,194052000,35027400
+SSBK,Southern States Bancshares Inc. Common Stock,Southern States Bancshares  Inc. is the banking holding company of Southern States Bank that provides community banking services to businesses and individuals. The company is headquartered in Anniston  Alabama.,NASDAQ,FINANCE,STATE COMMERCIAL BANKS,175571000,9012900
+SSU,Signa Sports United GmbH,None,NYSE,TECHNOLOGY,GENERAL,3220975000,334473000
+STAB,Statera Biopharma Inc,None,NASDAQ,TRADE & SERVICES,SERVICES-COMMERCIAL PHYSICAL & BIOLOGICAL RESEARCH,68684000,32095500
+STER,Sterling Check Corp. Common Stock,Sterling Check Corp. The company is headquartered in New York  New York.,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER PROCESSING & DATA PREPARATION,2035937000,95809000
+STRC,Sarcos Technology and Robotics Corporation Common Stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1384207000,142849000
+STRN,Stran & Company  Inc. Common Stock,Stran & Company  Inc. provides outsourced marketing solutions. The company is headquartered in Quincy  Massachusetts.,NASDAQ,TRADE & SERVICES,SERVICES-ADVERTISING AGENCIES,118289000,19359900
+SURG,SurgePays Inc. Common Stock,SurgePays  Inc.  provides telecommunications services in the United States. The company is headquartered in Bartlett  Tennessee.,NASDAQ,TRADE & SERVICES,SERVICES-ADVERTISING,24815800,12046500
+SVA,Sinovac Biotech Ltd,Sinovac Biotech Ltd.  a biopharmaceutical company  focuses on the research  development  manufacture and marketing of vaccines against human infectious diseases in the People's Republic of China. The company is headquartered in Beijing  the People's Republic of China.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,642437000,99295000
+SVNA,7 Acquisition Corporation Class A Ordinary Shares,7 Acquisition Corporation intends to effect a merger  stock exchange  asset acquisition  stock purchase  reorganization or business combination related to one or more businesses. The company is headquartered in Stamford  Connecticut.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,283188000,23000000
+SWAG,Software Acquisition Group Inc. III Class A Common Stock,Software Acquisition Group Inc. III intends to effect a merger  stock exchange  asset acquisition  stock purchase  reorganization or similar business combination with one or more companies. The company is headquartered in Las Vegas  Nevada.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,280251000,22807900
+SWSS,Springwater Special Situations Corp. Common stock,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,219872000,22481800
+TCBX,Third Coast Bancshares  Inc. Common Stock,Third Coast Bancshares  Inc. is a banking holding company of Third Coast Bank  SSB that offers various commercial banking solutions to small and medium-sized businesses and professionals. The company is headquartered in Humble  Texas.,NASDAQ,FINANCE,SAVINGS INSTITUTIONS  NOT FEDERALLY CHARTERED,347118000,13350700
+TCN,Tricon Capital Group Inc,Founded in 1988  Tricon is a rental housing company focused on serving the mid-market demographic. ,NYSE,TECHNOLOGY,GENERAL,4158472000,272372000
+TDCX,TDCX Inc.,None,NYSE,TECHNOLOGY,GENERAL,2550033000,142859000
+TGVC,TG Venture Acquisition Corp. Class A Common Stock,TG Venture Acquisition Corp. The company is headquartered in San Francisco  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,142010000,11557500
+THAC,Thrive Acquisition Corporation Class A ordinary shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,214116000,17250000
+THCP,Thunder Bridge Capital Partners IV Inc. Class A Common Stock,Thunder Bridge Capital Partners IV  Inc. intends to effect a merger  equity exchange  asset acquisition  stock purchase  reorganization or similar business combination with one or more companies. The company is headquartered in Great Falls  Virginia.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,294889000,24300800
+THRN,Thorne Healthtech Inc. Common Stock,Thorne HealthTech  Inc.  a science-driven wellness company  offers personalized solutions and approaches to health and wellness in the United States and internationally. The company is headquartered in New York  New York.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,335764000,52545000
+THRX,Theseus Pharmaceuticals Inc. Common Stock,Theseus Pharmaceuticals  Inc.  a biopharmaceutical company  is dedicated to the discovery  development  and commercialization of targeted therapies for the treatment of cancer patients. The company is headquartered in Cambridge  Massachusetts.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,426116000,38702600
+TIVC,Tivic Health Systems  Inc. Common Stock,None,NASDAQ,TECHNOLOGY,GENERAL,38860900,9715200
+TMC,TMC the metals company Inc,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,457276000,225259000
+TNGX,Tango Therapeutics Inc,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,918362000,87546000
+TOI,DFP Healthcare Acquisitions Corp,None,NASDAQ,LIFE SCIENCES,SERVICES-OFFICES & CLINICS OF DOCTORS OF MEDICINE,732475000,74590000
+TOST,Toast Inc.,Toast  Inc. operates a cloud-based technology platform for the restaurant industry in the United States and Ireland. The company is headquartered in Boston  Massachusetts.,NYSE,TECHNOLOGY,SERVICES-COMPUTER PROCESSING & DATA PREPARATION,15576461000,73730000
+TPBA,TPB Acquisition Corporation I Class A Ordinary Share,TPB Acquisition Corporation I intends to effect a merger  stock exchange  asset acquisition  share purchase  reorganization or similar business combination with one or more companies or entities. The company is headquartered in San Francisco  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,221170000,18036300
+TRAQ,Trine II Acquisition Corp.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,510772000,41400000
+TRDA,Entrada Therapeutics Inc. Common Stock,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,499406000,31212900
+TRIS,Tristar Acquisition I Corp.,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,279450000,23000000
+TRON,Corner Growth Acquisition Corp. 2 Class A Ordinary Share,Corner Growth Acquisition Corp. The company is headquartered in Palo Alto  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,228475000,18500000
+TROO,TROOPS Inc,None,NASDAQ,MANUFACTURING,RADIO & TV BROADCASTING & COMMUNICATIONS EQUIPMENT,509006000,101598000
+TRTL,TortoiseEcofin Acquisition Corp. III,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,418312000,0
+TSAT,Telesat Corporation Class A Common Shares and Class B Variable Voting Shares,None,NASDAQ,TECHNOLOGY,GENERAL,352691000,11907200
+TSVT,2seventy bio Inc,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,585396000,23369100
+TWCB,Bilander Acquisition Corp. Class A Common Stock,Bilander Acquisition Corp. The company is headquartered in San Francisco  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,382587000,16851600
+TWKS,Thoughtworks Holding Inc. Common Stock,Thoughtworks Holding  Inc. provides technology consulting services in North America  Asia Pacific  Europe  and Latin America. The company is headquartered in Chicago  Illinois.,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER PROGRAMMING SERVICES,8009321000,305117000
+TYRA,Tyra Biosciences Inc,Tyra Biosciences  Inc.  a preclinical-stage biopharmaceutical company  focuses on developing therapies to overcome tumor resistance and improve outcomes for cancer patients. The company is headquartered in Carlsbad  California.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,523663000,41265800
+UDMY,Udemy Inc. Common Stock,Udemy  Inc. operates a platform for teaching and learning skills in the United States and internationally. The company is headquartered in San Francisco  California.,NASDAQ,TRADE & SERVICES,SERVICES-EDUCATIONAL SERVICES,2502399000,138945000
+UPTD,TradeUP Acquisition Corp.,TradeUP Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,59374000,5849700
+USCT,TKB Critical Technologies 1 Class A Ordinary Shares,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,284625000,23000000
+USER,UserTesting  Inc.,UserTesting  Inc. participates in the operation of a software-as-a-service (SaaS) platform that enables organizations to learn about people's experiences as they interact with products  designs  applications  processes  concepts  or brands in the United States. UK and internationally. The company is headquartered in San Francisco  California.,NYSE,TECHNOLOGY,GENERAL,1187382000,140852000
+UTRS,Minerva Surgical Inc. Common Stock,Minerva Surgical Inc.  a commercial-stage medical technology company  focuses on developing  manufacturing  and marketing minimally invasive solutions to meet the uterine health care needs of women. The company is headquartered in Santa Clara  California.,NASDAQ,LIFE SCIENCES,SURGICAL & MEDICAL INSTRUMENTS & APPARATUS,142639000,28815900
+VATE,Innovate Corp,INNOVAR Corp. The company is headquartered in New York  New York.,NYSE,TECHNOLOGY,TELEPHONE COMMUNICATIONS (NO RADIOTELEPHONE),296296000,77768000
+VAXX,Vaxxinity  Inc. Class A Common Stock,None,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,746094000,111520000
+VBNK,VersaBank Common Shares,None,NASDAQ,TECHNOLOGY,GENERAL,333409000,27441100
+VCSA,Vacasa  Inc. Class A Common Stock,None,NASDAQ,TRADE & SERVICES,SERVICES-TO DWELLINGS & OTHER BUILDINGS,1731240000,214794000
+VCXA,10X Capital Venture Acquisition Corp. II Class A Ordinary Share,10X Capital Venture Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,278969000,20655000
+VIA,Via Renewables Inc,On December 4  2019  Viacom Inc. was acquired by CBS Corporation. The company is headquartered in New York  New York.,NASDAQ,ENERGY & TRANSPORTATION,ELECTRIC & OTHER SERVICES COMBINED,178304000,15572400
+VLAT,Valor Latitude Acquisition Corp.,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,280600000,23000000
+VLCN,Volcon Inc. Common stock,Volcon  Inc. develops  manufactures  and sells electric off-road sports vehicles and accessories in the United States. The company is headquartered in Round Rock  Texas.,NASDAQ,MANUFACTURING,MOTOR VEHICLES & PASSENGER CAR BODIES,190568000,17308600
+VLD,Velo3D Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1500113000,183164000
+VLN,Valens,None,NYSE,TECHNOLOGY,GENERAL,745516000,98094000
+VLNS,The Valens Company  Inc. Common Shares,None,NASDAQ,TECHNOLOGY,GENERAL,169474000,68062000
+VLTA,Volta Industries Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,1136987000,152307000
+VORB,Virgin Orbit Holdings Inc,None,NASDAQ,TECHNOLOGY,GENERAL,2473321000,362126000
+VQS,Viq Solutions Inc,VIQ Solutions Inc. is a technology and service platform provider for digital evidence content capture  retrieval and management in Australia  the United States  the United Kingdom  Canada and internationally. The company is headquartered in Mississauga  Canada.,NASDAQ,TECHNOLOGY,GENERAL,65317000,29878600
+VRE,Veris Residential Inc.,None,NYSE,REAL ESTATE & CONSTRUCTION,REAL ESTATE INVESTMENT TRUSTS,1741622000,90946000
+VSAC,Vision Sensing Acquisition Corp. Class A Common Stock,Vision Sensing Acquisition Corp. The company is headquartered in Miami  Florida.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,129600000,10547700
+VTYX,Ventyx Biosciences Inc. Common Stock,Ventyx Biosciences  Inc.  a clinical-stage biopharmaceutical company  develops small molecule product candidates for inflammatory diseases and autoimmune disorders. The company is headquartered in Encinitas  California.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,1000397000,50297000
+WAVC,Waverley Capital Acquisition Corp 1,Waverley Capital Acquisition Corp. The company is headquartered in Palo Alto  California.,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,260530000,21487000
+WAVD,Information Analysis Incorporated,None,NASDAQ,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,64157000,13947200
+WBX,Wallbox NV,Wallbox NV  a technology company  creates electric vehicle charging and energy management systems that redefine users' relationship with the grid. ,NYSE,TECHNOLOGY,GENERAL,2730407000,137740000
+WE,WeWork Inc,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,7308510000,792680000
+WEAV,Weave Communications  Inc.,Weave Communications  Inc. provides a customer communication and interaction software platform in the United States and Canada. The company is headquartered in Lehi  Utah.,NYSE,TECHNOLOGY,SERVICES-PREPACKAGED SOFTWARE,937260000,64240000
+WEJO,Wejo Group Limited Common Shares,None,NASDAQ,TECHNOLOGY,GENERAL,591886000,93950000
+WINV,WinVest Acquisition Corp. Common Stock,WinVest Acquisition Corp. The company is headquartered in Cambridge  Massachusetts.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,141186000,14375000
+WOLF,Wolfspeed Inc,None,NYSE,MANUFACTURING,SEMICONDUCTORS & RELATED DEVICES,14143609000,116217000
+WQGA,World Quantum Growth Acquisition Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,253408000,20395000
+WRAC,Williams Rowland Acquisition Corp,None,NYSE,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,284625000,28750000
+WRBY,Warby Parker Inc.,None,NYSE,LIFE SCIENCES,OPHTHALMIC GOODS,4989107000,94130000
+WULF,Terawulf Inc,Terawulf Inc. is a bitcoin mining company. The company is headquartered in Easton  Maryland.,NASDAQ,LIFE SCIENCES,PHOTOGRAPHIC EQUIPMENT & SUPPLIES,1369675000,99976000
+WWAC,Worldwide Webb Acquisition Corp. Class A Ordinary Share,Worldwide Webb Acquisition Corp. The company is headquartered in Orem  Utah.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,280025000,23000000
+XFIN,ExcelFin Acquisition Corp Class A Common Stock,ExcelFin Acquisition Corp. The company is headquartered in San Francisco  California.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,287385000,23000000
+XLO,Xilio Therapeutics Inc. Common Stock,Xilio Therapeutics  Inc.  a biotechnology company  designs immunotherapies to improve the immune systems of cancer patients. The company is headquartered in Waltham  Massachusetts.,NASDAQ,LIFE SCIENCES,PHARMACEUTICAL PREPARATIONS,437305000,27468900
+XOS,Xos Inc,None,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,462650000,162905000
+XPAX,XPAC Acquisition Corp. Class A Ordinary Shares,XPAC Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,265181000,21961100
+XPRO,Expro Group Holdings N.V.,Expro Group Holdings NV is dedicated to providing energy services. The company is headquartered in Houston  Texas.,NYSE,ENERGY & TRANSPORTATION,OIL & GAS FIELD SERVICES  NEC,1679157000,109107000
+XRTX,XORTX Therapeutics Inc. Common Stock,XORTX Therapeutics Inc.  a biopharmaceutical company  is dedicated to the development and commercialization of therapies to treat progressive kidney disease  hypertension  insulin resistance  and diabetic nephropathy. The company is headquartered in Vancouver  Canada.,NASDAQ,TECHNOLOGY,GENERAL,27061800,12645700
+YY,JOYY Inc,JOYY Inc. operates a social media platform in the People's Republic of China and internationally. The company is headquartered in Guangzhou  the People's Republic of China.,NASDAQ,TECHNOLOGY,SERVICES-COMPUTER PROCESSING & DATA PREPARATION,3513563000,77958000
+ZD,Ziff Davis Inc.,J2 Global  Inc. provides Internet services worldwide. The company is headquartered in Los Angeles  California.,NASDAQ,TECHNOLOGY,TELEGRAPH & OTHER MESSAGE COMMUNICATIONS,5458594000,48220800
+ZGN,Ermenegildo Zegna N.V.,Ermenegildo Zegna NV designs  manufactures  exports and sells men's clothing. ,NYSE,TECHNOLOGY,GENERAL,2397230000,223831000
+ZT,Zimmer Energy Transition Acquisition Corp. Class A Common Stock,Zimmer Energy Transition Acquisition Corp. The company is headquartered in New York  New York.,NASDAQ,REAL ESTATE & CONSTRUCTION,BLANK CHECKS,417450000,34500000
+ZWS,Zurn Water Solutions Corp,Zurn Water Solutions Corporation designs  acquires  manufactures  and markets water system solutions that provide and improve water quality  safety  flow control  and conservation in and around non-residential buildings. The company is headquartered in Milwaukee  Wisconsin.,NYSE,TECHNOLOGY,GENERAL INDUSTRIAL MACHINERY & EQUIPMENT,4487523000,121350000

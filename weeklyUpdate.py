@@ -43,8 +43,8 @@ if __name__ == '__main__':
     symbolFileList = [config['filepath']['symbolList']]
 
     # Whether to download new data
-    downloadData = True
-    timeFramesAlpha = ['1min','5min', '15min', '30min', '60min'] # , '5min', '15min', '30min', '60min'
+    downloadData = False
+    timeFramesAlpha = ['1min', '5min', '15min', '30min', '60min'] # , '5min', '15min', '30min', '60min'
     # Whether to create custom time frames
     customTimes = True
     customTimeFrames = ['2min']
@@ -55,6 +55,7 @@ if __name__ == '__main__':
     # update
     update = Update.UpdateData(**LoadIndicators())
     # Update data and download most recent
+    # Updates the indicators as specified in settings (./config/indicators.ini)
     if downloadData:
         for i in range(0, len(timeFramesAlpha)):
             print(f"==> Updating data for {timeFramesAlpha[i]}")
@@ -62,7 +63,7 @@ if __name__ == '__main__':
             SymbolIterator(symbolFileList, update.Update, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1], apiCap=150, functionCalls=1)
 
     # Update custom time frames
-    if customTimes:        
+    if customTimes:
         data = getData.GetData('./config/api.conf')
         # Create other timeframes
         for custom in customTimeFrames:
@@ -72,4 +73,9 @@ if __name__ == '__main__':
                 os.mkdir(destination)
             # Iterate through files and create corresponding custom time frame csvs
             # arguments [timeframe, destination path, source path]
+            if computeIndicators:
+                indicators = CI.ComputeIndicators(**LoadIndicators())
+                CI.ComputeIndicators(**LoadIndicators()).Compute(source=destination, frequency=custom, update=False, destination=destination)
+                #SymbolIterator(symbolFileList, indicators.Compute, [custom], prefix='Grouping Times', apiCap=150, functionCalls=0)
+            exit()
             SymbolIterator(symbolFileList, data.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')

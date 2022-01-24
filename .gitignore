@@ -3,3 +3,8 @@ fonts/
 backtesting/results/
 config/api.conf
 .atomignore
+config/fundamental_errors.csv
+pullbacktemp2.py
+pullbacktemp.py
+ORTemp.py
+gappersTemp.py

@@ -28,14 +28,12 @@ import analysis.Stats as stats
 import analysis.OpeningRange as OR
 import analysis.Patterns as patterns
 import analysis.Gappers as gappers
-import analysis.Summary as summary
 from helpers import LoadIndicators, SymbolIteratorFiles
 
 def Analyse(dataPath, timeFrames):
     for tf in timeFrames:
         source = dataPath + "/" + tf[:-2] + "/"
         destination = source + "/analysis/"
-
         # Create folder if not exists
         if not os.path.exists(destination):
             os.makedirs(destination)
@@ -44,9 +42,9 @@ def Analyse(dataPath, timeFrames):
         fileList = [os.path.basename(x) for x in glob.glob(source + "*.csv")]
 
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
-        SymbolIteratorFiles(fileList, gappers.Analyse, [source, destination, True], prefix='Analysing Gappers ')
+        #SymbolIteratorFiles(fileList, gappers.Analyse, [source, destination, True], prefix='Analysing Gappers ')
         # Summarise gapper results
-        summary.Gappers(destination)
+        #summary.Gappers(destination)
 
         # Arguments: [source, destination, openingRange=3, marketOnly=True]
         minute = int(tf[:-3])
@@ -62,15 +60,20 @@ def Analyse(dataPath, timeFrames):
             openRangeBars = 1
 
         # Iterate all files and analyse Arguments [source, destination, numberOfBars, marketOnly]
-        SymbolIteratorFiles(fileList, OR.Analyse, [source, destination, openRangeBars, True], prefix='Analysing Opening Range ')
+        #SymbolIteratorFiles(fileList, OR.Analyse, [source, destination, openRangeBars, True], prefix='Analysing Opening Range ')
         # Summarise opening range
-        summary.OpeningRange(destination)
+        #summary.OpeningRange(destination)
 
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
-        #SymbolIteratorFiles(fileList, patterns.Analyse, [source, destination, True], prefix='Analysing Patterns ')
-
+        patternFolder = destination + '/patterns/'
+        if not os.path.exists(patternFolder):
+            os.makedirs(patternFolder + 'figures/')
+        SymbolIteratorFiles(fileList, patterns.Analyse, [source, patternFolder, True], prefix='Analysing Patterns ')
+        patterns.Summary(patternFolder, destination)
+        exit()
         # Don't need stats.Analyse until trading regularly, provides more of an overview of last month
         #SymbolIteratorFiles(fileList, stats.Analyse, [source, destination, True], prefix='Analysing Stats ')
+
 
 if __name__ == '__main__':
     # Clear screen prior to execution
@@ -85,7 +88,7 @@ if __name__ == '__main__':
     dataPath = config['filepath']['indicatorDestination']
 
     # Timeframes
-    timeFrames = ['1min','2min','5min', '15min', '30min', '60min']
+    timeFrames = ['5min', '15min', '30min', '60min']
 
     # Symbol list
     symbolFileList = config['filepath']['symbolList']

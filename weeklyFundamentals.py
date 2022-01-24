@@ -12,32 +12,31 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 #
 # See the License for the specific language governing permissions and limitations under the License.
 #
-
-# Simple example to download symbol data from AlphaVantage obtaining all historic data
 import os
-import sys
-import inspect
-# Setup
-currentDir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentDir = os.path.dirname(currentDir)
-sys.path.insert(0, parentDir)
-# Import custom
-import data.Alpha as A
+import configparser
+import core.GetData as getData
 from helpers import SymbolIterator
 
 if __name__ == '__main__':
+    destination = './config/fundamental.csv'
+
     # Clear screen prior to execution
     clear = lambda: os.system('cls')
     clear()
-    # Download varialbles
-    destinationPath = "../downloads/"
-    symbolFileList = ["../data/symbols.csv"]
-    alpha = A.Alpha('../config/api.conf')
 
-    # If saving, make folders
-    if destinationPath:
-        if not os.path.exists(destinationPath):
-            os.makedirs(destinationPath)
+    # Config
+    config = configparser.ConfigParser()
+    config.read('./config/source.ini')
 
-    # Download maximum data for each symbol
-    SymbolIterator(symbolFileList, alpha.DownloadExtended, [destinationPath + '2m/', 2, '*', '*', True], apiCap=150, functionCalls=24)
+    # Config
+    symbolFileList = config['filepath']['symbolList']
+
+    # Data object
+    data = getData.GetData('./config/api.conf')
+
+    # Delete existing file
+    if os.path.exists(destination):
+        os.remove(destination)
+
+    # Iterate
+    SymbolIterator([symbolFileList], data.Downloadfundamental, [destination], apiCap=100, functionCalls=1)

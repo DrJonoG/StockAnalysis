@@ -77,35 +77,21 @@ def Analyse(symbol, source, destination, marketOnly=True):
     """
     # Load DF
     df = csvToPandas(source + symbol)
-    
+
     # month processing
     monthStart = datetime.today() - timedelta(days = 28)
     monthDF = df[df.index >= monthStart]
-    monthOverview, monthPricing = Overview(monthDF, '5Min')
+    if len(monthDF.index) > 2:
+        monthStats = MinMaxStats(monthDF)
+        monthOverview, monthPricing = Overview(monthDF, '5Min')
+        monthOverview.to_csv(destination + symbol.replace('.csv', '_m_overview.csv'), mode='w')
+        monthPricing.to_csv(destination + symbol.replace('.csv', '_m_pricing.csv'), mode='w')
 
     # week processing
     weekStart = datetime.today() - timedelta(days = 7)
     weekDF = df[df.index >= weekStart]
-    weekOverview, weekPricing = Overview(weekDF, '5Min')
-
-    # output
-    monthOverview.to_csv(destination + symbol.replace('.csv', '_m_overview.csv'), mode='w')
-    monthPricing.to_csv(destination + symbol.replace('.csv', '_m_pricing.csv'), mode='w')
-
-    weekOverview.to_csv(destination + symbol.replace('.csv', '_w_overview.csv'), mode='w')
-    weekPricing.to_csv(destination + symbol.replace('.csv', '_w_pricing.csv'), mode='w')
-
-    # day processing
-    # minus one business day
-    offset = max(1, (datetime.today().weekday() + 6) % 7 - 3)
-    dayStart = datetime.today() - timedelta(offset)
-    dayDF = df[df.index >= dayStart]
-    # Half year
-    halfYearStat = datetime.today() - timedelta(days = 178)
-    halfYearDF = df[df.index >= halfYearStat]
-
-    dayStats = MinMaxStats(dayDF)
-    weekStats = MinMaxStats(weekDF)
-    halfYearStats = MinMaxStats(halfYearDF)
-
-    exit()
+    if len(weekDF.index) > 2:
+        weekStats = MinMaxStats(weekDF)
+        weekOverview, weekPricing = Overview(weekDF, '5Min')
+        weekOverview.to_csv(destination + symbol.replace('.csv', '_w_overview.csv'), mode='w')
+        weekPricing.to_csv(destination + symbol.replace('.csv', '_w_pricing.csv'), mode='w')

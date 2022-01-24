@@ -48,34 +48,25 @@ class UpdateData:
 
         # Extract and format data
         newData = self.data.PriceDFSorter(rawData.text)
-
         # Check if data was retrieved, if not, return.
         if newData is None:
             return
 
-        # Order
-        try:
-            newData = newData.sort_index()
-        except Exception:
-            print(f"\n==> Error processing {symbol}\n")
-
         # Check if existing file
-        if not os.path.exists(saveFile):
-            return
-
-        # Read existing and convert datetime if exists
-        loadDF = csvToPandas(saveFile, asc=False, unicode=True)
-        if len(loadDF) == 0:
-            return
-
-        # Get latest date from existing data and filter to remove duplicates
-        maxDate = max(loadDF.index)
-        newData = newData[newData.index >= maxDate]
-
-        # If new data available
-        if len(newData) > 0:
+        if os.path.exists(saveFile):
+            # Read existing and convert datetime if exists
+            loadDF = csvToPandas(saveFile, asc=False, unicode=True)
+            if len(loadDF.index) > 0:
+                # Get latest date from existing data and filter to remove duplicates
+                maxDate = max(loadDF.index)
+                newData = newData[newData.index >= maxDate]
+        # If new data available (> 1 to exclude header row)
+        if len(newData.index) > 5:
+            newData = newData.sort_index()
             # Replace missing date times
             newData = newData.resample(dataInterval).mean()
+            # Remove any errors
+            newData = newData[[isinstance(newData.index[i], datetime.datetime) for i in range(len(newData))]]
             # Remove weekends
             newData = newData[newData.index.dayofweek < 5]
             # Remove out of hours (except pre and post market)
@@ -98,12 +89,20 @@ class UpdateData:
                 newData['vwap'] = newData['vwap'].fillna(method='ffill')
                 newData.loc[(newData.between_time('16:00:01', '09:29:59').index), 'vwap'] = 0
 
-            # Join
-            newData = pd.concat([newData,loadDF], axis=0)
-            # Drop duplicates and sort
-            newData = newData[~newData.index.duplicated(keep='first')]
-            # Order
-            newData = newData.sort_index()
+            # Join if existing file
+            if os.path.exists(saveFile):
+                sliceAmount = 500
+                newData = pd.concat([newData,loadDF[0:sliceAmount]], axis=0)
+                # Drop duplicates and sort
+                newData = newData[~newData.index.duplicated(keep='first')]
+                # Order
+                try:
+                    newData = newData.sort_index()
+                except Exception as e:
+                    print(newData)
+                    newData.to_csv(saveFile + '_error.csv', index=True)
+                    print(e)
+
             # Calculate moving_averages
             for period in self.simpleMovingAverage:
                 newData[str(period) + "MA"] = round(newData['close'].rolling(period).mean(), self.precision)
@@ -121,6 +120,12 @@ class UpdateData:
 
             # Replace NaN with 0
             newData = newData.fillna(0)
+            # Join files if exist
+            if os.path.exists(saveFile):
+                newData = pd.concat([newData[sliceAmount:],loadDF], axis=0)
+                # Remove any errors
+                newData = newData[[isinstance(newData.index[i], datetime.datetime) for i in range(len(newData))]]
+            # Sort
             newData = newData.sort_index(ascending=False)
             # Overwrite file
             newData.to_csv(saveFile, index=True)

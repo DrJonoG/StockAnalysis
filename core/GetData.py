@@ -68,6 +68,7 @@ class GetData:
             # Replace names in headers
             sliceDF = sliceDF.rename(columns={'timestamp': 'Datetime', 'time': 'Datetime'})
             sliceDF = sliceDF.set_index('Datetime')
+
             # convert index to datetime
             sliceDF.index = pd.to_datetime(sliceDF.index)
             # Ensure ordering is consistent and return
@@ -205,8 +206,13 @@ class GetData:
             The location where the files should be saved
         """
         dataAddress = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=%s&apikey=%s' % (symbol, self.apiKey)
-        # Get the requested data
-        rawData = self.GetRaw(dataAddress).json()
+        # Get the requested data and error checking
+        try:
+            rawData = self.GetRaw(dataAddress).json()
+        except Exception as e:
+            with open(filePath.replace(".csv", "_errors.csv"), "a") as file:
+                file.write(symbol + ', ' + e + ' -> Dataddress: ' + dataAddress + '\n')
+            return
         # If error message returned, or no data available, skip and append to error file
         if 'Error Message' in rawData:
             with open(filePath.replace(".csv", "_errors.csv"), "a") as file:
@@ -218,12 +224,15 @@ class GetData:
             return
         # Transpose pandas series
         df = pd.Series(rawData).to_frame().T
+        df = df.replace(',','', regex=True)
         # Write to csv
         if not os.path.isfile(filePath):
            df.to_csv(filePath, index=False)
         else: # else it exists so append without writing the header
            df.to_csv(filePath, mode='a', index=False, header=False)
 
+        # `SharesOutstanding`, `SharesFloat`, `SharesShort`, `SharesShortPriorMonth`, `ShortRatio`, `ShortPercentOutstanding`, `ShortPercentFloat`,
+        # `PercentInsiders`, `PercentInstitutions`, `ForwardAnnualDividendRate`, `ForwardAnnualDividendYield`, `PayoutRatio`, `DividendDate`, `ExDividendDate`
 
     def DownloadIndicators(self, symbol, indicator, interval, period, ohlc):
         """
@@ -258,18 +267,22 @@ class GetData:
     # Alphavantage does not offer extended data for all time frames
     # Function to create specific minute data from downloaded 1 minute intraday
     def CalculateMinutes(self, symbol, timeFrame, destinationPath, path):
-        # Check file exists
         filePath = path + symbol + '.csv'
+        destination = destinationPath + symbol + '.csv'
+        # Check source file exists
         if not os.path.exists(filePath): return
-        # Load small sample of csv to check for update
-        tickerDF = pd.read_csv(filePath, nrows=2)
-        # Skip if file does not contain datetime
-        if ('Datetime' not in tickerDF.columns): return
-        # If update required, load full file:
-        tickerDF = pd.read_csv(filePath, sep=',',index_col = 0, parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True,  engine='c', na_filter=False, usecols=['Datetime','open', 'close', 'high', 'low', 'volume']) # sep=',', parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False
+        # Load source
+        tickerDF = csvToPandas(filePath, asc=False, unicode=True)
+        # Load custom time
+        if os.path.exists(destination):
+            customDF = csvToPandas(destination, asc=False, unicode=True)
+            if len(customDF) > 0:
+                # Get latest date from existing data and filter to remove duplicates
+                maxDate = max(customDF.index)
+                tickerDF = tickerDF[tickerDF.index > maxDate]
+
         # New time frame
         newTF = []
-        start = time.time()
         # check length
         if len(tickerDF) < 3:
             return
@@ -277,12 +290,23 @@ class GetData:
         # Group
         tickerGroups = tickerDF.groupby(pd.Grouper(freq=timeFrame, offset='1min'))#.apply(your_function)
 
+        counter = 0
         for name, group in tickerGroups:
             if len(group) <= 1:
                 continue
-
-            row = [max(group.index), group.iloc[0][0], group.iloc[-1][1], max(group.high), min(group.low), sum(group.volume)]
+            row = [max(group.index), group.iloc[0][0], group.iloc[-1][1], max(group.high), min(group.low), int(float(group.volume[0])) + int(float(group.volume[1]))]
             newTF.append(row)
 
+        # Convert to df
         df = pd.DataFrame(newTF, columns = ['Datetime','open','close','high','low','volume'])
-        df.to_csv(destinationPath + symbol + '.csv')
+        df['Datetime'] = pd.to_datetime(df['Datetime'])
+        df = df.set_index('Datetime')
+
+
+        if os.path.exists(destination):
+            # Join
+            df = pd.concat([customDF,df], axis=0)
+        # Order
+        df = df.sort_index(ascending=False)
+        # Save
+        df.to_csv(destination)

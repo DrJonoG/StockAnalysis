@@ -1,1 +1,1 @@
-__all__ = ["ComputeIndicators", "Display", "DownloadData", "HotkeyGenerator"]
+__all__ = ["Figure", "GetData", "GetIndicators", "GetUpdate"]

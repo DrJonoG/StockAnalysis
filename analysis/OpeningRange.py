@@ -16,6 +16,7 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 # analysis of the impact of the previous day close, to the current day based on the opening bar
 
 import os
+import re
 import time
 import datetime
 import pandas as pd
@@ -48,7 +49,12 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
     df = csvToPandas(source + symbol)
 
     # OR is the opening range, C is close, O is open, yC is yesterdays close -> denotes the difference between left and right
-    columns = ['Datetime', 'yC', 'O', '% yC->O', '$ yC->O', 'OR High', 'OR Low', 'OR ATR', 'OR %']
+    # log file:
+    fileName = symbol[0] + '_Summary.csv'
+    if not os.path.exists(destination + fileName):
+        with open(destination + fileName, "w") as f:
+            f.write("Datetime,yC,O,% yC->O,$ yC->O,OR High,OR Low,OR ATR,OR %,OR Break Above/Below/None,Reverse back to OR,Full OR breakout reversal,Close in ORB Direction?,Close in opposite ORB dir,% OR L->Day Low,% OR H->Day High,Day Low,Day High,C,Volume\n")
+
     # Empty dictionary list for storage
     dictList = list()
     # Group on date intraday analysis
@@ -58,46 +64,180 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
     # Convert to list
     groupedDF = list(groupedDF)
     # Iterate through groups, skip first two groups for lookback
-    for index in range(2, len(groupedDF)):
-        # Get the days
-        currDay = groupedDF[index][1]
-        yDay = groupedDF[index-1][1]
-        # If only looking at open data, filter out the rest
-        if marketOnly:
-            currDay = currDay[currDay.Market == 1]
-            yDay = yDay[yDay.Market == 1]
+    with open(destination + fileName, "a") as f:
+        for index in range(2, len(groupedDF)):
+            # Get the days
+            currDay = groupedDF[index][1]
+            yDay = groupedDF[index-1][1]
+            # If only looking at open data, filter out the rest
+            if marketOnly:
+                currDay = currDay[currDay.Market == 1]
+                yDay = yDay[yDay.Market == 1]
 
-        yClose = yDay.iloc[-1].close
-        firstBarOpen = currDay.iloc[0].open
-        # Comparison to yesterdays data
-        change = firstBarOpen - yClose
-        gap = round((change / yClose), 5)
-        # The high and low of the opening range
-        ORLow = min(currDay[0:openingRange].low)
-        ORHigh = max(currDay[0:openingRange].high)
-        OR = ORHigh - ORLow
-        # Assignment
-        data = [currDay.index[0].strftime('%Y-%m-%d'), yClose, firstBarOpen, gap, change, ORHigh, ORLow, OR, round((OR/ORLow),5)]
-        # The change in the current day from start to end (not just one bar, but whole day)
-        lastBarClose = currDay.iloc[-1].close
-        dayChange = round(((lastBarClose - firstBarOpen) / firstBarOpen), 5)
-        # Remaining data
-        dayLow = min(currDay[openingRange:].low)
-        dayHigh = max(currDay[openingRange:].high)
-        #Assign
-        columns.append('% OR L->Day Low')
-        data.append(round((ORLow - dayLow)/dayLow,5))
-        columns.append('% OR H->Day High')
-        data.append(round((ORHigh - dayHigh)/dayHigh,5))
-        columns.append('Day Low')
-        data.append(dayLow)
-        columns.append('Day High')
-        data.append(dayHigh)
-        columns.append('C')
-        data.append(currDay.iloc[-1].close)
-        columns.append('Volume')
-        data.append(sum(currDay.volume))
-        # Append to list
-        dictList.append(dict(zip(columns, data)))
-    # Covnert to dataframe
-    pd.DataFrame.from_dict(dictList).to_csv(destination + symbol.replace('.csv', '_OR_' + str(openingRange) + 'bars.csv'), index=False)
+            # Check for data
+            # We check for 2 as we need a start and end value
+            if len(currDay) < 2 or len(yDay) < 2:
+                return
+
+            yClose = yDay.iloc[-1].close
+            firstBarOpen = currDay.iloc[0].open
+            # Comparison to yesterdays data
+            change = firstBarOpen - yClose
+            gap = round((change / yClose), 5)
+            # The high and low of the opening range
+            ORLow = min(currDay[0:openingRange].low)
+            ORHigh = max(currDay[0:openingRange].high)
+            # Check populated
+            if ORLow == 0 or ORHigh == 0:
+                return
+            # Define OR
+            OR = ORHigh - ORLow
+            # Assignment
+            data = f"{currDay.index[0].strftime('%Y-%m-%d')},{yClose},{firstBarOpen},{gap},{change},{ORHigh},{ORLow},{OR},{round((OR/ORLow),5)}"
+            # The change in the current day from start to end (not just one bar, but whole day)
+            lastBarClose = currDay.iloc[-1].close
+            dayChange = round(((lastBarClose - firstBarOpen) / firstBarOpen), 5)
+            # check if data exists
+            if len(currDay[openingRange:]) == 0:
+                return
+            # Remaining data
+            dayLow = min(currDay[openingRange:].low)
+            dayHigh = max(currDay[openingRange:].high)
+            # Check for valid values
+            if dayLow <= 0 or dayHigh <= 0:
+                return
+            # Does the close break the opening range
+            # Above is represented by 1, below is -1 and within OR is 0
+            breakType = 0
+            reverseToOR = False
+            completeReverse = False
+            closeInORBDirection = False
+            closeInOppDirection = False
+            for position, closeIter in enumerate(currDay[openingRange:].close):
+                if closeIter > ORHigh:
+                    breakType = 1
+                    # Check if the OR break reverses back to OR or completely reverses
+                    for subTime in currDay[openingRange + position:].close:
+                        if subTime < ORHigh:
+                            reverseToOR = True
+                        if subTime < ORLow:
+                            completeReverse = True
+                    # Is the close in the same direction as the breakout
+                    if currDay.iloc[-1].close >= ORHigh:
+                        closeInORBDirection = True
+                    elif currDay.iloc[-1].close <= ORLow:
+                        closeInOppDirection = True
+                    break
+
+                if closeIter < ORLow:
+                    breakType = -1
+                    # Check if the OR break reverses back to OR or completely reverses
+                    for subTime in currDay[openingRange + position:].close:
+                        if subTime > ORLow:
+                            reverseToOR = True
+                        if subTime > ORHigh:
+                            completeReverse = True
+                    # Is the close in the same direction as the breakout
+                    if currDay.iloc[-1].close <= ORLow:
+                        closeInORBDirection = True
+                    elif currDay.iloc[-1].close >= ORHigh:
+                        closeInOppDirection = True
+                    break
+
+            # Assign the break type
+
+            # Did breakout reverse back to OR
+            # Did breakout completely reverse to opposite side
+            # Did symbol close in the direction of the breakout
+            # The percentage difference between the OR low and the day low
+            # The percentage difference between the OR high and the day high
+            # Current day low
+            # Current day high
+            # The close
+            # Volume
+            data = data + f",{breakType},{reverseToOR},{completeReverse},{closeInORBDirection},{closeInOppDirection},{round((ORLow - dayLow)/dayLow,5)},{round((ORHigh - dayHigh)/dayHigh,5)},{dayLow},{dayHigh},{currDay.iloc[-1].close},{sum(currDay.volume)}\n"
+            f.write(data)
+
+
+def Summary(directory, destination):
+    # Load all files
+    if not os.path.exists(directory + 'Merged.csv'):
+        files = list(Path(directory).rglob('*.csv'))
+        masterDF = pd.concat((pd.read_csv(f, header = 0) for f in files))
+        masterDF.to_csv(directory + 'Merged.csv', index=False)
+    else:
+        # Load master
+        masterDF = pd.read_csv(directory + 'Merged.csv', index_col = 0)
+
+    # Filters
+    masterDF = masterDF[((masterDF['yC'] > 0.5) & (masterDF['yC'] < 250))]
+    masterDF = masterDF[(masterDF['Volume'] > 500000)]
+    masterDF['OR %'] = masterDF['OR %'] * 100
+    masterDF= masterDF[masterDF['OR %'] < 60]
+
+    # Groups
+    masterDF['priceGroup'] = pd.cut(masterDF['yC'], 25)
+    masterDF['ORPercent'] = pd.cut(masterDF['OR %'], 60)
+
+    # Analysis by price
+    groupedDF = masterDF.groupby(masterDF['priceGroup'], group_keys=False)
+    with open(destination + 'ORB_GrpByPrice.csv', 'w') as f:
+        header = "Price Range,Total Days,OR % of Price,ORB Above,ORB Below,ORB None,Reverse to OR,Full OR Reversal,Close in ORB Direction,Close in Opp Dir,Close between OR\n"
+        f.write(header)
+        for name, group in groupedDF:
+            line = AnalyseGroups(group, name)
+            f.write(line)
+
+    # Analysis of both OR percent and price grouped
+    with open(destination + 'ORB_GrpByORPercentPrice.csv', 'w') as f:
+        header = "Price Range,OR Percent,Total Days,OR % of Price,ORB Above,ORB Below,ORB None,Reverse to OR,Full OR Reversal,Close in ORB Direction,Close in Opp Dir,Close between OR\n"
+        f.write(header)
+        for priceName, priceGroup in groupedDF:
+            groupedDFSub = priceGroup.groupby(priceGroup['ORPercent'], group_keys=False)
+            for name, group in groupedDFSub:
+                line = AnalyseGroups(group, name)
+                priceName = re.sub('[\(\]]', '', str(priceName)).replace(","," to ")
+                f.write(f"{priceName},"+line)
+
+    # Analysis by OR percentage of price
+    groupedDF = masterDF.groupby(masterDF['ORPercent'], group_keys=False)
+    with open(destination + 'ORB_GrpByORPercent.csv', 'w') as f:
+        header = "OR Percent,Total Days,OR % of Price,ORB Above,ORB Below,ORB None,Reverse to OR,Full OR Reversal,Close in ORB Direction,Close in Opp Dir,Close between OR\n"
+        f.write(header)
+        for name, group in groupedDF:
+            line = AnalyseGroups(group, name)
+            f.write(line)
+
+def AnalyseGroups(group, name):
+    ORPercent = round(group['OR %'].mean(),2)
+    ORBreak = group['OR Break Above/Below/None'].value_counts()
+    ORReverse = group['Reverse back to OR'].value_counts()
+    ORFullReverse = group['Full OR breakout reversal'].value_counts()
+    ORCloseDirection = group['Close in ORB Direction?'].value_counts()
+    ORCloseOppDirection = group['Close in opposite ORB dir'].value_counts()
+
+    # Total Days
+    totalOR = ORBreak.sum()
+    # Calculate percentages of breakouts
+    ORBBelow = 0
+    ORBAbove = 0
+    ORBNone = 0
+    if 1 in ORBreak: ORBAbove = round(1 - (totalOR - ORBreak[1]) / totalOR,2)
+    if -1 in ORBreak: ORBBelow = round(1 - (totalOR - ORBreak[-1]) / totalOR,2)
+    if 0 in ORBreak: ORBNone = round(1 - (totalOR - ORBreak[0]) / totalOR,2)
+    # Calculate percent that return to OR
+    ORBRevTrue = 0
+    if 1 in ORReverse: ORBRevTrue = round(1 - (totalOR - ORReverse[1]) / totalOR,2)
+    # Calculate percent that completely reverses
+    ORBFullRev = 0
+    if 1 in ORFullReverse: ORBFullRev = round(1 - (totalOR - ORFullReverse[1]) / totalOR,2)
+    # Calculate percent that close in initial ORB direction
+    ORBCloseDir = 0
+    if 1 in ORCloseDirection: ORBCloseDir = round(1 - (totalOR - ORCloseDirection[1]) / totalOR,2)
+    # Calculate percent that close in opposite ORB direction
+    ORBOppCloseDir = 0
+    if 1 in ORCloseOppDirection: ORBOppCloseDir = round(1 - (totalOR - ORCloseOppDirection[1]) / totalOR,2)
+    # Write line
+    name = re.sub('[\(\]]', '', str(name)).replace(","," to ")
+    line = f"{name},{totalOR},{ORPercent},{ORBAbove},{ORBBelow},{ORBNone},{ORBRevTrue},{ORBFullRev},{ORBCloseDir},{ORBOppCloseDir},{round(1-(ORBOppCloseDir+ORBCloseDir),2)}\n"
+    return line

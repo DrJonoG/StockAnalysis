@@ -22,9 +22,9 @@ import time
 
 def csvToPandas(path, asc=True, unicode=False):
     if unicode:
-        df = pd.read_csv(path, sep=',', index_col = 0, parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False, dtype='unicode')
+        df = pd.read_csv(path, sep=',', index_col = 0, parse_dates=["Datetime"], on_bad_lines='skip', dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False, dtype='unicode')
     else:
-        df = pd.read_csv(path, sep=',', index_col = 0, parse_dates=["Datetime"], dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False)
+        df = pd.read_csv(path, sep=',', index_col = 0, parse_dates=["Datetime"], on_bad_lines='skip', dayfirst = True, infer_datetime_format=True, engine='c', na_filter=False)
     # Sort dates old to new
     df = df.sort_index(ascending=asc)
     return df
@@ -46,6 +46,8 @@ def PrintProgressBar (iteration, total, prefix = '', suffix = '', length = 20):
     length : Int
         The length of the progress bar
     """
+    if total < 1:
+        total = 1.0
     percent = ("{0:.1f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = '█' * filledLength + '-' * (length - filledLength)

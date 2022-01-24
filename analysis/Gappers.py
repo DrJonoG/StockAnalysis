@@ -16,10 +16,13 @@ __author__ = 'DrJonoG'  # Jonathon Gibbs
 # analysis of the impact of the previous day close, to the current day based on the opening bar
 
 import os
+import re
 import time
 import datetime
+import numpy as np
 import pandas as pd
-from helpers import csvToPandas
+from pathlib import Path
+from helpers import csvToPandas, PrintProgressBar
 
 """
 => Gappers looks at how the gap between open and close impacts the remainder of the day.
@@ -42,81 +45,221 @@ def Analyse(symbol, source, destination, marketOnly=True):
     marketOnly : Bool
         A boolean to use only market opening hours (if true) or all times (if false)
     """
+    # log file:
+    fileName = symbol[0] + '_Summary.csv'
+    if not os.path.exists(destination + fileName):
+        with open(destination + fileName, "w") as f:
+            f.write("Datetime,yOpen,yClose,yChange (%),yChange($),yClose RSI,Day Open,Gap (%),Gap ($),Gap Filled,Gap Reached,Gap Filled after 10am,Gap reached after 10am,Day High,Day Low,Day Close,Day Change,Volume\n")
     # Load DF
     df = csvToPandas(source + symbol)
-    # Specify output columns
-    columns = ['Datetime', 'yOpen', 'yClose', 'yChange (%)', 'yChange($)', 'yClose RSI', 'Day Open', 'Gap (%)', 'Gap ($)']
-    # Empty dictionary list for storage
-    dictList = list()
     # Group on date intraday analysis
     groupedDF = df.groupby(df.index.date, group_keys=False)
-    # Number of days
-    totalDays = groupedDF.ngroups
     # Daily statistics
     dailyStats = groupedDF.close.agg(['max', 'min', 'count', 'median', 'mean'])
     # Convert to list
     groupedDF = list(groupedDF)
     # Iterate through groups, skip first two groups for lookback
-    for index in range(2, len(groupedDF)):
-        try:
-            # Get the days
-            currDay = groupedDF[index][1]
-            yDay = groupedDF[index-1][1]
-            # If only looking at open data, filter out the rest
-            if marketOnly:
-                currDay = currDay[currDay.Market == 1]
-                yDay = yDay[yDay.Market == 1]
-            # Check if days exist
-            if (len(yDay.index) < 1 or len(currDay.index) < 1):
+    with open(destination + fileName, "a") as f:
+        for index in range(2, len(groupedDF)):
+            try:
+                # Get the days
+                currDay = groupedDF[index][1]
+                yDay = groupedDF[index-1][1]
+                # If only looking at open data, filter out the rest
+                if marketOnly:
+                    currDay = currDay[currDay.Market == 1]
+                    yDay = yDay[yDay.Market == 1]
+                # Check if days exist
+                if (len(yDay.index) < 1 or len(currDay.index) < 1):
+                    continue
+                # The change in the previous day between open and close
+                yClose = yDay.iloc[-1].close
+                yOpen = yDay.iloc[0].open
+                # Ensure data is available
+                if (yOpen == 0 or yClose == 0):
+                    continue
+                # Calculate change in yesterdays market
+                yChange = round(((yClose - yOpen) / yOpen), 5)
+                # The gap between yesterday day close and market open
+                firstBarOpen = currDay.iloc[0].open
+                gap = round(((firstBarOpen - yClose) / yClose), 5) # Change between yesterdays close and todays open, the gap.
+                lastBarClose = currDay.iloc[-1].close
+                dayChange = round(((lastBarClose - firstBarOpen) / firstBarOpen), 5)
+                # If no change then no gap
+                if gap == 0:
+                    continue
+                # Gap direction
+                if gap >= 0:
+                    # Assignment
+                    # Check if gap has been filled and what time
+                    # This is whether the gap has been completely filled
+                    gapFill = currDay[currDay.low < yClose].head(1)
+                    gapFilled = "No"
+                    if not gapFill.empty:
+                        gapFilled = gapFill.index[0].strftime('%H:%M')
+
+                    # Check if gap has been reached and what time:
+                    # This is whether the price touched the gap
+                    currDayRemainder = currDay[1:] # We exclude the first bar (the gap) as in theory this will always be touched
+                    gapTouched = currDayRemainder[currDayRemainder.low < firstBarOpen].head(1)
+                    touched = "No"
+                    if not gapTouched.empty:
+                        touched = gapTouched.index[0].strftime('%H:%M')
+
+                    # Assignment
+                    # Check if gap has been filled and what time after 10am
+                    # This is whether the gap has been completely filled
+                    gapFill = currDay[((currDay.low < yClose) & (currDay.index.hour >= 10))].head(1)
+                    gapFilledLater = "No"
+                    if not gapFill.empty:
+                        gapFilledLater = gapFill.index[0].strftime('%H:%M')
+
+                    # Check if gap has been reached and what time after 10am:
+                    # This is whether the price touched the gap
+                    gapTouched = currDay[((currDay.low < firstBarOpen) & (currDay.index.hour >= 10))].head(1)
+                    touchedLater = "No"
+                    if not gapTouched.empty:
+                        touchedLater = gapTouched.index[0].strftime('%H:%M')
+                else:
+                    # Assignment
+                    # Check if gap has been filled and what time
+                    # This is whether the gap has been completely filled
+                    gapFill = currDay[currDay.high > yClose].head(1)
+                    gapFilled = "No"
+                    if not gapFill.empty:
+                        gapFilled = gapFill.index[0].strftime('%H:%M')
+
+                    # Check if gap has been reached and what time:
+                    # This is whether the price touched the gap
+                    currDayRemainder = currDay[1:] # We exclude the first bar (the gap) as in theory this will always be touched
+                    gapTouched = currDayRemainder[currDayRemainder.high > firstBarOpen].head(1)
+                    touched = "No"
+                    if not gapTouched.empty:
+                        touched = gapTouched.index[0].strftime('%H:%M')
+
+                    # Assignment
+                    # Check if gap has been filled and what time after 10am
+                    # This is whether the gap has been completely filled
+                    gapFill = currDay[((currDay.high > yClose) & (currDay.index.hour >= 10))].head(1)
+                    gapFilledLater = "No"
+                    if not gapFill.empty:
+                        gapFilledLater = gapFill.index[0].strftime('%H:%M')
+
+                    # Check if gap has been reached and what time after 10am:
+                    # This is whether the price touched the gap
+                    gapTouched = currDay[((currDay.high > firstBarOpen) & (currDay.index.hour >= 10))].head(1)
+                    touchedLater = "No"
+                    if not gapTouched.empty:
+                        touchedLater = gapTouched.index[0].strftime('%H:%M')
+
+                # High and lows of the day
+                dayHigh = max(currDay.high)
+                dayLow = min(currDay.low)
+                # The clsoe and entire day change
+                dayClose = lastBarClose
+                dayChange = dayChange
+                dayVol = sum(currDay.volume)
+                # Assignment for CSV file
+                line = f"{currDay.index[0].strftime('%Y-%m-%d')},{yOpen},{yClose},{yChange},{(yClose - yOpen)},{yDay.iloc[-1].RSI14},{firstBarOpen},{gap},{(firstBarOpen - yClose)},{gapFilled},{touched},{gapFilledLater},{touchedLater},{dayHigh},{dayLow},{dayClose},{dayChange},{dayVol}\n"
+                f.write(line)
+            except Exception:
+                print(f"\n ==> Error processing {symbol}\n")
                 continue
-            # The change in the previous day between open and close
-            yClose = yDay.iloc[-1].close
-            yOpen = yDay.iloc[0].open
-            # Ensure data is available
-            if (yOpen == 0 or yClose == 0):
-                continue
-            # Calculate change
-            yChange = round(((yClose - yOpen) / yOpen), 5)
-            # The gap between yesterday day close and market open
-            firstBarOpen = currDay.iloc[0].open
-            gap = round(((firstBarOpen - yClose) / yClose), 5)
-            # Assignment
-            data = [currDay.index[0].strftime('%Y-%m-%d'), yOpen, yClose, yChange, (yClose - yOpen), yDay.iloc[-1].RSI14,firstBarOpen, gap, (firstBarOpen - yClose)]
-            # The change in the current day from start to end (not just one bar, but whole day)
-            lastBarClose = currDay.iloc[-1].close
-            dayChange = round(((lastBarClose - firstBarOpen) / firstBarOpen), 5)
-            # Assignment
-            columns.append('Gap Filled')
-            # Check if gap has been filled and what time
-            gapFill = currDay[currDay.low < yClose].head(1)
-            if gapFill.empty:
-                data.append("Not filled")
-            else:
-                data.append(gapFill.index[0].strftime('%H:%M'))
-            # Check if gap has been reached and what time:
-            columns.append('Gap Reached')
-            currDayRemainder = currDay[1:] # We exclude the first bar (the gap) as in theory this will always be touched
-            gapTouched = currDayRemainder[currDayRemainder.low < firstBarOpen].head(1)
-            if gapTouched.empty:
-                data.append("Not touched")
-            else:
-                data.append(gapTouched.index[0].strftime('%H:%M'))
-            # High and lows of the day
-            columns.append('Day High')
-            data.append(max(currDay.high))
-            columns.append('Day Low')
-            data.append(min(currDay.low))
-            # The clsoe and entire day change
-            columns.append('Day Close')
-            data.append(lastBarClose)
-            columns.append('Day Change')
-            data.append(dayChange)
-            columns.append('Volume')
-            data.append(sum(currDay.volume))
-            # Append to list
-            dictList.append(dict(zip(columns, data)))
-        except Exception:
-            print(f"\n ==> Error processing {symbol}\n")
-            continue
-    # Covnert to dataframe and save appending 'GAP' to file name
-    pd.DataFrame.from_dict(dictList).to_csv(destination + symbol.replace('.csv', '_GAP.csv'), index=False)
+
+def PercentageCalculation(group, column):
+    # % of days that fill the gap before 10am
+    gapCounts = group[column].value_counts()
+    sumCounts = sum(gapCounts)
+    gapFilledPerc = 1
+    if 'No' in gapCounts:
+        gapFilledPerc = round((sumCounts - gapCounts['No']) / sumCounts, 2)
+    # Most common fill time
+    mostCommonString = ''
+    mostCommon = gapCounts.nlargest(n=4).index.values
+    if len(mostCommon) < 4: rangeValue = len(mostCommon)
+    else: rangeValue = 4
+    for i in range(0,rangeValue):
+        mostCommonString = mostCommonString + str(mostCommon[i]) + '->' + str(round(1-(sumCounts - gapCounts[mostCommon[i]]) / sumCounts,2)) + " "
+
+    return (gapFilledPerc, mostCommonString)
+
+def CalculateSummary(group, name):
+    numRows = len(group.index)
+    if numRows == 0: return
+
+    gapFilledPerc, mostCommonString = PercentageCalculation(group, 'Gap Filled')
+    gapFilledPercAfter, mostCommonStringAfter = PercentageCalculation(group, 'Gap Filled after 10am')
+    gapReachedPerc, commonReachedString = PercentageCalculation(group, 'Gap Reached')
+    gapReachedPercAfter, commonReachedStringAfter = PercentageCalculation(group, 'Gap reached after 10am')
+
+    closeInDirection = round((len(group[(group['Gap ($)'] >= 0.0) & (group['Day Close'] > group['Day Open'])]) + # Positive
+                        len(group[(group['Gap ($)'] < 0.0) & (group['Day Close'] < group['Day Open'])])) / numRows,2)  # Negative
+    closeOppDirection = round((len(group[(group['Gap ($)'] >= 0.0) & (group['Day Close'] < group['yClose'])]) +
+                        len(group[(group['Gap ($)'] < 0.0) & (group['Day Close'] > group['yClose'])])) / numRows,2)
+    closeInGap = round(1-(closeInDirection + closeOppDirection),2)
+
+    name = re.sub('[\(\]]', '', str(name)).replace(","," to ")
+    line = f"{name},{numRows},{gapFilledPerc},{mostCommonString},{gapFilledPercAfter},{mostCommonStringAfter},{gapReachedPerc},{commonReachedString},{gapReachedPercAfter},{commonReachedStringAfter},{closeInDirection},{closeOppDirection},{closeInGap}\n"
+    return line
+
+def Summary(directory, destination):
+    # Load all files
+    if not os.path.exists(directory + 'Merged.csv'):
+        files = list(Path(directory).rglob('*.csv'))
+        masterDF = pd.concat((pd.read_csv(f, header = 0) for f in files))
+        masterDF.to_csv(directory + 'Merged.csv', index=False)
+    else:
+        # Load master
+        masterDF = pd.read_csv(directory + 'Merged.csv', index_col = 0)
+
+    # Filter out very large and very small stocks and low volume
+    masterDF = masterDF[((masterDF['yClose'] > 0.5) & (masterDF['yClose'] < 250))]
+    masterDF = masterDF[((masterDF['Gap ($)'] > -15) & (masterDF['Gap ($)'] < 15))]
+    masterDF = masterDF[((masterDF['yChange($)'] > -15) & (masterDF['yChange($)'] < 15))]
+    masterDF = masterDF[(masterDF['Volume'] > 500000)]
+
+    # Cut data
+    masterDF['priceGroup'] = pd.cut(masterDF['Gap ($)'], 60)
+    masterDF['closingPrice'] = pd.cut(masterDF['yOpen'], 100)
+    masterDF['pricePercent'] = pd.cut(masterDF['Gap (%)'], 60)
+    masterDF['yChangePercent'] = pd.cut(masterDF['yChange (%)'], 60)
+
+    # Analysis by gap $
+    groupedDF = masterDF.groupby(masterDF['priceGroup'], group_keys=False)
+    with open(destination + 'GAP_GrpByGapPrice.csv', 'w') as f:
+        header = "Gap $,# Days,% Filled before 10am,MostCommonFillTimes before 10am,% Filled after 10am,MostCommonFillTimes after 10am,% Reached before 10am,AvgReachTime before 10am,% Reached after 10am,AvgReachTime after 10am,% Close in Gap Dir,% Close opposite Gap dir,Close In Gap\n"
+        f.write(header)
+        for name, group in groupedDF:
+            line = CalculateSummary(group, name)
+            if line is not None:
+                f.write(line)
+
+    # Analysis by gap %
+    groupedDF = masterDF.groupby(masterDF['pricePercent'], group_keys=False)
+    with open(destination + 'GAP_GrpByGapPercent.csv', 'w') as f:
+        header = "Gap %,# Days,% Filled before 10am,MostCommonFillTimes before 10am,% Filled after 10am,MostCommonFillTimes after 10am,% Reached before 10am,AvgReachTime before 10am,% Reached after 10am,AvgReachTime after 10am,% Close in Gap Dir,% Close opposite Gap dir,Close In Gap\n"
+        f.write(header)
+        for name, group in groupedDF:
+            line = CalculateSummary(group, name)
+            if line is not None:
+                f.write(line)
+
+    # Analysis by change yesterday
+    groupedDF = masterDF.groupby(masterDF['yChangePercent'], group_keys=False)
+    with open(destination + 'GAP_GrpByYChange.csv', 'w') as f:
+        header = "yChange,# Days,% Filled before 10am,MostCommonFillTimes before 10am,% Filled after 10am,MostCommonFillTimes after 10am,% Reached before 10am,AvgReachTime before 10am,% Reached after 10am,AvgReachTime after 10am,% Close in Gap Dir,% Close opposite Gap dir,Close In Gap\n"
+        f.write(header)
+        for name, group in groupedDF:
+            line = CalculateSummary(group, name)
+            if line is not None:
+                f.write(line)
+
+    # Analysis by symbol price
+    groupedDF = masterDF.groupby(masterDF['closingPrice'], group_keys=False)
+    with open(destination + 'GAP_GrpByPrice.csv', 'w') as f:
+        header = "Price,# Days,% Filled before 10am,MostCommonFillTimes before 10am,% Filled after 10am,MostCommonFillTimes after 10am,% Reached before 10am,AvgReachTime before 10am,% Reached after 10am,AvgReachTime after 10am,% Close in Gap Dir,% Close opposite Gap dir,Close In Gap\n"
+        f.write(header)
+        for name, group in groupedDF:
+            line = CalculateSummary(group, name)
+            if line is not None:
+                f.write(line)
