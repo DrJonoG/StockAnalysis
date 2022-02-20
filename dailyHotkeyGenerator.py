@@ -35,7 +35,7 @@ class HotKeys:
 
     def StopPosition(self, keys, amount, focus, clear, name, send):
         for i in range(0, len(amount)):
-            command = '%s%sROUTE=STOP;StopType=Market;StopPrice=Ask-0.10;Share=Pos;TIF=DAY+;SELL=%s;' % (focus, clear, str(amount[i]), send)
+            command = '%s%sROUTE=STOP;StopType=Market;StopPrice=Ask-%s;Share=Pos;TIF=DAY+;SELL=%s;' % (focus, clear, str(amount[i]), send)
             self.AddHotkey(keys[i], name + str(amount[i]) + '%.', command)
 
     def CoverShort(self, keys, percent, focus, clear, name, send, stop=False):
@@ -84,13 +84,13 @@ class HotKeys:
 if __name__ == '__main__':
     # Adjust your risk value here to automatically increase the position sizes
     riskValue = 200
-    focus = '' #'FocusWindow Level2;'
+    focus = 'FocusWindow Level2;' #'FocusWindow Level2;'
     clear = 'CXL ALLSYMB;'
     send = 'Send'
     slippage = '0.03'
     # risk
     stopKeys = ['Shift+v','Shift+b','Shift+n','Shift+m']
-    stopValues [0.1, 0.2, 0.3, 0.5]
+    stopValues = [0.1, 0.2, 0.3, 0.5]
     # long and short hotkeys
     longKeys = ['Ctrl+1','Ctrl+2','Ctrl+3','Ctrl+4','Ctrl+5','Ctrl+6','Ctrl+7','Ctrl+8','Ctrl+9','Ctrl+0']
     shortKeys = ['F1', 'F2','F3', 'F4','F5', 'F6','F7', 'F8','F9', 'F10']
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     # Initialise hotkeys config df
     hotkey = HotKeys()
     # risk
-    hotkey.StopPosition(stopKeys, stopValues, focus, clear, 'Adjust Stop ', send):
+    hotkey.StopPosition(stopKeys, stopValues, focus, clear, 'Adjust Stop ', send)
     # trade
     hotkey.TradeHotkeysRisk(longKeysRisk, shortKeys, riskValue, riskAmount, focus, slippage, send)
     hotkey.TradeHotkeysQuantity(longKeys, shortKeys, tradeQty, focus, slippage, send)
@@ -117,6 +117,13 @@ if __name__ == '__main__':
     hotkey.CoverShort(coversKeysStop, sellPercent, focus, clear, 'Cover Short and Adjust Stop', send, True)
     hotkey.SellPosition(sellKeys, sellPercent, focus, clear, 'Exit Long ', send)
     hotkey.SellPosition(sellKeysStop, sellPercent, focus, clear, 'Exit Long and Adjust Stop ', send, True)
+    # Profit targets
+    hotkey.AddHotkey('Ctrl+X', 'Profit Target $.10', 'Route=LIMIT; Share=Pos; Price=ASK+.10; NoRR=N; SELL; TIF=DAY')
+    hotkey.AddHotkey('Ctrl+Y', 'Profit Target $.20', 'Route=LIMIT; Share=Pos; Price=ASK+.20; NoRR=N; SELL; TIF=DAY')
+    hotkey.AddHotkey('Ctrl+Z', 'Profit Target $.30', 'Route=LIMIT; Share=Pos; Price=ASK+.30; NoRR=N; SELL; TIF=DAY')
+    # Trailing stopPrice
+    hotkey.AddHotkey('Ctrl+J', 'Trail $0.20', 'CXL ALLSYMB;Share=Pos;ROUTE=STOP;StopType=Trailing;TrailPrice=0.2; TIF=DAY+;SELL=Send;')
+    hotkey.AddHotkey('Ctrl+K', 'Trail $0.10', 'CXL ALLSYMB;Share=Pos;ROUTE=STOP;StopType=Trailing;TrailPrice=0.1; TIF=DAY+;SELL=Send;')
     # news
     hotkey.AddHotkey('Ctrl+N', 'News', 'http://www.benzinga.com/quote/%SYMB%;https://stocktwits.com/symbol/%SYMB%;http://uk.finance.yahoo.com/quote/%SYMB%/news?p=%SYMB%;http://seekingalpha.com/symbol/%SYMB%')
     hotkey.AddHotkey('Shift+P', 'Profile', 'http://uk.finance.yahoo.com/quote/%SYMB%/profile?p=%SYMB%')
@@ -151,7 +158,8 @@ if __name__ == '__main__':
     # Montage
     hotkey.AddHotkey(',', 'Decrease Shares', focus + 'FOCUS Share;FShare=Share-50')
     hotkey.AddHotkey('.', 'Increase Shares', focus + 'FOCUS Share;FShare=Share+50')
+    hotkey.AddHotkey('Tab','Focus on Level 2', 'FocusWindow Level2;')
     # Save
-    hotkey.Save('C:/DAS Trader Pro New/Auto_Hotkey.htk')
+    hotkey.Save('./Auto_Hotkey.htk')
 
     print("Hotkey file created. Saved to C:/DAS Trader Pro New/Auto_Hotkey.htk")

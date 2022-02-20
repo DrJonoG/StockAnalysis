@@ -70,17 +70,26 @@ class Figure:
             )
         )
 
-    def AddStopLine(self, start, end, price):
-        self.figure.add_shape(type="line", x0=start,
-            y0 = price,
-            x1 = end,
-            y1 = price, fillcolor = 'yellow')
 
-    def AddLine(self, df, column, color="black", name="Undefined", width=1):
+    def AddStopLine(self, end, start, price, output):
+        self.figure.add_trace(
+            go.Scatter(
+                x=[start,end],
+                y=[price, price],
+                mode='lines',
+                line=dict(color='black', width=2)
+            )
+        )
+        self.figure.add_trace(go.Scatter(x=[end], y=[price], textposition='top right', text=output, mode="text", showlegend=False))
+
+    def AddLine(self, df, column, color="black", name="Undefined", width=1,output=""):
         self.figure.add_trace(
             go.Scatter(
                 x=df.index,
                 y=df[column],
+                mode='lines+text',
+                text=output,
+                textposition='top right',
                 line=dict(color=color, width=width)
             )
         )
@@ -104,6 +113,18 @@ class Figure:
             line_width=50,
             fillcolor=color,
             opacity=0.5
+        )
+
+    def AddSlope(self, x1, x2, y1, y2, slope):
+        self.figure.add_trace(
+            go.Scatter(
+                mode='lines+text',
+                textposition='top right',
+                text = str(round(slope,2)),
+                x=[x1, x2],
+                y=[y1, y2],
+                line=dict(color="blue", width=1)
+            )
         )
 
     def Show(self):

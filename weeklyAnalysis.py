@@ -27,6 +27,7 @@ import pandas as pd
 import analysis.Stats as stats
 import analysis.OpeningRange as OR
 import analysis.Patterns as patterns
+import analysis.MAPullback as pullback
 import analysis.Gappers as gappers
 from helpers import LoadIndicators, SymbolIteratorFiles
 
@@ -68,8 +69,13 @@ def Analyse(dataPath, timeFrames):
         patternFolder = destination + '/patterns/'
         if not os.path.exists(patternFolder):
             os.makedirs(patternFolder + 'figures/')
-        SymbolIteratorFiles(fileList, patterns.Analyse, [source, patternFolder, True], prefix='Analysing Patterns ')
-        patterns.Summary(patternFolder, destination)
+        #SymbolIteratorFiles(fileList, patterns.Analyse, [source, patternFolder, True], prefix='Analysing ' + tf[:-2] + ' Patterns ' )
+        MAPBFolder = destination + '/pullback/'
+        if not os.path.exists(MAPBFolder):
+            os.makedirs(MAPBFolder + 'figures/')
+        SymbolIteratorFiles(fileList, pullback.Analyse, [source, MAPBFolder, True], prefix='Analysing ' + tf[:-2] + ' MA Pullback ' )
+        #pullback.Summary(MAPBFolder, destination)
+        #patterns.Summary(patternFolder, destination)
         exit()
         # Don't need stats.Analyse until trading regularly, provides more of an overview of last month
         #SymbolIteratorFiles(fileList, stats.Analyse, [source, destination, True], prefix='Analysing Stats ')
@@ -88,7 +94,7 @@ if __name__ == '__main__':
     dataPath = config['filepath']['indicatorDestination']
 
     # Timeframes
-    timeFrames = ['5min', '15min', '30min', '60min']
+    timeFrames = ['2min', '5min', '15min', '30min', '60min']
 
     # Symbol list
     symbolFileList = config['filepath']['symbolList']

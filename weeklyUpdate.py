@@ -77,5 +77,4 @@ if __name__ == '__main__':
                 indicators = CI.ComputeIndicators(**LoadIndicators())
                 CI.ComputeIndicators(**LoadIndicators()).Compute(source=destination, frequency=custom, update=False, destination=destination)
                 #SymbolIterator(symbolFileList, indicators.Compute, [custom], prefix='Grouping Times', apiCap=150, functionCalls=0)
-            exit()
             SymbolIterator(symbolFileList, data.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')

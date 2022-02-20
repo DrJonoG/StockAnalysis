@@ -47,7 +47,7 @@ def Analyse(symbol, source, destination, marketOnly=True, pattern=[1, 1, -1, 1])
     riskPercents = [0.02]
 
     ''' The patterns to look for and enter on '''
-    patterns = [[1, 1, -1, 1], [1, 1, 1, -1, 1], [1, 1, 1,-1, 1, 1]]
+    patterns = [[1, 1, -1, 1], [1, 1, 1, -1, 1]]
 
     ''' The profit target is risk per share * profit target, i.e. risk 200
     get 400 with a ProfitTarget of 2'''
@@ -60,7 +60,7 @@ def Analyse(symbol, source, destination, marketOnly=True, pattern=[1, 1, -1, 1])
     ''' MA must be above following moving averages, 0-0 represents ignore
     The first MA must be greater than the second i.e. 10ema-20ema: 10ema should
     be higher than 20ema. '''
-    maAboveMAs = ['0-0', '10EMA-50EMA', '10EMA-100EMA']
+    maAboveMAs = ['0-0', '20EMA-100EMA']
 
     ''' Above or below vwap '''
     vWAP = [True, False]
@@ -86,8 +86,19 @@ def Analyse(symbol, source, destination, marketOnly=True, pattern=[1, 1, -1, 1])
     ''' Whether green bar needs to close above PB '''
     closeAbove = [True, False]
 
+    ''' Whether the wick must be less than 2 * the size of candle on entry '''
+    wickConstraint = [True, False]
+
+    ''' Whether to trade when entry candle is over overExtended
+    If true, do not trade overextended '''
+    overExtended = [True, False]
+
+    ''' Whether the pullback needs to have less volume than previous green candle
+    if True, pullback must have less volume than previous candles '''
+    lessVolumePB = [True, False]
+
     # Average minimum volume
-    minVolume = 4000000
+    minVolume = 5000000
     # How much room to give stop loss from low of pullback
     perShareAdjustment = 0.03
     # Trade costs
@@ -96,21 +107,22 @@ def Analyse(symbol, source, destination, marketOnly=True, pattern=[1, 1, -1, 1])
     if not os.path.exists(source + symbol): return
     df = csvToPandas(source + symbol)
 
+    # Filter out symbols that are penny stocks or too high in value
+    if df.close.min() > 80 or df.close.max() < 5: return
+
     # Open market only
     if marketOnly:
-        df = df[df.Market == 1]
+        df = df[(df.index.hour >= 7) & (df.index.hour < 17)]
 
     # Filter out data over a year old
     # Older dates have less signifcance as markets change
     df = df[df.index > '2021-01-01']
 
     # log file:
-    if symbol[0] == 'B' or symbol[0] == 'b':
-        exit()
     fileName = symbol[0] + '_Summary.csv'
     if not os.path.exists(destination + fileName):
         with open(destination + fileName, "w") as f:
-            f.write("Symbol,Days,IncrementalProfitTaking,MinDayVolume,PnL,Total Profit,Total Loss,PnL Per Trade,# Trades,# Trades Per Day,Reset PNL,# Profits,# Losses,# EOD,# Bust,Win %,Risk %,Stop Limit,Pattern,Profit Target,Price Above MA,MA above MA,vWAP,RSI,Entry Vol > PB Vol,Per Share Adjust.,Cost Per Trade,Positive,CloseAbovePullback\n")
+            f.write("Symbol,Days,IncrementalProfitTaking,MinDayVolume,PnL,Total Profit,Total Loss,PnL Per Trade,# Trades,# Trades Per Day,Reset PNL,# Profits,# Losses,# EOD,# Bust,Win %,Risk %,Stop Limit,Pattern,Profit Target,Price Above MA,MA above MA,vWAP,RSI,Entry Vol > PB Vol,Per Share Adjust.,Cost Per Trade,Positive,CloseAbovePullback,WickConstraint,overExtendedConstraint,lessVolumePB\n")
 
     f = open(destination + fileName, 'a')
     # symbol
@@ -128,13 +140,16 @@ def Analyse(symbol, source, destination, marketOnly=True, pattern=[1, 1, -1, 1])
                                         for stopLimit in stopLimits:
                                             for reset in resetPNL:
                                                 for above in closeAbove:
-                                                    returnLine = runAnalysis(df, reset, above, destination, sym, riskPercent, pattern, profitTarget, priceAboveMA, maAboveMA, vwap, RSI, entryVol, increm,  stopLimit, perShareAdjustment, costPerTrade, minVolume)
-                                                    if returnLine is not None:
-                                                        f.write(returnLine)
+                                                    for wickLength in wickConstraint:
+                                                        for notOverExtended in overExtended:
+                                                            for lessVolume in lessVolumePB:
+                                                                returnLine = runAnalysis(df, reset, lessVolume, notOverExtended, wickLength, above, destination, sym, riskPercent, pattern, profitTarget, priceAboveMA, maAboveMA, vwap, RSI, entryVol, increm,  stopLimit, perShareAdjustment, costPerTrade, minVolume)
+                                                                if returnLine is not None:
+                                                                    f.write(returnLine)
     f.close()
 
 
-def runAnalysis(df, reset, closeAboveRed, destination, symbol, riskPercent, pattern, profitTarget, priceAboveMA, maAboveMA, vwap, rsi, entryVol, incremental, stopLimit, perShareAdjustment, costPerTrade, minVolume):
+def runAnalysis(df, reset, lessVolumePB, notOverExtended,  wickLength, closeAboveRed, destination, symbol, riskPercent, pattern, profitTarget, priceAboveMA, maAboveMA, vwap, rsi, entryVol, incremental, stopLimit, perShareAdjustment, costPerTrade, minVolume):
     # Whether to write figures
     # Note, this is computational expensive
     drawFigures = False
@@ -163,10 +178,10 @@ def runAnalysis(df, reset, closeAboveRed, destination, symbol, riskPercent, patt
     for idx, day in df.groupby(df.index.date):
         # Pandas to numpy
         Volume = day.volume.to_numpy()
+
         # Check if any entries
         if Volume.shape[0] < 1:
             continue
-
         # check if average volume below min volume
         if sum(Volume) < minVolume:
             continue
@@ -177,6 +192,7 @@ def runAnalysis(df, reset, closeAboveRed, destination, symbol, riskPercent, patt
         Close = day.close.to_numpy()
         Open = day.open.to_numpy()
         Low = day.low.to_numpy()
+        High = day.high.to_numpy()
 
         # Do not trade penny stocks
         if np.average(Close) < 2.5 or np.average(Close) > 80:
@@ -194,6 +210,7 @@ def runAnalysis(df, reset, closeAboveRed, destination, symbol, riskPercent, patt
             figure.CandleStick(day)
             figure.TextConfig(chartTitle=f"{symbol} : {df.index[0]}")
 
+        tradeToday = False
         # If pattern found len > 0
         if len(pullbackIdx) > 0:
             # For every pullback found
@@ -219,15 +236,25 @@ def runAnalysis(df, reset, closeAboveRed, destination, symbol, riskPercent, patt
                 if Date[entryCandleIdx].hour >= 14:
                     continue
 
+                # If wick is more than double the body of candle, do not trade
+                if wickLength:
+                    entryCandleSize = (Close[entryCandleIdx] - Open[entryCandleIdx]) * 2
+                    topWick = High[entryCandleIdx] - Close[entryCandleIdx]
+                    bottomWick = Open[entryCandleIdx] - Low[entryCandleIdx]
+                    if topWick > entryCandleSize or bottomWick > entryCandleSize:
+                        continue
+
                 # Entry should not be too over extended from pullback+
-                changeRed = Open[redCandleIdx[len(redCandleIdx)-1]] - Close[redCandleIdx[len(redCandleIdx)-1]]
-                changeEntry = entryPrice - Open[entryCandleIdx]
-                if changeEntry > Close[redCandleIdx] * 0.01 and changeEntry > (changeRed * 2):
-                    continue
+                if notOverExtended:
+                    changeRed = Open[redCandleIdx[len(redCandleIdx)-1]] - Close[redCandleIdx[len(redCandleIdx)-1]]
+                    changeEntry = entryPrice - Open[entryCandleIdx]
+                    if changeEntry > Close[redCandleIdx] * 0.01 and changeEntry > (changeRed * 2):
+                        continue
 
                 # Pullback should have less volume than previous candles
-                if redCandleVol > Volume[redCandleIdx[0] - 1]:
-                    continue
+                if lessVolumePB:
+                    if redCandleVol > Volume[redCandleIdx[0] - 1] and redCandleVol > Volume[redCandleIdx[0] - 2]:
+                        continue
 
                 ''' Check if the condition to close above pullback is True
                  If so check this and continue if not satisfied '''
@@ -295,6 +322,7 @@ def runAnalysis(df, reset, closeAboveRed, destination, symbol, riskPercent, patt
                 targetPrice.append(entryPrice + (riskPerShare * profitTarget))
                 # Update total trades
                 Trades = Trades + 1
+                tradeToday = True
                 # Update figure
                 if drawFigures:
                     figure.AddMarker(day.index[entryCandleIdx], Close[entryCandleIdx], 'triangle-up', 'green', size=12)
@@ -365,12 +393,12 @@ def runAnalysis(df, reset, closeAboveRed, destination, symbol, riskPercent, patt
                             break
 
 
-        if drawFigures:
+        if drawFigures and tradeToday:
             figure.Save(destination + f"/figures/{symbol}_{str(round(PnL, 0))}_{str(random.randint(1000,9999))}.png")
 
     if Trades > 0:
         # Append to summary
-        return (f"""{symbol},{Days},{incremental},{minVolume},{round(ProfitValue+LossValue,2)},{ProfitValue},{LossValue},{round((ProfitValue+LossValue) / Trades, 2)},{Trades},{round(Trades / Days,2)},{reset},{Profits},{Stops},{EOD},{Bust},{round(Profits / Trades, 2)},{riskPercent},{stopLimit},{' '.join(map(str, pattern))},{profitTarget},{priceAboveMA},{maAboveMA},{vwap},{rsi},{entryVol},{perShareAdjustment},{costPerTrade},{1 if (ProfitValue+LossValue) > 0 else 0}, {closeAboveRed}\n""")
+        return (f"""{symbol},{Days},{incremental},{minVolume},{round(ProfitValue+LossValue,2)},{ProfitValue},{LossValue},{round((ProfitValue+LossValue) / Trades, 2)},{Trades},{round(Trades / Days,2)},{reset},{Profits},{Stops},{EOD},{Bust},{round(Profits / Trades, 2)},{riskPercent},{stopLimit},{' '.join(map(str, pattern))},{profitTarget},{priceAboveMA},{maAboveMA},{vwap},{rsi},{entryVol},{perShareAdjustment},{costPerTrade},{1 if (ProfitValue+LossValue) > 0 else 0}, {closeAboveRed},{wickLength},{notOverExtended},{lessVolumePB}\n""")
 
 #Symbol	Days	IncrementalProfitTaking	MinDayVolume	PnL	Total Profit	Total Loss	PnL Per Trade	# Trades	# Trades Per Day
 # Reset PNL	# Profits	# Losses	# EOD	# Bust	Win %	Risk %	Stop Limit	Pattern	Profit Target	Price Above MA	MA above MA	vWAP
