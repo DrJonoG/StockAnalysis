@@ -29,6 +29,7 @@ import analysis.OpeningRange as OR
 import analysis.Patterns as patterns
 import analysis.MAPullback as pullback
 import analysis.Gappers as gappers
+import analysis.ORB as orb
 from helpers import LoadIndicators, SymbolIteratorFiles
 
 def Analyse(dataPath, timeFrames):
@@ -43,9 +44,10 @@ def Analyse(dataPath, timeFrames):
         fileList = [os.path.basename(x) for x in glob.glob(source + "*.csv")]
 
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
-        #SymbolIteratorFiles(fileList, gappers.Analyse, [source, destination, True], prefix='Analysing Gappers ')
+        #SymbolIteratorFiles(fileList, gappers.Analyse, [source, destination + 'gappers/', True], prefix='Analysing Gappers ')
         # Summarise gapper results
         #summary.Gappers(destination)
+
 
         # Arguments: [source, destination, openingRange=3, marketOnly=True]
         minute = int(tf[:-3])
@@ -61,10 +63,10 @@ def Analyse(dataPath, timeFrames):
             openRangeBars = 1
 
         # Iterate all files and analyse Arguments [source, destination, numberOfBars, marketOnly]
-        #SymbolIteratorFiles(fileList, OR.Analyse, [source, destination, openRangeBars, True], prefix='Analysing Opening Range ')
+        SymbolIteratorFiles(fileList, OR.Analyse, [source, destination +  'openingrange/', 5, True], prefix='Analysing Opening Range ')
         # Summarise opening range
         #summary.OpeningRange(destination)
-
+        exit();
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
         patternFolder = destination + '/patterns/'
         if not os.path.exists(patternFolder):
@@ -73,7 +75,14 @@ def Analyse(dataPath, timeFrames):
         MAPBFolder = destination + '/pullback/'
         if not os.path.exists(MAPBFolder):
             os.makedirs(MAPBFolder + 'figures/')
-        SymbolIteratorFiles(fileList, pullback.Analyse, [source, MAPBFolder, True], prefix='Analysing ' + tf[:-2] + ' MA Pullback ' )
+        #SymbolIteratorFiles(fileList, pullback.Analyse, [source, MAPBFolder, True], prefix='Analysing ' + tf[:-2] + ' MA Pullback ' )
+
+
+        ORBFolder = destination + '/ORB/'
+        if not os.path.exists(ORBFolder):
+            os.makedirs(ORBFolder + 'figures/')
+        SymbolIteratorFiles(fileList, orb.Analyse, [source, ORBFolder, True], prefix='Analysing ' + tf[:-2] + ' ORB ' )
+        #SymbolIteratorFiles(fileList, pullback.Analyse, [source, MAPBFolder, True], prefix='Analysing ' + tf[:-2] + ' MA Pullback ' )
         #pullback.Summary(MAPBFolder, destination)
         #patterns.Summary(patternFolder, destination)
         exit()
@@ -94,7 +103,7 @@ if __name__ == '__main__':
     dataPath = config['filepath']['indicatorDestination']
 
     # Timeframes
-    timeFrames = ['2min', '5min', '15min', '30min', '60min']
+    timeFrames = ['1min','2min', '5min', '15min', '30min', '60min']
 
     # Symbol list
     symbolFileList = config['filepath']['symbolList']

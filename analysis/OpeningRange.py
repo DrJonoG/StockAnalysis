@@ -19,7 +19,9 @@ import os
 import re
 import time
 import datetime
+import numpy as np
 import pandas as pd
+from core import Figure
 from pathlib import Path
 from helpers import csvToPandas, PrintProgressBar
 
@@ -53,7 +55,7 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
     fileName = symbol[0] + '_Summary.csv'
     if not os.path.exists(destination + fileName):
         with open(destination + fileName, "w") as f:
-            f.write("Datetime,yC,O,% yC->O,$ yC->O,OR High,OR Low,OR ATR,OR %,OR Break Above/Below/None,Reverse back to OR,Full OR breakout reversal,Close in ORB Direction?,Close in opposite ORB dir,% OR L->Day Low,% OR H->Day High,Day Low,Day High,C,Volume\n")
+            f.write("Symbol,Datetime,yC,O,% yC->O,$ yC->O,OR High,OR Low,OR ATR,ATR,OR%ofATR,OR %,OR Break Above/Below/None,Reverse back to OR,Full OR breakout reversal,Close in ORB Direction?,Close in opposite ORB dir,% OR L->Day Low,% OR H->Day High,Day Low,Day High,C,Volume\n")
 
     # Empty dictionary list for storage
     dictList = list()
@@ -65,10 +67,26 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
     groupedDF = list(groupedDF)
     # Iterate through groups, skip first two groups for lookback
     with open(destination + fileName, "a") as f:
-        for index in range(2, len(groupedDF)):
+        for index in range(14, len(groupedDF)):
             # Get the days
             currDay = groupedDF[index][1]
             yDay = groupedDF[index-1][1]
+            # Calculate atr:
+            atrArr = []
+            for i in range(index-14, index):
+                currDay = groupedDF[index][1]
+                atr = currDay.high - currDay.low
+                atrArr = np.append(atrArr, atr)
+            dailyATR = round(np.mean(atrArr),2)
+            # Daily ATR has to be at least $0.30
+            if dailyATR < 0.25:
+                continue
+            # Pre market
+            preMarket = currDay[currDay.Market == 0]
+            preMarketVol = preMarket['volume'].sum()
+            # Skip if volume for premarket is too low
+            if preMarketVol < 200000:
+                continue;
             # If only looking at open data, filter out the rest
             if marketOnly:
                 currDay = currDay[currDay.Market == 1]
@@ -93,7 +111,7 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
             # Define OR
             OR = ORHigh - ORLow
             # Assignment
-            data = f"{currDay.index[0].strftime('%Y-%m-%d')},{yClose},{firstBarOpen},{gap},{change},{ORHigh},{ORLow},{OR},{round((OR/ORLow),5)}"
+            data = f"{symbol},{currDay.index[0].strftime('%Y-%m-%d')},{yClose},{firstBarOpen},{gap},{change},{ORHigh},{ORLow},{OR},{dailyATR},{round(OR/dailyATR,2)},{round((OR/ORLow),5)}"
             # The change in the current day from start to end (not just one bar, but whole day)
             lastBarClose = currDay.iloc[-1].close
             dayChange = round(((lastBarClose - firstBarOpen) / firstBarOpen), 5)
@@ -106,6 +124,12 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
             # Check for valid values
             if dayLow <= 0 or dayHigh <= 0:
                 return
+            # Create figure
+            figure = Figure.Figure()
+            figure.CandleStick(pd.concat((yDay,currDay)))
+            figure.TextConfig(chartTitle=f"{symbol}. Date {currDay.index[0]}... Premarket Volume: {str(preMarketVol)}... ATR {str(dailyATR)}")
+            figure.AddStopLine(currDay.index[0], currDay.index[len(currDay)-1], ORLow, "OR Low")
+            figure.AddStopLine(currDay.index[0], currDay.index[len(currDay)-1], ORHigh, "OR High")
             # Does the close break the opening range
             # Above is represented by 1, below is -1 and within OR is 0
             breakType = 0
@@ -157,7 +181,9 @@ def Analyse(symbol, source, destination, openingRange=3, marketOnly=True):
             # Volume
             data = data + f",{breakType},{reverseToOR},{completeReverse},{closeInORBDirection},{closeInOppDirection},{round((ORLow - dayLow)/dayLow,5)},{round((ORHigh - dayHigh)/dayHigh,5)},{dayLow},{dayHigh},{currDay.iloc[-1].close},{sum(currDay.volume)}\n"
             f.write(data)
-
+            # Write figure
+            fileLocation = destination + "/figures/" + symbol + "_" + str(index) + ".png"
+            figure.Save(fileLocation)
 
 def Summary(directory, destination):
     # Load all files

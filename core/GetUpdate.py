@@ -54,12 +54,18 @@ class UpdateData:
 
         # Check if existing file
         if os.path.exists(saveFile):
-            # Read existing and convert datetime if exists
-            loadDF = csvToPandas(saveFile, asc=False, unicode=True)
-            if len(loadDF.index) > 0:
-                # Get latest date from existing data and filter to remove duplicates
-                maxDate = max(loadDF.index)
-                newData = newData[newData.index >= maxDate]
+            try:
+                # Read existing and convert datetime if exists
+                loadDF = csvToPandas(saveFile, asc=False, unicode=True)
+                if len(loadDF.index) > 0:
+                    # Get latest date from existing data and filter to remove duplicates
+                    maxDate = max(loadDF.index)
+                    newData = newData[newData.index >= maxDate]
+            except Exception:
+                print("Error ")
+                print(saveFile)
+                print(" ^ ")
+                return
         # If new data available (> 1 to exclude header row)
         if len(newData.index) > 5:
             newData = newData.sort_index()

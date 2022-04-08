@@ -21,6 +21,7 @@ import time
 import datetime
 import numpy as np
 import pandas as pd
+from core import Figure
 from pathlib import Path
 from helpers import csvToPandas, PrintProgressBar
 
@@ -49,7 +50,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
     fileName = symbol[0] + '_Summary.csv'
     if not os.path.exists(destination + fileName):
         with open(destination + fileName, "w") as f:
-            f.write("Datetime,yOpen,yClose,yChange (%),yChange($),yClose RSI,Day Open,Gap (%),Gap ($),Gap Filled,Gap Reached,Gap Filled after 10am,Gap reached after 10am,Day High,Day Low,Day Close,Day Change,Volume\n")
+            f.write("Symbol,Datetime,yOpen,yClose,yChange (%),yChange($),yClose RSI,Day Open,Gap (%),Gap ($),ATR,ATR%ofGap,Gap Filled,Gap Reached,Gap Filled after 10am,Gap reached after 10am,Day High,Day Low,Day Close,Day Change,Volume,PreVolume\n")
     # Load DF
     df = csvToPandas(source + symbol)
     # Group on date intraday analysis
@@ -60,11 +61,29 @@ def Analyse(symbol, source, destination, marketOnly=True):
     groupedDF = list(groupedDF)
     # Iterate through groups, skip first two groups for lookback
     with open(destination + fileName, "a") as f:
-        for index in range(2, len(groupedDF)):
+
+
+        for index in range(14, len(groupedDF)):
             try:
+                # Calculate atr:
+                atrArr = []
+                for i in range(index-14, index):
+                    currDay = groupedDF[index][1]
+                    atr = currDay.high - currDay.low
+                    atrArr = np.append(atrArr, atr)
+                dailyATR = round(np.mean(atrArr),2)
+                # Daily ATR has to be at least $0.30
+                if dailyATR < 0.25:
+                    continue
                 # Get the days
                 currDay = groupedDF[index][1]
                 yDay = groupedDF[index-1][1]
+                # Pre market
+                preMarket = currDay[currDay.Market == 0]
+                preMarketVol = preMarket['volume'].sum()
+                # Skip if volume for premarket is too low
+                if preMarketVol < 200000:
+                    continue;
                 # If only looking at open data, filter out the rest
                 if marketOnly:
                     currDay = currDay[currDay.Market == 1]
@@ -88,8 +107,15 @@ def Analyse(symbol, source, destination, marketOnly=True):
                 # If no change then no gap
                 if gap == 0:
                     continue
+                # Create figure
+                figure = Figure.Figure()
+                figure.CandleStick(pd.concat((yDay,currDay)))
+                figure.TextConfig(chartTitle=f"{symbol}. Date {currDay.index[0]}... Premarket Volume: {str(preMarketVol)}... ATR {str(dailyATR)}")
+                figure.AddStopLine(currDay.index[0], currDay.index[len(currDay)-1], firstBarOpen, "Market Open")
+                figure.AddStopLine(currDay.index[0], currDay.index[len(currDay)-1], yClose, "Yesterday Close")
+                figure.AddStopLine(currDay.index[0], currDay.index[len(currDay)-1], (firstBarOpen+yClose) / 2, "MidLine. Gapping " + str(gap*100)  + "%")
                 # Gap direction
-                if gap >= 0:
+                if gap >= 0.01:
                     # Assignment
                     # Check if gap has been filled and what time
                     # This is whether the gap has been completely filled
@@ -120,7 +146,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     touchedLater = "No"
                     if not gapTouched.empty:
                         touchedLater = gapTouched.index[0].strftime('%H:%M')
-                else:
+                elif gap <= -0.01:
                     # Assignment
                     # Check if gap has been filled and what time
                     # This is whether the gap has been completely filled
@@ -152,17 +178,22 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     if not gapTouched.empty:
                         touchedLater = gapTouched.index[0].strftime('%H:%M')
 
-                # High and lows of the day
-                dayHigh = max(currDay.high)
-                dayLow = min(currDay.low)
-                # The clsoe and entire day change
-                dayClose = lastBarClose
-                dayChange = dayChange
-                dayVol = sum(currDay.volume)
-                # Assignment for CSV file
-                line = f"{currDay.index[0].strftime('%Y-%m-%d')},{yOpen},{yClose},{yChange},{(yClose - yOpen)},{yDay.iloc[-1].RSI14},{firstBarOpen},{gap},{(firstBarOpen - yClose)},{gapFilled},{touched},{gapFilledLater},{touchedLater},{dayHigh},{dayLow},{dayClose},{dayChange},{dayVol}\n"
-                f.write(line)
-            except Exception:
+                if gap <= -0.01 or gap >= 0.01:
+                    # High and lows of the day
+                    dayHigh = max(currDay.high)
+                    dayLow = min(currDay.low)
+                    # The clsoe and entire day change
+                    dayClose = lastBarClose
+                    dayChange = dayChange
+                    dayVol = sum(currDay.volume)
+                    # Assignment for CSV file
+                    line = f"{symbol},{currDay.index[0].strftime('%Y-%m-%d')},{yOpen},{yClose},{yChange},{(yClose - yOpen)},{yDay.iloc[-1].RSI14},{firstBarOpen},{gap},{gap},{dailyATR},{round(dailyATR/gap,4)},{gapFilled},{touched},{gapFilledLater},{touchedLater},{dayHigh},{dayLow},{dayClose},{dayChange},{dayVol},{preMarketVol}\n"
+                    f.write(line)
+                    # Write figure
+                    fileLocation = destination + "/figures/" + symbol + "_" + str(index) + ".png"
+                    figure.Save(fileLocation)
+            except Exception as e:
+                print('Failed to do something: ' + str(e))
                 print(f"\n ==> Error processing {symbol}\n")
                 continue
 

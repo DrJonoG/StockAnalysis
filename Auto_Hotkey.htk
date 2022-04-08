@@ -1,0 +1,46 @@
+Ctrl+ESC:Cancel All:PANIC
+1:Chart 1:MinuteChart 1 2d; NumBar 36
+4:Chart 15:MinuteChart 15 5d; NumBar 36
+2:Chart 2:MinuteChart 2 2d; NumBar 36
+5:Chart 30:MinuteChart 30 10d; NumBar 36
+3:Chart 5:MinuteChart 5 5d; NumBar 36
+6:Chart 60:MinuteChart 60 20d; NumBar 36
+7:Chart D:DayChart 1d 60d; Zoomfit
+8:Chart D Large:DayChart 1d 120d; Zoomfit
+Ctrl+NumPad+:Chart Show Historic Data:GetMoreHistoricalData
+NumPad+:Chart ZoomIn:ZoomIn
+NumPad-:Chart ZoomOut:ZoomOut
+PageDown:Cover Short 100%.:FocusWindow Level2;ROUTE=LIMIT;Price=ASK+0.03;Price=Round2;Share=Pos*1;TIF=DAY+;BUY=Send;
+Delete:Cover Short 33.0%.:FocusWindow Level2;ROUTE=LIMIT;Price=ASK+0.03;Price=Round2;Share=Pos*0.33;TIF=DAY+;BUY=Send;
+End:Cover Short 50.0%.:FocusWindow Level2;ROUTE=LIMIT;Price=ASK+0.03;Price=Round2;Share=Pos*0.5;TIF=DAY+;BUY=Send;
+,:Decrease Shares:FocusWindow Level2;FOCUS Share;FShare=Share-50
+Ctrl+D:Draw Delete Lines:RemoveALLLines
+\:Draw HorizontalLine:ConfigTrendLine horzline dashline:09ab00:2;HorizontalLine;
+Ctrl+\:Draw HorizontalLine:ConfigTrendLine horzline dashline:ab0000:2;HorizontalLine;
+Ctrl+R:Draw Rectangle:Rectangle
+Ctrl+T:Draw Trendline:TrendLine
+PageUp:Exit Long 100%.:FocusWindow Level2;ROUTE=LIMIT;Price=BID-0.03;Price=Round2;Share=Pos*1;TIF=DAY;SELL=Send;
+Insert:Exit Long 33.0%.:FocusWindow Level2;ROUTE=LIMIT;Price=BID-0.03;Price=Round2;Share=Pos*0.33;TIF=DAY;SELL=Send;
+Home:Exit Long 50.0%.:FocusWindow Level2;ROUTE=LIMIT;Price=BID-0.03;Price=Round2;Share=Pos*0.5;TIF=DAY;SELL=Send;
+TAB:Focus on Level 2:SwitchTWnd;
+NumPad3:Focus on Level 2 Bot:FocusWindow montageThree;
+NumPad2:Focus on Level 2 Mid:FocusWindow montageTwo;
+NumPad1:Focus on Level 2 Top:FocusWindow montageOne;
+.:Increase Shares:FocusWindow Level2;FOCUS Share;FShare=Share+50
+=:Long / Short Break Even:FocusWindow Level2;CXL ALLSYMB;Route=Stop;Price=AvgCost;StopType=MARKET;STOPPRICE=AvgCost;StopPrice=Round2;Share=Pos;TIF=DAY+;Send=Reverse;
+Ctrl+A:Long Alert:AlertName=PriceBroke;AlertType=LastPrice;PlaySound=no;AlertOperator=>=;AddAlert;
+Ctrl+B:Long Buy x Shares:FocusWindow Level2;ROUTE=MARKET;Share=500;TIF=DAY+;BUY=Load;
+Ctrl+F:Long Buy x Shares 100% Risk:StopPrice=Price;Price = Ask-Price; Share = 200 / Price;ROUTE=SMRTL;Price=Ask+0.03;TIF=DAY+;BUY=Send;TriggerOrder=RT:STOP STOPTYPE:MARKET STOPPRICE:StopPrice ACT:SELL QTY:POS TIF:DAY+
+Shift+F:Long Buy x Shares 50% risk:StopPrice=Price;Price = Ask-Price; Share = 100 / Price;ROUTE=SMRTL;Price=Ask+0.03;TIF=DAY+;BUY=Send;TriggerOrder=RT:STOP STOPTYPE:MARKET STOPPRICE:StopPrice ACT:SELL QTY:POS TIF:DAY+
+Shift+E:Long Buy x Shares At Price:DefShare=BP*0.97;Price=Price-StopPrice;SShare=100/Price;Share=DefShare-SShare;DefShare=DefShare+SShare;SShare=Share;Sshare=DefShare-SShare;Share=0.5*SShare; SShare=Share;Share=Price*100; Price=StopPrice; DefShare=Price*100; Price=Share/100; Price=Price+StopPrice; StopPrice=Price; Share=SShare; TogSShare; Price=Price+.03;TIF=DAY+;Route=Stop;StopType=Limit; Buy=Send; Share=DefShare;Price=Share/100; StopPrice=Price; DefShare=400;TriggerOrder=RT:STOP STOPTYPE:MARKET PX:StopPrice-0 ACT:SELL STOPPRICE:StopPrice QTY:Pos TIF:DAY+;
+Ctrl+S:Long Stop Loss Setup:Share=Pos;ROUTE=STOP;StopType=Market;StopPrice=Price;TIF=DAY+;SELL=LOAD
+Ctrl+N:News:https://www.barchart.com/stocks/quotes/%SYMB%/overview;http://www.benzinga.com/quote/%SYMB%;http://seekingalpha.com/symbol/%SYMB%;https://stocks.jonathongibbs.com/symbol.php?sym=%SYMB%;https://tradingterminal.com/stocks/%SYMB%
+Shift+N:News:https://uk.investing.com/equities/pre-market;https://stocktwits.com/stream/trending;
+Shift+P:Profile:http://uk.finance.yahoo.com/quote/%SYMB%/profile?p=%SYMB%
+Ctrl+P:Profit Target 1.5:Route=LIMIT;Share=Pos*.33;Price=(200.0/Pos)*1.5;Price=AvgCost+Price;NoRR=N;SELL;TIF=DAY
+Shift+L:Profit Target 2.0:Route=LIMIT;Share=Pos;Price=(200.0/Pos)*2.0;Price=AvgCost+Price;NoRR=N;SELL;TIF=DAY
+Shift+A:Short Alert:AlertName=PriceBroke;AlertType=LastPrice;PlaySound=no;AlertOperator=<=;AddAlert;
+Ctrl+F:Short Sell x Shares 100% Risk:StopPrice=Price;Price = Bid-Price; Share = 200 / Price;ROUTE=SMRTL;Price=Bid-0.03;TIF=DAY+;SELL=Send;TriggerOrder=RT:STOP STOPTYPE:MARKET STOPPRICE:StopPrice ACT:BUY QTY:POS TIF:DAY+
+Shift+S:Stop Position:StopPrice=Price
+Ctrl+K:Trail $0.10:CXL ALLSYMB;Share=Pos;ROUTE=STOP;StopType=Trailing;TrailPrice=0.1; TIF=DAY+;SELL=Send;
+Ctrl+J:Trail $x.xx:CXL ALLSYMB;Share=Pos;ROUTE=STOP;StopType=Trailing;TrailPrice=0.2; TIF=DAY+;SELL=Load;
