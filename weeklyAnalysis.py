@@ -62,11 +62,19 @@ def Analyse(dataPath, timeFrames):
         elif minute == 60:
             openRangeBars = 1
 
+        ORBFolder = destination + '/ORB/'
+        if not os.path.exists(ORBFolder):
+            os.makedirs(ORBFolder + 'figures/')
+        SymbolIteratorFiles(fileList, orb.Analyse, [source, ORBFolder, True], prefix='Analysing ' + tf[:-2] + ' ORB ' )
+
+        exit()
+
+
         # Iterate all files and analyse Arguments [source, destination, numberOfBars, marketOnly]
         SymbolIteratorFiles(fileList, OR.Analyse, [source, destination +  'openingrange/', 5, True], prefix='Analysing Opening Range ')
         # Summarise opening range
         #summary.OpeningRange(destination)
-        exit();
+
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
         patternFolder = destination + '/patterns/'
         if not os.path.exists(patternFolder):

@@ -67,6 +67,8 @@ def Analyse(symbol, source, destination, marketOnly=True):
     if not os.path.exists(source + symbol): return
     df = csvToPandas(source + symbol)
 
+    start_date = datetime.datetime(2020,1,1)
+    df = (df.index > start_date))
     # Check index is correct format
     if type(df.index) != pd.core.indexes.datetimes.DatetimeIndex: return
 
@@ -82,10 +84,10 @@ def Analyse(symbol, source, destination, marketOnly=True):
     #df = df[df.index >= '2022-01-01']
 
     # log file:
-    fileName = 'Final_Analysis_1Min_ORAsOC.csv'
+    fileName = 'ORB_Analysis.csv'
     if not os.path.exists(destination + fileName):
         with open(destination + fileName, "w") as f:
-            f.write("Date,Symbol,Breaktime,ORPattern,Up,Down,Even,ORL,ORH,OR,OR%,ATR,ORas%ofATR,ATR>OR,ORL>yHOD,ORC>yHOD,ORH>PreHigh,ORH>PreLow,HigherVolOnEntry,>EMA50,>EMA100,50MA>100MA,VWAP>50EMA,Entry,Stop,StopType,RiskPerShare,PT1,PT1-time,P1Met,PT2,PT2-time,P2Met,Figure\n")
+            f.write("Date,Symbol,PreVolume,ORType,Breaktime,ORPattern,Up,Down,Even,UpVol,DownVol,EvenVol,ORL,ORH,OR,OR%,ATR,ORas%ofATR,ATR>OR,ORL>yHOD,ORC>yHOD,ORH>PreHigh,ORH>PreLow,HigherVolOnEntry,>EMA50,>EMA100,50MA>100MA,VWAP>50EMA,Entry,Stop,StopType,RiskPerShare,PT1,PT1-time,P1Met,PT2,PT2-time,P2Met,Figure\n")
     f = open(destination + fileName, 'a')
     """ Parameters """
     # Stop details
@@ -215,6 +217,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
         # Premarket values
         preMarketHigh = max(preMarket.high)
         preMarketLow = min(preMarket.low)
+        preMarketVol = sum(preMarket.volume.to_numpy())
 
         positionInPre = 0 # 0 is inside, 1 above pre market highs, -1 below
         # Check where ORH is in relation to premarket
@@ -223,7 +226,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
         elif ORH < preMarketLow:
             positionInPre = -1
 
-        positionInPreLow = 0 # 0 is inside, 1 above pre market highs, -1 below
+        positionInPreLow = 0 # 0 is inside, 1 above pre market lows, -1 below
         # Check where ORL is in relation to premarket
         if ORL > preMarketLow:
             positionInPreLow = 1
@@ -232,6 +235,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
 
         # Trade variables, reset to defaults
         breakAbove = False
+        breakBelow = False
         stopLoss = 0
         entryPrice = 0
         riskPerShare = 0
@@ -257,21 +261,30 @@ def Analyse(symbol, source, destination, marketOnly=True):
         Down = 0
         Even = 0
 
+        UpVol = 0
+        DownVol = 0
+        EvenVol = 0
+
+        ORType = ""
+
         ORPattern = ""
         for j in range(0,ORBars):
             if Close[j] > Open[j]:
                 ORPattern = ORPattern + " 1"
                 Up += 1
+                UpVol += Vol[i]
             elif Close[j] < Open[j]:
                 ORPattern = ORPattern + " -1"
                 Down += 1
+                DownVol += Vol[i]
             else:
                 ORPattern = ORPattern + " 0"
                 Even += 1
+                EvenVol += Vol[i]
 
         # Iterate through the candlesticks of the current day
         for i in range(ORBars, len(Low)):
-            if not breakAbove:
+            if not breakAbove and not breakBelow:
                 # If break not found within an hour, stop
                 if i >= 60 + ORBars:
                     break;
@@ -288,19 +301,15 @@ def Analyse(symbol, source, destination, marketOnly=True):
 
                 # Look for break above OR
                 if High[i] > ORH and Open[i] > VWAP[i]:
-                    entryPrice = ORH + 0.03
-                    stopLoss = VWAP[i] - 0.03
+                    entryPrice = ORH + 0.02
+                    stopLoss = Low[i] - 0.01
                     riskPerShare = round((entryPrice - stopLoss),2)
 
                     # Don't risk under 0.05 and Don't risk more than $0.35
-                    if riskPerShare < 0.08 or riskPerShare > 0.38:
-                        # Try adjusting to VWAP as stop
-                        stopLoss = Low[i] - 0.03
-                        riskPerShare = round((entryPrice - stopLoss),2)
-                        if riskPerShare < 0.08 or riskPerShare > 0.38:
-                            break
-                        else:
-                            stopType = "VWAP"
+                    if riskPerShare < 0.06:
+                        break
+                    else:
+                        stopType = "EntryCandle"
 
                     # Higher average volume on entry?
                     # Skip first two bars due to market opening
@@ -308,8 +317,8 @@ def Analyse(symbol, source, destination, marketOnly=True):
                         HigherVolOnEntry = 1
 
                     # Set targets
-                    profitOne = round((riskPerShare * 1.5) + entryPrice,2)
-                    profitTwo = round((riskPerShare * 2.0) + entryPrice,2)
+                    profitOne = round((riskPerShare * 2.0) + entryPrice,2)
+                    profitTwo = round((riskPerShare * 3.0) + entryPrice,2)
 
                     # Add to figure
                     figure.AddStopLine(Date[0], Date[i], ORL, "Open Range Low $" + str(ORL))
@@ -322,15 +331,42 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     breakTime = Date[i]
                     breakAbove = True
                     drawFigure = True
+                    ORType = "Long"
                     continue
-            else:
-                # Check if we're stopped out
-                if(Low[i] <= stopLoss):
-                    # Lost trade
-                    stoppedOut = True
-                    # Add exit to figure
-                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', str(stopLoss) + ' (Stopped out)', size=16)
-                    break
+                else if Low[i] < ORL and Open[i] < VWAP[i]:
+                    entryPrice = ORL - 0.02
+                    stopLoss = High[i] + 0.01
+                    riskPerShare = round((stopLoss - entryPrice),2)
+
+                    # Don't risk under 0.05 and Don't risk more than $0.35
+                    if riskPerShare < 0.06:
+                        break
+                    else:
+                        stopType = "EntryCandle"
+
+                    # Higher average volume on entry?
+                    # Skip first two bars due to market opening
+                    if Volume[i] > np.average(Volume[ORBars-3:ORBars]):
+                        HigherVolOnEntry = 1
+
+                    # Set targets
+                    profitOne = round(entryPrice - (riskPerShare * 2.0) ,2)
+                    profitTwo = round(entryPrice - (riskPerShare * 3.0) ,2)
+
+                    # Add to figure
+                    figure.AddStopLine(Date[0], Date[i], ORL, "Open Range Low $" + str(ORL))
+                    figure.AddStopLine(Date[0], Date[i], ORH, "Open Range High $" + str(ORH))
+                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitOne, "Profit Target One")
+                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitTwo, "Profit Target Two")
+                    figure.AddStopLine(Date[0], Date[len(Date)-1], stopLoss, "Stop Loss (" + stopType + ")")
+                    figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "Entry, risk $" + str(riskPerShare), size=16)
+
+                    breakTime = Date[i]
+                    breakAbove = True
+                    drawFigure = True
+                    ORType = "Short"
+                    continue
+            else if breakAbove:
                 if(High[i] >= profitOne and not profitOneMet):
                     # profit target met
                     profitOneMet = True
@@ -346,6 +382,36 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     # Add exit to figure
                     figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', str(profitTwo) + ' (P 2.0)', size=16)
                     break
+                # Check if we're stopped out
+                if(Low[i] < stopLoss):
+                    # Lost trade
+                    stoppedOut = True
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', str(stopLoss) + ' (Stopped out)', size=16)
+                    break
+            else if breakBelow:
+                if(Low[i] <= profitOne and not profitOneMet):
+                    # profit target met
+                    profitOneMet = True
+                    P1Met = 1
+                    profitOneTime = Date[i].strftime("%H:%M")
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', str(profitOne) + ' (P 1.50)', size=16)
+                if(Low[i] <= profitTwo and not profitTwoMet):
+                    # profit target met
+                    profitTwoMet = True
+                    P2Met = 1
+                    profitTwoTime = Date[i].strftime("%H:%M")
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', str(profitTwo) + ' (P 2.0)', size=16)
+                    break
+                # Check if we're stopped out
+                if(High[i] > stopLoss):
+                    # Lost trade
+                    stoppedOut = True
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', str(stopLoss) + ' (Stopped out)', size=16)
+                    break
 
         if drawFigure:
             fileLocation = "None"
@@ -353,9 +419,8 @@ def Analyse(symbol, source, destination, marketOnly=True):
             figName = "Loss_"
             if P1Met == 1:
                 figName = "Profit_"
-            fileLocation = destination + "/Final_Analysis/" + figName + "_" + symbol + "_" + str(idx) + ".png"
-            fileLocation = ""
-            #figure.Save(fileLocation)
+            fileLocation = destination + "/Final_Analysis/" + figName + "_" + symbol + "_" + str(ORType) + "_" + str(idx) + ".png"
+            figure.Save(fileLocation)
 
             OR = round(ORH-ORL,2)
             ORPercent = round(OR / Close[0], 4)
@@ -365,4 +430,4 @@ def Analyse(symbol, source, destination, marketOnly=True):
             ORPercentOfATR = round(OR / ATR, 4)
 
 
-            f.write(f"{idx},{symbol},{breakTime.strftime('%H:%M')},{ORPattern},{Up},{Down},{Even},{ORL},{ORH},{OR},{ORPercent},{ATR},{ORPercentOfATR},{atrAboveOR},{ORLowPosition},{ORClosePosition},{positionInPre},{positionInPreLow},{HigherVolOnEntry},{above50EMA},{above100EMA},{MAStacked},{VwapAboveFast},{entryPrice},{stopLoss},{stopType},{riskPerShare},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
+            f.write(f"{idx},{symbol},{preMarketVol},{ORType},{breakTime.strftime('%H:%M')},{ORPattern},{Up},{Down},{Even},{UpVol},{DownVol},{EvenVol},{ORL},{ORH},{OR},{ORPercent},{ATR},{ORPercentOfATR},{atrAboveOR},{ORLowPosition},{ORClosePosition},{positionInPre},{positionInPreLow},{HigherVolOnEntry},{above50EMA},{above100EMA},{MAStacked},{VwapAboveFast},{entryPrice},{stopLoss},{stopType},{riskPerShare},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
