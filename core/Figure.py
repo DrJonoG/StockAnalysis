@@ -25,29 +25,33 @@ class Figure:
         self.figure = None
 
     def CandleStick(self, df):
-        # Create candlestick
-        self.figure = go.Figure(dict({
-            "data":
-                [go.Candlestick(
-                    x = df.index,
-                    open = df['open'],
-                    high = df['high'],
-                    low = df['low'],
-                    close = df['close']
-                )],
-            "layout": {
-                "title": {
-                    "text": "Temp name",
-                }
-            }
-        }))
+        self.figure = make_subplots(specs=[[{"secondary_y": True}]])
+
+        self.figure.add_trace(go.Candlestick(x=df.index.time,
+                                    open=df['open'], high=df['high'],
+                                    low=df['low'], close=df['close'],
+                                    increasing_line_color= 'green', decreasing_line_color= 'red', opacity=0.8,
+                                    name='Day', yaxis='y'
+                                  )
+                   )
+        self.figure.add_trace(go.Bar(x=df.index.time, y=df['volume'],
+                          name='Volume', opacity=0.1
+                          , yaxis='y2'
+                          )
+                   )
+
+        self.figure.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+        self.figure.update_layout(margin=dict(l=20, r=20, t=20, b=20))
+        #self.figure.add_trace(go.Bar(x=df.index,y=df[‘volume’]),row=2,col=1)
+        #self.figure = make_subplots(specs=[[{"secondary_y": True}]])
+        #self.figure.add_trace(go.Bar(x=df.index, y=df['volume']), secondary_y=False)
 
 
     def AppendCandles(self, df):
         if not self.figure:
             self.CandleStick(df)
         else:
-            self.figure.add_vline(x=df.index[0], line_width=2, line_dash="dash", line_color="grey")
+            self.figure.add_vline(x=df.index[0].time, line_width=2, line_dash="dash", line_color="grey")
             self.figure['data'][0]['x'] = np.concatenate((self.figure['data'][0]['x'],df.index))
             self.figure['data'][0]['open'] = np.concatenate((self.figure['data'][0]['open'],df.open))
             self.figure['data'][0]['high'] = np.concatenate((self.figure['data'][0]['high'],df.high))
@@ -71,13 +75,13 @@ class Figure:
         )
 
 
-    def AddStopLine(self, end, start, price, output):
+    def AddStopLine(self, end, start, price, output, col='black',width=1):
         self.figure.add_trace(
             go.Scatter(
                 x=[start,end],
                 y=[price, price],
                 mode='lines',
-                line=dict(color='black', width=2)
+                line=dict(color=col, width=width)
             )
         )
         self.figure.add_trace(go.Scatter(x=[end], y=[price], textposition='top right', text=output, mode="text", showlegend=False))
@@ -85,13 +89,25 @@ class Figure:
     def AddLine(self, df, column, color="black", name="Undefined", width=1,output=""):
         self.figure.add_trace(
             go.Scatter(
-                x=df.index,
+                x=df.index.time,
                 y=df[column],
                 mode='lines+text',
                 text=output,
                 textposition='top right',
                 line=dict(color=color, width=width)
             )
+        )
+
+    def addText(self, preh, prel, yhigh, ylow):
+        # add annotation
+        self.figure.add_annotation(
+            xref='x domain',
+            yref='y domain',
+            x=0.01,
+            y=0.9,
+            text='YHigh: ' + str(yhigh) + '<br />YLow: ' + str(ylow) + '<br />PHigh: ' + str(preh) + '<br />PLow: ' + str(prel),
+            showarrow=False,
+            row=1, col=1
         )
 
     def TextConfig(self, chartTitle="Stock Prices", height=1200, width=2560,  yaxis="Price $ - US Dollars"):
