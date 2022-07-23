@@ -19,6 +19,7 @@ import os
 import time
 import random
 import datetime
+import pathlib
 import numpy as np
 import pandas as pd
 import matplotlib.lines as lines
@@ -49,7 +50,211 @@ def CalculateSlope(x,y):
 
     return slope, intercept, fittedline
 
-def Analyse(symbol, source, destination, marketOnly=True):
+def OpenFile(path):
+    # Open 5 minute chart
+    if not os.path.exists(path): return
+    df = csvToPandas(path)
+
+    start_date = datetime.datetime(2022,1,1)
+    df = df[df.index > start_date]
+
+    return df
+
+def WriteLine(year,time, longshort, orperc, vwapperc,WithinPreRange,AbovePreH,BelowPreLow,WithinYRange,AboveYHigh,BelowYLow, loss, pt1Met, pt2Met, risk):
+    # Counts
+    winners = pt1Met
+    total = loss + winners
+
+    # Write to file
+    lossVal = loss * risk
+    pt1Val = (pt1Met * (risk * 2))
+    pt2Val = (pt2Met* (risk * 3))
+    winVal = pt1Val
+    totalVal = lossVal + pt1Val
+
+    if lossVal == 0:
+        lossVal = 1
+
+    if total > 0:
+        winperc = round(winners/(winners+loss),2)
+        valperc = round(winVal / totalVal , 2)
+    else:
+        winperc = 0
+        valperc = 0
+
+    new_row = [year,time, longshort,orperc, vwapperc, WithinPreRange,AbovePreH,BelowPreLow,WithinYRange,AboveYHigh,BelowYLow, total, winners, loss,winperc,pt1Met, pt2Met, winVal - lossVal, round(winVal / lossVal,2) ,lossVal, winVal, pt1Val, pt2Val, valperc]
+    return new_row
+
+def AnalysePerTicker(path, filename, outputfile):
+    fullDF = pd.read_csv(path + filename, index_col = 0)
+    risk = 1
+
+    columns=['Year','Symbol','LongShort','Total','Wins','Losses','WinPerc','PT1','PT2','AvgPerTrade','LossVal','WinVal','PT1Val','PT2Val','WinValPerc']
+    rows = []
+
+    # Short
+    df = fullDF[(fullDF.Entry < fullDF.Stop)]
+    df_symbol = df.groupby('Symbol').agg({'Symbol':'count', 'P1Met':'sum', 'P2Met':'sum'})
+    df_symbol = df_symbol.rename(columns={'Symbol': 'Total'}).reset_index()
+    df_full = pd.DataFrame()
+    df_full['Symbol'] = df_symbol['Symbol']
+    df_full['LongShort'] = 'Short'
+    df_full['Total'] = df_symbol['Total']
+    df_full['Wins'] = df_symbol['P1Met'] + df_symbol['P2Met']
+    df_full['Losses'] = df_full['Total'] - df_full['Wins']
+    df_full['WinPerc'] = round((df_full['Wins'] / df_full['Total'])*100, 2)
+    df_full['PT1'] = df_symbol['P1Met']
+    df_full['PT2'] = df_symbol['P2Met']
+    df_full['Total'] = df_symbol['Total']
+    df_full['Total'] = df_symbol['Total']
+
+    # Long
+    df = fullDF[(fullDF.Entry >= fullDF.Stop)]
+    df_symbol = df.groupby('Symbol').agg({'Symbol':'count', 'P1Met':'sum', 'P2Met':'sum'})
+    df_symbol = df_symbol.rename(columns={'Symbol': 'Total'}).reset_index()
+    df_full_l = pd.DataFrame()
+    df_full_l['Symbol'] = df_symbol['Symbol']
+    df_full_l['LongShort'] = 'Long'
+    df_full_l['Total'] = df_symbol['Total']
+    df_full_l['Wins'] = df_symbol['P1Met'] + df_symbol['P2Met']
+    df_full_l['Losses'] = df_full_l['Total'] - df_full_l['Wins']
+    df_full_l['WinPerc'] = round((df_full_l['Wins'] / df_full_l['Total'])*100, 2)
+    df_full_l['PT1'] = df_symbol['P1Met']
+    df_full_l['PT2'] = df_symbol['P2Met']
+    df_full_l['Total'] = df_symbol['Total']
+    df_full_l['Total'] = df_symbol['Total']
+
+    df_full.reset_index(drop=True, inplace=True)
+    df_full_l.reset_index(drop=True, inplace=True)
+
+    df = pd.concat( [df_full, df_full_l], axis=0)
+    df.sort_values(by=['Symbol'], inplace=True)
+    df.to_csv(path + outputfile, index=False)
+
+
+def AnaylseResults(path, filename):
+    fullDF = pd.read_csv(path + filename, index_col = 0)
+    risk = 1
+    # Set index to datetime to filter by year
+    fullDF.index = pd.to_datetime(fullDF.index)
+
+    times = ['09:30','10:30','12:30','15:30']
+    orPercATR = [0, 0.25, 0.5, 1, 99999]
+    VWAPDiff = [0, 2.5, 5, 10, 99999]
+
+    # Date	Symbol	PreVolume	preMarketHigh	preMarketLow	OR	ATR	OR%ofATR	yHigh	yLow	VWAP	VWAP%DiffPrice	Entry	Stop	StopType	RiskPerShare	EntryTime	PB#	PT1	PT1-time	P1Met	PT2	PT2-time	P2Met	Figure
+
+    columns=['Year','Time','LongShort','ORPerc','VWAPPerc','WithinPreRange','AbovePreH','BelowPreLow','WithinYRange','AboveYHigh','BelowYLow','Total','Wins','Losses','WinPerc','PT1','PT2','pnl','R:R','LossVal','WinVal','PT1Val','PT2Val','WinValPerc']
+    rows = []
+    year = [2021,2022]
+    for n in year:
+        # All
+        loss = fullDF[(fullDF.P1Met == 0) & (fullDF.index.year == n)].shape[0]
+        pt1Met = fullDF[(fullDF.P1Met == 1) & (fullDF.index.year == n)].shape[0]
+        pt2Met = fullDF[(fullDF.P2Met == 1) & (fullDF.index.year == n)].shape[0]
+        # Write to file
+        rows.append(WriteLine(n,'All','All', 'All', 'All', 'All', 'All', 'All', 'All', 'All', 'All', loss, pt1Met, pt2Met, risk))
+
+        direction  = ['Short','Long']
+        for k in direction:
+            # Filter
+            df = fullDF[(fullDF.Type == k) & (fullDF.index.year == n)]
+
+            # All
+            loss = df[(df.P1Met == 0)].shape[0]
+            pt1Met = df[(df.P1Met == 1)].shape[0]
+            pt2Met = df[(df.P2Met == 1)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All',k, 'All', 'All', 'All', 'All', 'All', 'All', 'All', 'All', loss, pt1Met, pt2Met, risk))
+
+            # All trades above pre high and yhigh
+            loss = df[(df.P1Met == 0) & (df.Entry >= df.preMarketHigh) & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            pt1Met = df[(df.P1Met == 1) & (df.Entry >= df.preMarketHigh) & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            pt2Met = df[(df.P2Met == 1) & (df.Entry >= df.preMarketHigh) & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All',k, 'All', 'All', 0, 1, 0, 1, 0, 0, loss, pt1Met, pt2Met, risk))
+
+            # All trades less than pre low and within yRange
+            loss = df[(df.P1Met == 0) & (df.Entry <= df.preMarketLow)  & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            pt1Met = df[(df.P1Met == 1) & (df.Entry <= df.preMarketLow) & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            pt2Met = df[(df.P2Met == 1) & (df.Entry <= df.preMarketLow) & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All', k,'All', 'All', 0, 0, 1, 1, 0, 0, loss, pt1Met, pt2Met, risk))
+
+            # All trades in pre range
+            loss = df[(df.P1Met == 0) & (df.Entry >= df.preMarketLow) & (df.Entry <= df.preMarketHigh)].shape[0]
+            pt1Met = df[(df.P1Met == 1) & (df.Entry >= df.preMarketLow) & (df.Entry <= df.preMarketHigh)].shape[0]
+            pt2Met = df[(df.P2Met == 1) & (df.Entry >= df.preMarketLow) & (df.Entry <= df.preMarketHigh)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All',k, 'All', 'All', 1, 0, 0, 'All', 'All', 'All', loss, pt1Met, pt2Met, risk))
+
+            # All trades above pre high
+            loss = df[(df.P1Met == 0) & (df.Entry >= df.preMarketHigh)].shape[0]
+            pt1Met = df[(df.P1Met == 1) & (df.Entry >= df.preMarketHigh)].shape[0]
+            pt2Met = df[(df.P2Met == 1) & (df.Entry >= df.preMarketHigh)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All',k, 'All', 'All', 0, 1, 0, 'All', 'All', 'All', loss, pt1Met, pt2Met, risk))
+
+            # All trades less than pre low
+            loss = df[(df.P1Met == 0) & (df.Entry <= df.preMarketLow)].shape[0]
+            pt1Met = df[(df.P1Met == 1) & (df.Entry <= df.preMarketLow)].shape[0]
+            pt2Met = df[(df.P2Met == 1) & (df.Entry <= df.preMarketLow)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All', k,'All', 'All', 0, 0, 1, 'All', 'All', 'All', loss, pt1Met, pt2Met, risk))
+
+            # All trades in yesterday range
+            loss = df[(df.P1Met == 0) & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            pt1Met = df[(df.P1Met == 1) & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            pt2Met = df[(df.P2Met == 1) & (df.Entry >= df.yLow) & (df.Entry <= df.yHigh)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All',k, 'All', 'All', 'All', 'All', 'All', 1, 0, 0, loss, pt1Met, pt2Met, risk))
+
+            # All trades above yesterday low
+            loss = df[(df.P1Met == 0) & (df.Entry >= df.yHigh)].shape[0]
+            pt1Met = df[(df.P1Met == 1) & (df.Entry >= df.yHigh)].shape[0]
+            pt2Met = df[(df.P2Met == 1) & (df.Entry >= df.yHigh)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All',k, 'All', 'All','All', 'All', 'All', 0, 1, 0, loss, pt1Met, pt2Met, risk))
+
+            # All trades less than yesterday low
+            loss = df[(df.P1Met == 0) & (df.Entry <= df.yLow)].shape[0]
+            pt1Met = df[(df.P1Met == 1) & (df.Entry <= df.yLow)].shape[0]
+            pt2Met = df[(df.P2Met == 1) & (df.Entry <= df.yLow)].shape[0]
+            # Write to file
+            rows.append(WriteLine(n,'All', k,'All', 'All', 'All', 'All', 'All', 0, 0, 1, loss, pt1Met, pt2Met, risk))
+
+            # Time filter
+            for i in range(0, len(times)-1):
+                loss = df[(df.P1Met == 0) & (df.EntryTime >= times[i]) & (df.EntryTime < times[i+1])].shape[0]
+                pt1Met = df[(df.P1Met == 1) & (df.EntryTime >= times[i]) & (df.EntryTime < times[i+1])].shape[0]
+                pt2Met = df[(df.P2Met == 1) & (df.EntryTime >= times[i]) & (df.EntryTime < times[i+1])].shape[0]
+                # Write to file
+                rows.append(WriteLine(n,times[i] + ' to ' + times[i+1], 'All', 'All','All', 'All', 'All', 'All', 'All', 'All', 'All', loss, pt1Met, pt2Met, risk))
+
+            # OR Perc filter
+            for i in range(1, len(orPercATR)):
+                # With ATR %
+                loss = df[(df.P1Met == 0) & (df['OR%ofATR'] >= orPercATR[i-1]) & (df['OR%ofATR'] < orPercATR[i])].shape[0]
+                pt1Met = df[(df.P1Met == 1) & (df['OR%ofATR'] >= orPercATR[i-1]) & (df['OR%ofATR'] < orPercATR[i])].shape[0]
+                pt2Met = df[(df.P2Met == 1) & (df['OR%ofATR'] >= orPercATR[i-1]) & (df['OR%ofATR'] < orPercATR[i])].shape[0]
+                # Write to file
+                rows.append(WriteLine(n,'All', k,'OR%ofATR ' + str(orPercATR[i-1]) + ' to ' + str(orPercATR[i]), 'All', 'All', 'All', 'All', 'All', 'All', 'All', loss, pt1Met, pt2Met, risk))
+
+            # VWAP % filter
+            for i in range(1, len(VWAPDiff)):
+                # With VWAP %
+                loss = df[(df.P1Met == 0) & (df['VWAP%DiffPrice'] >= VWAPDiff[i-1]) & (df['VWAP%DiffPrice'] < VWAPDiff[i])].shape[0]
+                pt1Met = df[(df.P1Met == 1) & (df['VWAP%DiffPrice'] >= VWAPDiff[i-1]) & (df['VWAP%DiffPrice'] < VWAPDiff[i])].shape[0]
+                pt2Met = df[(df.P2Met == 1) & (df['VWAP%DiffPrice'] >= VWAPDiff[i-1]) & (df['VWAP%DiffPrice'] < VWAPDiff[i])].shape[0]
+                # Write to file
+                rows.append(WriteLine(n,'All',k, 'All', 'VWAP%DiffPrice ' + str(VWAPDiff[i-1]) + ' to ' + str(VWAPDiff[i]), 'All', 'All', 'All', 'All', 'All', 'All', loss, pt1Met, pt2Met, risk))
+
+    resultsDF = pd.DataFrame(rows, columns=columns)
+    resultsDF.to_csv(path + filename.replace('Raw','Analysis'), index=False)
+
+# hodBars is the number of bars before retesting HOD
+# ORBars is the number of bars in the open range, the HOD/LOD must be outside of this
+def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outputFigures=False):
     """
     A series of possible variables to be tested
 
@@ -63,35 +268,38 @@ def Analyse(symbol, source, destination, marketOnly=True):
         A boolean to use only market opening hours (if true) or all times (if false)
     """
 
-    # Load DF
-    if not os.path.exists(source + symbol): return
-    df = csvToPandas(source + symbol)
+    # Remove extra slashes
+    source = os.path.normpath(source + symbol)
 
-    start_date = datetime.datetime(2022,1,1)
-    df = (df.index > start_date))
+
+    # Load DF
+    df = OpenFile(source)
+
     # Check index is correct format
     if type(df.index) != pd.core.indexes.datetimes.DatetimeIndex: return
+
+    # Open 5 minute chart
+    #currDir = os.path.basename(os.path.dirname(source))
+    #fivePath = source.replace(currDir,"5m")
+    #dfFive = OpenFile(fivePath)
 
     # Filter out symbols that are penny stocks or too high in value
     #if df.close.min() > 80 or df.close.max() < 5: return
 
+    # Select pre-market data
     dfPreMarket = df[df.Market == 0]
+
     # Open market only
     df = df[df.Market == 1]
-
-    # Filter out data over a year old
-    # Older dates have less signifcance as markets change
-    #df = df[df.index >= '2022-01-01']
+    #dfFive = dfFive[dfFive.Market == 1]
 
     # log file:
-    fileName = 'HOD_Analysis.csv'
+    fileName = str(hodBars) + 'PB_' + str(ORBars) + 'OR_Raw.csv'
     if not os.path.exists(destination + fileName):
         with open(destination + fileName, "w") as f:
-            f.write("Date,Symbol,PreVolume,Entry,Stop,StopType,RiskPerShare,PT1,PT1-time,P1Met,PT2,PT2-time,P2Met,Figure\n")
+            f.write("Date,Symbol,Type,PreVolume,preMarketHigh,preMarketLow,OR,ATR,OR%ofATR,yHigh,yLow,VWAP,VWAP%DiffPrice,Entry,Stop,StopType,RiskPerShare,EntryTime,PB#,PT1,PT1-time,P1Met,PT2,PT2-time,P2Met,Figure\n")
     f = open(destination + fileName, 'a')
     """ Parameters """
-    # Stop details
-    risk = 200
     # Where is OR in relation to yesterday
     yHigh = 0
     yLow = 0
@@ -107,7 +315,6 @@ def Analyse(symbol, source, destination, marketOnly=True):
     atrList = list()
     # Iterate through each day
     for idx, day in df.groupby(df.index.date):
-
         Low = day.low.to_numpy()
         High = day.high.to_numpy()
 
@@ -138,76 +345,27 @@ def Analyse(symbol, source, destination, marketOnly=True):
 
         # Pandas to numpy
         Volume = day.volume.to_numpy()
-
-        # check if average volume below min volume
-        # This is look forward, however, I wouldn't trade stocks without a high pre-market
-        # Consequently, 3million volume is an easy target.
-        if sum(Volume) < 3000000:
-            continue
-
-        # Convert columns to numpy
-        Date = day.index
+        Date = day.index.time
         CandleDir = day.Candle.to_numpy()
         Close = day.close.to_numpy()
         Open = day.open.to_numpy()
         Vol = day.volume.to_numpy()
         VWAP = day.vwap.to_numpy()
-        trendFast = day['50EMA'].to_numpy()
-        trendSlow = day['100EMA'].to_numpy()
+
         # Filter out symbols that are penny stocks or too high in value
-        if min(Low) > 90 or max(High) < 5: continue
+        if min(Low) > 250 or max(High) < 5: continue
 
         # Create figure
-        figure = Figure.Figure()
-        figure.CandleStick(day)
-        figure.TextConfig(chartTitle=f"{symbol} : {idx}")
-        figure.AddLine(day, "vwap", "yellow", "VWAP",2)
-
-        # Open range
-        ORL = round(min(Low[0:ORBars]),2)
-        ORH = round(max(High[0:ORBars]),2)
-
-        # OR based on open close
-        ORL = round(Open[0], 2)
-        ORH = round(Close[ORBars],2)
-
-        # Is the close of the OR (i.e., close of 5 minutes on OR5) above yesterdays high
-        ORClosePosition = 0
-        if Close[ORBars] > yHigh:
-            ORClosePosition = 1
-        elif Close[ORBars] < yLow:
-            ORClosePosition = -1
-
-        # Is the low of the OR greater than yesterdays high
-        ORLowPosition = 0
-        if ORL > yHigh:
-            ORLowPosition = 1
-        elif ORL < yLow:
-            ORLowPosition = -1
+        #figure = Figure.Figure()
+        #figure.CandleStick(day)
+        #figure.TextConfig(chartTitle=f"{symbol} : {idx}")
+        #figure.AddLine(day, "vwap", "yellow", "VWAP",2)
+        #figure.AddLine(day, "50EMA", "blue", "50EMA",2)
 
         # Update high and low now that they have been used
         # This is ready for the next iteration
         yLow = min(day.low.to_numpy())
         yHigh = max(day.high.to_numpy())
-
-        # EMA indicators
-        above50EMA = 0
-        above100EMA = 0
-        # Is the ORH greater than the moving averages
-        if ORH > trendFast[0]:
-            above50EMA = 1
-        if ORH > trendSlow[0]:
-            above100EMA = 1
-
-        # Whether moving averages are stacked on each other
-        MAStacked = 0
-        if trendFast[0] > trendSlow[0]:
-            MAStacked = 1
-
-        # Whether vwap is above fast MA
-        VwapAboveFast = 0
-        if VWAP[0] > trendFast[0]:
-            VwapAboveFast = 1
 
         # Premarket data
         preMarket = dfPreMarket[dfPreMarket.index.date == idx]
@@ -219,19 +377,9 @@ def Analyse(symbol, source, destination, marketOnly=True):
         preMarketLow = min(preMarket.low)
         preMarketVol = sum(preMarket.volume.to_numpy())
 
-        positionInPre = 0 # 0 is inside, 1 above pre market highs, -1 below
-        # Check where ORH is in relation to premarket
-        if ORH > preMarketHigh:
-            positionInPre = 1
-        elif ORH < preMarketLow:
-            positionInPre = -1
-
-        positionInPreLow = 0 # 0 is inside, 1 above pre market lows, -1 below
-        # Check where ORL is in relation to premarket
-        if ORL > preMarketLow:
-            positionInPreLow = 1
-        elif ORL < preMarketLow:
-            positionInPreLow = -1
+        # Exclude low pre-market volume or low OR volume
+        if preMarketVol < 1000000 or sum(Vol[0:ORBars]) < 2000000:
+            continue
 
         # Trade variables, reset to defaults
         breakAbove = False
@@ -269,48 +417,66 @@ def Analyse(symbol, source, destination, marketOnly=True):
         highIndex = 0
         currLow = 99999
         lowIndex = 0
+        # 15 min ORB
+        orbHigh = max(High[0:ORBars])
+        orbLow = min(Low[0:ORBars])
+        orbRange = round(orbHigh-orbLow,2)
+        orbPerc = round(orbRange / ATR,4)
+        #figure.AddStopLine(Date[0], Date[len(Date)-1], orbHigh, "H")
+        #figure.AddStopLine(Date[0], Date[len(Date)-1], orbLow, "L")
+        # Variable reset
+        reset = False
+        # Entry counter
+        entries = 0
+        entryTime = ""
+        entryVwap = 0
+        # Figure destination
+        fileLocation = destination + "/figures/" + symbol + "_" + str(idx) + ".png"
         # Iterate through the candlesticks of the current day
-        for i in range(ORBars, len(Low)):
-            if not breakAbove and not breakBelow:
-                # Do not trade within first 15 minutes
-                if i < 15:
-                    # Get the current high and low
-                    if currHigh < High[i]:
-                        currHigh = High[i]
-                        highIndex = i
-                    if currLow > Low[i]:
-                        currLow = Low[i]
-                        lowIndex = i
-                    continue
+        for i in range(0, len(Low)):
+            # Do not trade within first 15 minutes
+            if i < ORBars:
+                # Get the current high and low
+                if currHigh < High[i]:
+                    currHigh = High[i]
+                    highIndex = i
+                if currLow > Low[i]:
+                    currLow = Low[i]
+                    lowIndex = i
+                continue
 
+            if not breakAbove and not breakBelow:
                 # Look for break above HOD: check high is above current high, that the bar opens above VWAP and that it was at least 1 bar ago (a pullback)
-                if High[i] > currHigh and Open[i] > VWAP[i] and highIndex+1 < i:
+                if(High[i] > currHigh and Open[i] > VWAP[i] and highIndex+hodBars < i and High[i] > orbHigh):
+                    ####
+                    #### L O N G
+                    ####
                     entryPrice = currHigh + 0.02
                     stopLoss = Low[i] - 0.01
                     riskPerShare = round((entryPrice - stopLoss),2)
 
                     # Don't risk under 0.05 and Don't risk more than $0.35
                     if riskPerShare < 0.05:
-                        continue
+                        break
 
                     # Set targets
                     profitOne = round((riskPerShare * 2.0) + entryPrice,2)
                     profitTwo = round((riskPerShare * 3.0) + entryPrice,2)
 
                     # Add to figure
-                    figure.AddStopLine(Date[0], Date[i], currHigh, "Entry")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitOne, "R2")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitTwo, "R3")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], stopLoss, "Stop")
-                    figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "Risk $" + str(riskPerShare), size=16)
-
-                    breakTime = Date[i]
+                    #figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "(L)", size=16)
+                    entries = entries + 1
+                    entryTime = Date[i].strftime("%H:%M")
+                    entryVwap = VWAP[i]
+                    tradeType = 'Long'
                     breakAbove = True
                     drawFigure = True
-                    ORType = "Long"
-                    continue
-                else if Low[i] < currLow and Open[i] < VWAP[i] and highIndex+1 < i:
-                    entryPrice = ORL - 0.02
+
+                elif(Low[i] < currLow and Open[i] < VWAP[i] and lowIndex+hodBars < i and Low[i] < orbLow):
+                    ####
+                    #### S H O R T
+                    ####
+                    entryPrice = currLow - 0.02
                     stopLoss = High[i] + 0.01
                     riskPerShare = round((stopLoss - entryPrice),2)
 
@@ -323,80 +489,104 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     profitTwo = round(entryPrice - (riskPerShare * 3.0) ,2)
 
                     # Add to figure
-                    figure.AddStopLine(Date[0], Date[i], currLow, "Entry")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitOne, "R2")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitTwo, "R3")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], stopLoss, "Stop")
-                    figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "Risk $" + str(riskPerShare), size=16)
-
-                    breakTime = Date[i]
-                    breakAbove = True
+                    #figure.AddMarker(Date[i], entryPrice, 'triangle-down', 'red', "(S)", size=16)
+                    entries = entries + 1
+                    entryTime = Date[i].strftime("%H:%M")
+                    entryVwap = VWAP[i]
+                    tradeType = 'Short'
+                    breakBelow = True
                     drawFigure = True
-                    ORType = "Short"
-                    continue
-                else:
-                    # Get the current high and low
-                    if currHigh < High[i]:
-                        currHigh = High[i]
-                        highIndex = i
-                    if currLow > Low[i]:
-                        currLow = Low[i]
-                        lowIndex = i
-            else if breakAbove:
+
+            # L O N G
+            elif breakAbove:
+                # P R O F I T   O N E
                 if(High[i] >= profitOne and not profitOneMet):
                     # profit target met
                     profitOneMet = True
                     P1Met = 1
                     profitOneTime = Date[i].strftime("%H:%M")
                     # Add exit to figure
-                    figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', str(profitOne) + ' (P 1.50)', size=16)
-                if(High[i] >= profitTwo and not profitTwoMet):
+                    #figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', "(PT1)", size=16)
+
+                # P R O F I T   T W O
+                elif(High[i] >= profitTwo):
                     # profit target met
-                    profitTwoMet = True
                     P2Met = 1
                     profitTwoTime = Date[i].strftime("%H:%M")
+                    # Write
+                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{profitOne},{profitOneTime}, {P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
                     # Add exit to figure
-                    figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', str(profitTwo) + ' (P 2.0)', size=16)
-                    break
-                # Check if we're stopped out
-                if(Low[i] < stopLoss):
+                    #figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', "(PT2)", size=16)
+                    # Reset variables
+                    reset = True
+
+                # S T O P
+                elif(Low[i] < stopLoss and not reset):
                     # Lost trade
                     stoppedOut = True
+                    profitOneMet = False
+                    # Write
+                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
                     # Add exit to figure
-                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', str(stopLoss) + ' (Stopped out)', size=16)
-                    break
-            else if breakBelow:
+                    #figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', '(SL)', size=16)
+                    # Reset variables
+                    reset = True
+            # S H O R T
+            elif breakBelow:
+                # P R O F I T   O N E
                 if(Low[i] <= profitOne and not profitOneMet):
                     # profit target met
                     profitOneMet = True
                     P1Met = 1
                     profitOneTime = Date[i].strftime("%H:%M")
                     # Add exit to figure
-                    figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', str(profitOne) + ' (P 1.50)', size=16)
-                if(Low[i] <= profitTwo and not profitTwoMet):
+                    #figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', "(PT1)" , size=16)
+
+                # P R O F I T   T W O
+                elif(Low[i] <= profitTwo):
                     # profit target met
-                    profitTwoMet = True
                     P2Met = 1
                     profitTwoTime = Date[i].strftime("%H:%M")
+                    # Write
+                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
                     # Add exit to figure
-                    figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', str(profitTwo) + ' (P 2.0)', size=16)
-                    break
-                # Check if we're stopped out
-                if(High[i] > stopLoss):
+                    #figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', "(PT2)", size=16)
+                    # Reset variables
+                    reset = True
+
+                # S T O P
+                elif(High[i] > stopLoss and not reset):
                     # Lost trade
                     stoppedOut = True
+                    # Write
+                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
                     # Add exit to figure
-                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', str(stopLoss) + ' (Stopped out)', size=16)
-                    break
+                    #figure.AddMarker(Date[i], stopLoss, 'triangle-up', 'green', '(SL)', size=16)
+                    # Reset variables
+                    reset = True
 
-        if drawFigure:
-            fileLocation = "None"
-            # Name figure for easy sorting
-            figName = "Loss_"
-            if P1Met == 1:
-                figName = "Profit_"
-            fileLocation = destination + "/Final_Analysis/" + figName + "_" + symbol + "_" + str(ORType) + "_" + str(idx) + ".png"
+            # Reset all variables to default after a stop out or when profit target two is reached
+            if reset:
+                # Reset variables
+                breakBelow = False
+                breakAbove = False
+                profitOneMet = False
+                P1Met = 0
+                P2Met = 0
+                profitTwoTime = ""
+                profitOneTime = ""
+                entryVwap = 0
+                tradeType = None
+                # default
+                reset = False
+
+            # Get the current high and low
+            if currHigh < High[i]:
+                currHigh = High[i]
+                highIndex = i
+            if currLow > Low[i]:
+                currLow = Low[i]
+                lowIndex = i
+
+        if drawFigure and outputFigures:
             figure.Save(fileLocation)
-            exit()
-
-            f.write(f"{idx},{symbol},{preMarketVol},{entryPrice},{stopLoss},{stopType},{riskPerShare},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")

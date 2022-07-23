@@ -44,9 +44,9 @@ if __name__ == '__main__':
 
     # Whether to download new data
     downloadData = True
-    timeFramesAlpha = ['1min', '5min', '15min', '30min', '60min'] # , '5min', '15min', '30min', '60min'
+    timeFramesAlpha = ['30min', '60min'] # , '5min', '15min', '30min', '60min'
     # Whether to create custom time frames
-    customTimes = False
+    customTimes = True
     customTimeFrames = ['2min']
     # Timeframes
     # Whether to compute the indicators for the corresponding timeframe
@@ -60,7 +60,6 @@ if __name__ == '__main__':
         for i in range(0, len(timeFramesAlpha)):
             print(f"==> Updating data for {timeFramesAlpha[i]}")
             # (symbol, destination, dataInterval, month, year)
-        
             SymbolIterator(symbolFileList, update.Update, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 2, 1], apiCap=150, functionCalls=1)
             SymbolIterator(symbolFileList, update.Update, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1], apiCap=150, functionCalls=1)
 
@@ -75,8 +74,8 @@ if __name__ == '__main__':
                 os.mkdir(destination)
             # Iterate through files and create corresponding custom time frame csvs
             # arguments [timeframe, destination path, source path]
+            SymbolIterator(symbolFileList, data.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')
             if computeIndicators:
                 indicators = CI.ComputeIndicators(**LoadIndicators())
                 CI.ComputeIndicators(**LoadIndicators()).Compute(source=destination, frequency=custom, update=False, destination=destination)
                 #SymbolIterator(symbolFileList, indicators.Compute, [custom], prefix='Grouping Times', apiCap=150, functionCalls=0)
-            SymbolIterator(symbolFileList, data.CalculateMinutes, [custom, destination, dataPath + '1m/'], prefix='Grouping Times')

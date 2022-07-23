@@ -29,7 +29,8 @@ import analysis.OpeningRange as OR
 import analysis.Patterns as patterns
 import analysis.MAPullback as pullback
 import analysis.Gappers as gappers
-import analysis.ORB as orb
+import analysis.OutputCharts as output
+import analysis.HOD as hod
 from helpers import LoadIndicators, SymbolIteratorFiles
 
 def Analyse(dataPath, timeFrames):
@@ -50,17 +51,55 @@ def Analyse(dataPath, timeFrames):
 
 
         # Arguments: [source, destination, openingRange=3, marketOnly=True]
-        minute = int(tf[:-3])
-        if minute == 1:
-            openRangeBars = 30
-        elif minute == 2:
-            openRangeBars = 15
-        elif minute == 15:
-            openRangeBars = 2
-        elif minute == 30:
-            openRangeBars = 1
-        elif minute == 60:
-            openRangeBars = 1
+
+        #hod.AnaylseResults(destination + '/HOD/', 'HOD_Analysis.csv','Analysis_2PB_5OR.csv')
+        #exit()
+        HODFolder = destination + '/HOD/'
+        if not os.path.exists(HODFolder):
+            os.makedirs(HODFolder + 'figures/')
+        #SymbolIteratorFiles(fileList, orb.Analyse, [source, ORBFolder, True], prefix='Analysing ' + tf[:-2] + ' ORB ' )
+        if tf[:-2] == '2m' or tf[:-2] == '1m':
+            #SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 2, 5, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            #hod.AnaylseResults(destination + '/HOD/', '2PB_5OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', '2PB_5OR_Raw.csv', 'Ticker_2PB_5OR.csv')
+
+            #SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 2, 10, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '2PB_10OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', 'Raw_2PB_10OR.csv', 'Ticker_2PB_10OR.csv')
+
+            SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 6, 10, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '6PB_10OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', 'Raw_6PB_10OR.csv', 'Ticker_6PB_10OR.csv')
+
+            SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 2, 15, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '2PB_15OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', 'Raw_2PB_15OR.csv', 'Ticker_2PB_15OR.csv')
+
+        if tf[:-2] == '5m':
+            SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 2, 1, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '2PB_1OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', '2PB_5OR_Raw.csv', 'Ticker_2PB_5OR.csv')
+
+            SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 2, 3, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '2PB_3OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', '2PB_5OR_Raw.csv', 'Ticker_2PB_5OR.csv')
+
+            SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 1, 3, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '1PB_3OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', '2PB_5OR_Raw.csv', 'Ticker_2PB_5OR.csv')
+
+            SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 3, 3, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '3PB_3OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', '2PB_5OR_Raw.csv', 'Ticker_2PB_5OR.csv')
+
+            SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 2, 6, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '2PB_6OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', 'Raw_2PB_10OR.csv', 'Ticker_2PB_10OR.csv')
+
+            SymbolIteratorFiles(fileList, hod.Analyse, [source, HODFolder, 2, 12, True, False], prefix='Analysing ' + tf[:-2] + ' HOD ' )
+            hod.AnaylseResults(destination + '/HOD/', '2PB_12OR_Raw.csv')
+            #hod.AnalysePerTicker(destination + '/HOD/', 'Raw_2PB_10OR.csv', 'Ticker_2PB_10OR.csv')
+
 
         ORBFolder = destination + '/ORB/'
         if not os.path.exists(ORBFolder):
@@ -71,29 +110,29 @@ def Analyse(dataPath, timeFrames):
 
 
         # Iterate all files and analyse Arguments [source, destination, numberOfBars, marketOnly]
-        SymbolIteratorFiles(fileList, OR.Analyse, [source, destination +  'openingrange/', 5, True], prefix='Analysing Opening Range ')
+        #SymbolIteratorFiles(fileList, OR.Analyse, [source, destination +  'openingrange/', 5, True], prefix='Analysing Opening Range ')
         # Summarise opening range
         #summary.OpeningRange(destination)
 
         # Iterate all files and analyse Arguments [source, destination, marketOnly]
-        patternFolder = destination + '/patterns/'
-        if not os.path.exists(patternFolder):
-            os.makedirs(patternFolder + 'figures/')
+        #patternFolder = destination + '/patterns/'
+        #if not os.path.exists(patternFolder):
+        #    os.makedirs(patternFolder + 'figures/')
         #SymbolIteratorFiles(fileList, patterns.Analyse, [source, patternFolder, True], prefix='Analysing ' + tf[:-2] + ' Patterns ' )
-        MAPBFolder = destination + '/pullback/'
-        if not os.path.exists(MAPBFolder):
-            os.makedirs(MAPBFolder + 'figures/')
+        #MAPBFolder = destination + '/pullback/'
+        #if not os.path.exists(MAPBFolder):
+        #    os.makedirs(MAPBFolder + 'figures/')
         #SymbolIteratorFiles(fileList, pullback.Analyse, [source, MAPBFolder, True], prefix='Analysing ' + tf[:-2] + ' MA Pullback ' )
 
 
-        ORBFolder = destination + '/ORB/'
-        if not os.path.exists(ORBFolder):
-            os.makedirs(ORBFolder + 'figures/')
-        SymbolIteratorFiles(fileList, orb.Analyse, [source, ORBFolder, True], prefix='Analysing ' + tf[:-2] + ' ORB ' )
+        #ORBFolder = destination + '/ORB/'
+        #if not os.path.exists(ORBFolder):
+        #    os.makedirs(ORBFolder + 'figures/')
+        #SymbolIteratorFiles(fileList, orb.Analyse, [source, ORBFolder, True], prefix='Analysing ' + tf[:-2] + ' ORB ' )
         #SymbolIteratorFiles(fileList, pullback.Analyse, [source, MAPBFolder, True], prefix='Analysing ' + tf[:-2] + ' MA Pullback ' )
         #pullback.Summary(MAPBFolder, destination)
         #patterns.Summary(patternFolder, destination)
-        exit()
+        #exit()
         # Don't need stats.Analyse until trading regularly, provides more of an overview of last month
         #SymbolIteratorFiles(fileList, stats.Analyse, [source, destination, True], prefix='Analysing Stats ')
 
@@ -111,7 +150,7 @@ if __name__ == '__main__':
     dataPath = config['filepath']['indicatorDestination']
 
     # Timeframes
-    timeFrames = ['1min','2min', '5min', '15min', '30min', '60min']
+    timeFrames = ['1min']
 
     # Symbol list
     symbolFileList = config['filepath']['symbolList']

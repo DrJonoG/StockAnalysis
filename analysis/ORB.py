@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.lines as lines
 import matplotlib.pyplot as plt
+import plotly.offline as po
 import financialanalysis as fa
 from core import Figure
 from pathlib import Path
@@ -68,7 +69,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
     df = csvToPandas(source + symbol)
 
     start_date = datetime.datetime(2020,1,1)
-    df = (df.index > start_date))
+    df = df[df.index > start_date]
     # Check index is correct format
     if type(df.index) != pd.core.indexes.datetimes.DatetimeIndex: return
 
@@ -87,7 +88,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
     fileName = 'ORB_Analysis.csv'
     if not os.path.exists(destination + fileName):
         with open(destination + fileName, "w") as f:
-            f.write("Date,Symbol,PreVolume,ORType,Breaktime,ORPattern,Up,Down,Even,UpVol,DownVol,EvenVol,ORL,ORH,OR,OR%,ATR,ORas%ofATR,ATR>OR,ORL>yHOD,ORC>yHOD,ORH>PreHigh,ORH>PreLow,HigherVolOnEntry,>EMA50,>EMA100,50MA>100MA,VWAP>50EMA,Entry,Stop,StopType,RiskPerShare,PT1,PT1-time,P1Met,PT2,PT2-time,P2Met,Figure\n")
+            f.write("Date,Symbol,PreVolume,ORType,preHigh,preLow,yestHigh,yestLow,Breaktime,ORPattern,Up,Down,Even,UpVol,DownVol,EvenVol,ORL,ORH,OR,OR%,ATR,ORas%ofATR,ATR>OR,ORL>yHOD,ORC>yHOD,ORH>PreHigh,ORH>PreLow,HigherVolOnEntry,>EMA50,>EMA100,50MA>100MA,VWAP>50EMA,Entry,Stop,StopType,RiskPerShare,PT1,PT1-time,P1Met,PT2,PT2-time,P2Met,Figure\n")
     f = open(destination + fileName, 'a')
     """ Parameters """
     # Stop details
@@ -142,11 +143,15 @@ def Analyse(symbol, source, destination, marketOnly=True):
         # check if average volume below min volume
         # This is look forward, however, I wouldn't trade stocks without a high pre-market
         # Consequently, 3million volume is an easy target.
-        if sum(Volume) < 3000000:
-            continue
+        #if sum(Volume) < 3000000:
+        #    continue
 
         # Convert columns to numpy
-        Date = day.index
+        Date = day.index.time
+
+        if(len(Date) < 300):
+            continue
+
         CandleDir = day.Candle.to_numpy()
         Close = day.close.to_numpy()
         Open = day.open.to_numpy()
@@ -155,21 +160,25 @@ def Analyse(symbol, source, destination, marketOnly=True):
         trendFast = day['50EMA'].to_numpy()
         trendSlow = day['100EMA'].to_numpy()
         # Filter out symbols that are penny stocks or too high in value
-        if min(Low) > 90 or max(High) < 5: continue
+        if max(High) < 5: continue
 
         # Create figure
         figure = Figure.Figure()
         figure.CandleStick(day)
         figure.TextConfig(chartTitle=f"{symbol} : {idx}")
-        figure.AddLine(day, "vwap", "yellow", "VWAP",2)
+        figure.AddLine(day, "vwap", "orange", "VWAP",1)
+        figure.AddLine(day, "50EMA", "blue", "50EMA",1)
 
-        # Open range
-        ORL = round(min(Low[0:ORBars]),2)
-        ORH = round(max(High[0:ORBars]),2)
+        figure.AddStopLine(Date[0], Date[len(Date)-1], yHigh, "yH", '#90ee90', 0.3)
+        figure.AddStopLine(Date[0], Date[len(Date)-1], yLow, "yL", '#FF7E62', 0.3)
+
+        # Update variables
+        yestHigh = yHigh
+        yestLow = yLow
 
         # OR based on open close
-        ORL = round(Open[0], 2)
-        ORH = round(Close[ORBars],2)
+        ORL = round(min(day[0:ORBars].low),2)
+        ORH = round(max(day[0:ORBars].high),2)
 
         # Is the close of the OR (i.e., close of 5 minutes on OR5) above yesterdays high
         ORClosePosition = 0
@@ -218,6 +227,14 @@ def Analyse(symbol, source, destination, marketOnly=True):
         preMarketHigh = max(preMarket.high)
         preMarketLow = min(preMarket.low)
         preMarketVol = sum(preMarket.volume.to_numpy())
+
+        # Add pre-market levels
+        figure.AddStopLine(Date[0], Date[len(Date)-1], preMarketHigh, "preH", '#90ee90', 0.6)
+        figure.AddStopLine(Date[0], Date[len(Date)-1], preMarketLow, "preL", '#FF7E62', 0.6)
+
+        # Exclude low pre-market volume
+        if preMarketVol < 1000000:
+            continue
 
         positionInPre = 0 # 0 is inside, 1 above pre market highs, -1 below
         # Check where ORH is in relation to premarket
@@ -321,12 +338,12 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     profitTwo = round((riskPerShare * 3.0) + entryPrice,2)
 
                     # Add to figure
-                    figure.AddStopLine(Date[0], Date[i], ORL, "Open Range Low $" + str(ORL))
-                    figure.AddStopLine(Date[0], Date[i], ORH, "Open Range High $" + str(ORH))
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitOne, "Profit Target One")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitTwo, "Profit Target Two")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], stopLoss, "Stop Loss (" + stopType + ")")
-                    figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "Entry, risk $" + str(riskPerShare), size=16)
+                    #figure.AddStopLine(Date[0], Date[i], ORL, "ORL", 'grey', 0.5)
+                    #figure.AddStopLine(Date[0], Date[i], ORH, "ORH", 'grey', 0.5)
+                    #figure.AddStopLine(Date[0], Date[len(Date)-1], profitOne, "PT1", 'grey', 0.5)
+                    #figure.AddStopLine(Date[0], Date[len(Date)-1], profitTwo, "PT2", 'grey', 0.5)
+                    #figure.AddStopLine(Date[0], Date[len(Date)-1], stopLoss, "Stop", 'grey', 0.5)
+                    figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "", size=16)
 
                     breakTime = Date[i]
                     breakAbove = True
@@ -354,33 +371,63 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     profitTwo = round(entryPrice - (riskPerShare * 3.0) ,2)
 
                     # Add to figure
-                    figure.AddStopLine(Date[0], Date[i], ORL, "Open Range Low $" + str(ORL))
-                    figure.AddStopLine(Date[0], Date[i], ORH, "Open Range High $" + str(ORH))
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitOne, "Profit Target One")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], profitTwo, "Profit Target Two")
-                    figure.AddStopLine(Date[0], Date[len(Date)-1], stopLoss, "Stop Loss (" + stopType + ")")
-                    figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "Entry, risk $" + str(riskPerShare), size=16)
+                    #figure.AddStopLine(Date[0], Date[i], ORL, "ORL", 'grey', 0.5)
+                    #figure.AddStopLine(Date[0], Date[i], ORH, "ORH", 'grey', 0.5)
+                    #figure.AddStopLine(Date[0], Date[len(Date)-1], profitOne, "PT1", 'grey', 0.5)
+                    #figure.AddStopLine(Date[0], Date[len(Date)-1], profitTwo, "PT2", 'grey', 0.5)
+                    #figure.AddStopLine(Date[0], Date[len(Date)-1], stopLoss, "Stop", 'grey', 0.5)
+                    figure.AddMarker(Date[i], entryPrice, 'triangle-down', 'red', "", size=16)
 
                     breakTime = Date[i]
-                    breakAbove = True
+                    breakBelow = True
                     drawFigure = True
                     ORType = "Short"
                     continue
-            else if breakAbove:
+            elif breakAbove:
                 if(High[i] >= profitOne and not profitOneMet):
                     # profit target met
                     profitOneMet = True
                     P1Met = 1
                     profitOneTime = Date[i].strftime("%H:%M")
                     # Add exit to figure
-                    figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', str(profitOne) + ' (P 1.50)', size=16)
+                    figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', str(profitOne) , size=16)
                 if(High[i] >= profitTwo and not profitTwoMet):
                     # profit target met
                     profitTwoMet = True
                     P2Met = 1
                     profitTwoTime = Date[i].strftime("%H:%M")
                     # Add exit to figure
-                    figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', str(profitTwo) + ' (P 2.0)', size=16)
+                    figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', str(profitTwo) , size=16)
+                    break
+                # Check if we're stopped out
+                if(Low[i] < stopLoss):
+                    # Lost trade
+                    stoppedOut = True
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', 'SL', size=16)
+                    break
+            elif breakBelow:
+                if(Low[i] <= profitOne and not profitOneMet):
+                    # profit target met
+                    profitOneMet = True
+                    P1Met = 1
+                    profitOneTime = Date[i].strftime("%H:%M")
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], profitOne, 'triangle-up', 'blue', str(profitOne) , size=16)
+                if(Low[i] <= profitTwo and not profitTwoMet):
+                    # profit target met
+                    profitTwoMet = True
+                    P2Met = 1
+                    profitTwoTime = Date[i].strftime("%H:%M")
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], profitTwo, 'triangle-up', 'blue', str(profitTwo) , size=16)
+                    break
+                # Check if we're stopped out
+                if(High[i] > stopLoss):
+                    # Lost trade
+                    stoppedOut = True
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], stopLoss, 'triangle-up', 'green', 'SL', size=16)
                     break
                 # Check if we're stopped out
                 if(Low[i] < stopLoss):
@@ -419,7 +466,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
             figName = "Loss_"
             if P1Met == 1:
                 figName = "Profit_"
-            fileLocation = destination + "/Final_Analysis/" + figName + "_" + symbol + "_" + str(ORType) + "_" + str(idx) + ".png"
+            fileLocation = destination + "/figures/" + figName + "_" + symbol + "_" + str(ORType) + "_" + str(idx) + ".png"
             figure.Save(fileLocation)
 
             OR = round(ORH-ORL,2)
@@ -430,4 +477,4 @@ def Analyse(symbol, source, destination, marketOnly=True):
             ORPercentOfATR = round(OR / ATR, 4)
 
 
-            f.write(f"{idx},{symbol},{preMarketVol},{ORType},{breakTime.strftime('%H:%M')},{ORPattern},{Up},{Down},{Even},{UpVol},{DownVol},{EvenVol},{ORL},{ORH},{OR},{ORPercent},{ATR},{ORPercentOfATR},{atrAboveOR},{ORLowPosition},{ORClosePosition},{positionInPre},{positionInPreLow},{HigherVolOnEntry},{above50EMA},{above100EMA},{MAStacked},{VwapAboveFast},{entryPrice},{stopLoss},{stopType},{riskPerShare},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
+            f.write(f"{idx},{symbol},{preMarketVol},{ORType},{preMarketHigh},{preMarketLow},{yestHigh},{yestLow},{breakTime.strftime('%H:%M')},{ORPattern},{Up},{Down},{Even},{UpVol},{DownVol},{EvenVol},{ORL},{ORH},{OR},{ORPercent},{ATR},{ORPercentOfATR},{atrAboveOR},{ORLowPosition},{ORClosePosition},{positionInPre},{positionInPreLow},{HigherVolOnEntry},{above50EMA},{above100EMA},{MAStacked},{VwapAboveFast},{entryPrice},{stopLoss},{stopType},{riskPerShare},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")

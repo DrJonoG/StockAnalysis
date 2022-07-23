@@ -18,6 +18,7 @@ import numpy as np
 from io import StringIO
 import os
 import time
+import datetime
 from helpers import csvToPandas
 
 
@@ -273,6 +274,9 @@ class GetData:
         if not os.path.exists(filePath): return
         # Load source
         tickerDF = csvToPandas(filePath, asc=False, unicode=True)
+        start_date = datetime.datetime(2022,1,1)
+        tickerDF = tickerDF[tickerDF.index > start_date]
+
         # Load custom time
         if os.path.exists(destination):
             customDF = csvToPandas(destination, asc=False, unicode=True)

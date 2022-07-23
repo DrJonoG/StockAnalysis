@@ -41,10 +41,10 @@ class UpdateData:
         rawData = self.data.GetRaw(dataAddress)
 
         # Ensure there is a return
-        if rawData is None:
-            with open(destination + '/error.csv', "a") as file:
-                file.write(symbol + ', No data found. \n')
-            return
+        #if rawData is None:
+        #    with open(destination + '/error.csv', "a") as file:
+        #        file.write(symbol + ', No data found. \n')
+        #    return
 
         # Extract and format data
         newData = self.data.PriceDFSorter(rawData.text)
@@ -60,12 +60,18 @@ class UpdateData:
                 if len(loadDF.index) > 0:
                     # Get latest date from existing data and filter to remove duplicates
                     maxDate = max(loadDF.index)
-                    newData = newData[newData.index >= maxDate]
+                    weekNumber = maxDate.week
+                    newDate = max(newData.index)
+                    newWeek = newDate.week
+                    if weekNumber >= newWeek:
+                        return
+                    else:
+                        # Get latest date from existing data and filter to remove duplicates
+                        maxDate = max(loadDF.index)
+                        newData = newData[newData.index >= maxDate]
             except Exception:
-                print("Error ")
-                print(saveFile)
-                print(" ^ ")
                 return
+
         # If new data available (> 1 to exclude header row)
         if len(newData.index) > 5:
             newData = newData.sort_index()
@@ -106,7 +112,7 @@ class UpdateData:
                     newData = newData.sort_index()
                 except Exception as e:
                     print(newData)
-                    newData.to_csv(saveFile + '_error.csv', index=True)
+                    #newData.to_csv(saveFile + '_error.csv', index=True)
                     print(e)
 
             # Calculate moving_averages
