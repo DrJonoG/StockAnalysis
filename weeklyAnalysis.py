@@ -101,6 +101,14 @@ def Analyse(dataPath, timeFrames):
             #hod.AnalysePerTicker(destination + '/HOD/', 'Raw_2PB_10OR.csv', 'Ticker_2PB_10OR.csv')
 
 
+        ORBFolder = destination + '/ORB/'
+        if not os.path.exists(ORBFolder):
+            os.makedirs(ORBFolder + 'figures/')
+        SymbolIteratorFiles(fileList, orb.Analyse, [source, ORBFolder, True], prefix='Analysing ' + tf[:-2] + ' ORB ' )
+
+        exit()
+
+
         # Iterate all files and analyse Arguments [source, destination, numberOfBars, marketOnly]
         #SymbolIteratorFiles(fileList, OR.Analyse, [source, destination +  'openingrange/', 5, True], prefix='Analysing Opening Range ')
         # Summarise opening range

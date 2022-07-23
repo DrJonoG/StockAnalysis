@@ -289,15 +289,15 @@ def Analyse(symbol, source, destination, marketOnly=True):
             if Close[j] > Open[j]:
                 ORPattern = ORPattern + " 1"
                 Up += 1
-                UpVol += Vol[j]
+                UpVol += Vol[i]
             elif Close[j] < Open[j]:
                 ORPattern = ORPattern + " -1"
                 Down += 1
-                DownVol += Vol[j]
+                DownVol += Vol[i]
             else:
                 ORPattern = ORPattern + " 0"
                 Even += 1
-                EvenVol += Vol[j]
+                EvenVol += Vol[i]
 
         # Iterate through the candlesticks of the current day
         for i in range(ORBars, len(Low)):
@@ -317,13 +317,13 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     Even += 1
 
                 # Look for break above OR
-                if High[i] > ORH:
+                if High[i] > ORH and Open[i] > VWAP[i]:
                     entryPrice = ORH + 0.02
-                    stopLoss = round((Low[i] - 0.01),2)
+                    stopLoss = Low[i] - 0.01
                     riskPerShare = round((entryPrice - stopLoss),2)
 
                     # Don't risk under 0.05 and Don't risk more than $0.35
-                    if riskPerShare < 0.05:
+                    if riskPerShare < 0.06:
                         break
                     else:
                         stopType = "EntryCandle"
@@ -350,13 +350,13 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     drawFigure = True
                     ORType = "Long"
                     continue
-                elif Low[i] < ORL:
+                else if Low[i] < ORL and Open[i] < VWAP[i]:
                     entryPrice = ORL - 0.02
-                    stopLoss = round((High[i] + 0.01), 2)
+                    stopLoss = High[i] + 0.01
                     riskPerShare = round((stopLoss - entryPrice),2)
 
                     # Don't risk under 0.05 and Don't risk more than $0.35
-                    if riskPerShare < 0.05:
+                    if riskPerShare < 0.06:
                         break
                     else:
                         stopType = "EntryCandle"
@@ -428,6 +428,36 @@ def Analyse(symbol, source, destination, marketOnly=True):
                     stoppedOut = True
                     # Add exit to figure
                     figure.AddMarker(Date[i], stopLoss, 'triangle-up', 'green', 'SL', size=16)
+                    break
+                # Check if we're stopped out
+                if(Low[i] < stopLoss):
+                    # Lost trade
+                    stoppedOut = True
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', str(stopLoss) + ' (Stopped out)', size=16)
+                    break
+            else if breakBelow:
+                if(Low[i] <= profitOne and not profitOneMet):
+                    # profit target met
+                    profitOneMet = True
+                    P1Met = 1
+                    profitOneTime = Date[i].strftime("%H:%M")
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', str(profitOne) + ' (P 1.50)', size=16)
+                if(Low[i] <= profitTwo and not profitTwoMet):
+                    # profit target met
+                    profitTwoMet = True
+                    P2Met = 1
+                    profitTwoTime = Date[i].strftime("%H:%M")
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', str(profitTwo) + ' (P 2.0)', size=16)
+                    break
+                # Check if we're stopped out
+                if(High[i] > stopLoss):
+                    # Lost trade
+                    stoppedOut = True
+                    # Add exit to figure
+                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', str(stopLoss) + ' (Stopped out)', size=16)
                     break
 
         if drawFigure:
