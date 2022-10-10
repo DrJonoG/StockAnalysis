@@ -307,6 +307,8 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
     totalWins = 0
     totalLosses = 0
     totalBars = 0
+    # Number of bars in the open range
+    ORBars = 5
     # counter for current day
     dayCount = 0
     # ATR
@@ -332,9 +334,6 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
             yHigh = max(day.high.to_numpy())
 
             continue
-
-        # Load the 5 min data
-        #five = dfFive[dfFive.index.date == idx]
 
         # Calculate the average
         ATR = round(np.average(atrList),2)
@@ -391,15 +390,28 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
         profitOne = 0
         profitTwo = 0
         profitOneMet = False
+        profitTwoMet = False
         profitOneTime = "None"
         profitTwoTime = "None"
         stoppedOut = False
         drawFigure = False
+        breakTime = None
         P1Met = 0
         P2Met = 0
-        tradeType = None
         HigherVolOnEntry = 0 # 0 means no, 1 means yes
         stopType = "Min"
+
+        Up = 0
+        Down = 0
+        Even = 0
+
+        UpVol = 0
+        DownVol = 0
+        EvenVol = 0
+
+        ORType = ""
+
+
         # Variables
         currHigh = 0
         highIndex = 0
