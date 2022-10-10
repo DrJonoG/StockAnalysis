@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 import os
 from threading import Thread
+import multiprocessing
 import time
 
 
@@ -188,7 +189,8 @@ class ComputeIndicators(object):
         if self.vWAP:
             tickerDF = tickerDF.groupby(tickerDF.index.date, group_keys=False).apply(self.ComputeVWAP)
             tickerDF['vwap'] = tickerDF['vwap'].fillna(method='ffill')
-            tickerDF.loc[(tickerDF.between_time('16:00:01', '09:29:59').index), 'vwap'] = 0
+            tickerDF['vwapOpen'] = tickerDF['vwap']
+            tickerDF.loc[(tickerDF.between_time('16:00:01', '09:29:59').index), 'vwapOpen'] = 0
         # Replace NaN with 0
         tickerDF = tickerDF.fillna(0)
         # Sort dates old to new
@@ -199,6 +201,7 @@ class ComputeIndicators(object):
 
     def ComputeThread(self, fileList, marketOnly, destination, frequency):
         for index, fileName in enumerate(fileList):
+            print(fileName)
             # Load small sample of csv to check for update
             tickerDF = pd.read_csv(fileName, nrows=2)
             # Skip if file does not contain datetime
@@ -210,14 +213,15 @@ class ComputeIndicators(object):
                 # File name
                 fileName = Path(fileName).name
                 # Check if already been updated, and skip if so.
-                if ('Market' not in tickerDF.columns) or (tickerDF.head(1).Market.values not in [0,1,2]):
+                #if ('Market' not in tickerDF.columns) or (tickerDF.head(1).Market.values not in [0,1,2]):
                     # Compute indicators
-                    tickerDF = self.Indicators(tickerDF, marketOnly, frequency)
-                    # Save
-                    tickerDF.to_csv(destination + fileName, index=True, index_label="Datetime")
-                else:
+                tickerDF = self.Indicators(tickerDF, marketOnly, frequency)
+                # Save
+                tickerDF.to_csv(destination + "\\" + fileName, index=True, index_label="Datetime")
+
+                #else:
                     # Copy file anyway so all files are in single location
-                    tickerDF.to_csv(destination + fileName, index=False)
+                #    tickerDF.to_csv(destination + fileName, index=False)
 
 
     def ComputeForFiles(self, source, marketOnly, destination, frequency):
@@ -239,7 +243,7 @@ class ComputeIndicators(object):
         files = list(Path(source).rglob('*.csv'))
         fileCount = len(files)
         # Split files for multi threaded
-        cores = 12
+        cores = 6
         fileSplit = np.array_split(np.array(files),cores)
         # multi thread
         threads = []
@@ -247,6 +251,7 @@ class ComputeIndicators(object):
             threads.append(Thread(target=self.ComputeThread, args=([fileSplit[i],marketOnly, destination, frequency])))
 
         print(f"==> Processing indicators over {cores} cores. Please be patient.")
+
         start = time.time()
         # Start all threads
         for x in threads:

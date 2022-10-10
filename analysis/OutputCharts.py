@@ -73,7 +73,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
     atrList = list()
     # Iterate through each day
     for idx, day in df.groupby(df.index.date):
-        day = day[day.index.hour < 15]
+        day = day[day.index.hour < 14]
         day = day[day.index.hour > 6]
 
         Low = day.low.to_numpy()
@@ -108,7 +108,7 @@ def Analyse(symbol, source, destination, marketOnly=True):
 
 
         # Exclude low pre-market volume
-        if preMarketVol < 2000000:
+        if preMarketVol < 1000000:
             continue
 
         # Calculate the average
@@ -139,16 +139,16 @@ def Analyse(symbol, source, destination, marketOnly=True):
         trendFast = day['50EMA'].to_numpy()
         trendSlow = day['100EMA'].to_numpy()
         # Filter out symbols that are penny stocks or too high in value
-        if max(High) < 5: continue
+        if max(High) < 3: continue
 
         # Create figure
         figure = Figure.Figure()
         figure.CandleStick(day)
         figure.TextConfig(chartTitle=f"{symbol} : {idx}")
-        #figure.AddLine(day, "vwap", "orange", "VWAP",1)
-        figure.AddLine(day, "50EMA", "blue", "50EMA",2)
+        figure.AddLine(day, "vwap", "black", "VWAP",2)
         figure.AddLine(day, "20EMA", "grey", "20EMA",1)
-
+        figure.AddLine(day, "50EMA", "black", "50EMA",1)
+        figure.AddVerticalRect('09:30:00', '09:30:00', 'black')
         # Add pre-market levels
         figure.AddStopLine(Date[0], Date[len(Date)-1], preMarketHigh, "preH", '#90ee90', 0.6)
         figure.AddStopLine(Date[0], Date[len(Date)-1], preMarketLow, "preL", '#FF7E62', 0.6)
@@ -156,9 +156,9 @@ def Analyse(symbol, source, destination, marketOnly=True):
         #figure.AddStopLine(Date[0], Date[len(Date)-1], yLow, "yL", '#FF7E62', 0.3)
 
         # Iterate through the candlesticks of the current day
-        for i in range(1, len(Low)-1):
-            if finder.doji(day, i):
-                figure.AddStopLine(Date[i-1], Date[i+1], High[i], "doji")
+        #for i in range(1, len(Low)-1):
+        #    if finder.doji(day, i):
+        #        figure.AddStopLine(Date[i-1], Date[i+1], High[i], "doji")
 
         # Update variables
         yestHigh = yHigh

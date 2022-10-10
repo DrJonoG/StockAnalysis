@@ -44,7 +44,7 @@ if __name__ == '__main__':
 
     # Whether to download new data
     downloadData = True
-    timeFramesAlpha = ['30min', '60min'] # , '5min', '15min', '30min', '60min'
+    timeFramesAlpha = ['1min','5min','30min', '60min'] # , '5min', '15min', '30min', '60min'
     # Whether to create custom time frames
     customTimes = True
     customTimeFrames = ['2min']
@@ -60,7 +60,6 @@ if __name__ == '__main__':
         for i in range(0, len(timeFramesAlpha)):
             print(f"==> Updating data for {timeFramesAlpha[i]}")
             # (symbol, destination, dataInterval, month, year)
-            SymbolIterator(symbolFileList, update.Update, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 2, 1], apiCap=150, functionCalls=1)
             SymbolIterator(symbolFileList, update.Update, [dataPath + timeFramesAlpha[i][:-2], timeFramesAlpha[i], 1, 1], apiCap=150, functionCalls=1)
 
     # Update custom time frames

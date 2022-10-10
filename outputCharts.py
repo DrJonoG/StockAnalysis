@@ -60,7 +60,7 @@ if __name__ == '__main__':
     dataPath = config['filepath']['indicatorDestination']
 
     # Timeframes
-    timeFrames = ['5min']
+    timeFrames = ['2min']
 
     # Symbol list
     symbolFileList = config['filepath']['symbolList']
