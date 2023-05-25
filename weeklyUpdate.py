@@ -44,9 +44,9 @@ if __name__ == '__main__':
 
     # Whether to download new data
     downloadData = True
-    timeFramesAlpha = ['30min', '60min'] # , '5min', '15min', '30min', '60min'
+    timeFramesAlpha = ['1min', '5min', '15min', '60min','1day'] # , '5min', '15min', '30min', '60min'
     # Whether to create custom time frames
-    customTimes = True
+    customTimes = False
     customTimeFrames = ['2min']
     # Timeframes
     # Whether to compute the indicators for the corresponding timeframe
