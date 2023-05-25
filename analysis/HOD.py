@@ -50,12 +50,12 @@ def CalculateSlope(x,y):
 
     return slope, intercept, fittedline
 
-def OpenFile(path):
+def OpenFile(path,y,m,d):
     # Open 5 minute chart
     if not os.path.exists(path): return
     df = csvToPandas(path)
 
-    start_date = datetime.datetime(2022,1,1)
+    start_date = datetime.datetime(y,m,d)
     df = df[df.index > start_date]
 
     return df
@@ -146,7 +146,7 @@ def AnaylseResults(path, filename):
 
     columns=['Year','Time','LongShort','ORPerc','VWAPPerc','WithinPreRange','AbovePreH','BelowPreLow','WithinYRange','AboveYHigh','BelowYLow','Total','Wins','Losses','WinPerc','PT1','PT2','pnl','R:R','LossVal','WinVal','PT1Val','PT2Val','WinValPerc']
     rows = []
-    year = [2021,2022]
+    year = [2019,2020,2021,2022]
     for n in year:
         # All
         loss = fullDF[(fullDF.P1Met == 0) & (fullDF.index.year == n)].shape[0]
@@ -272,8 +272,8 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
     source = os.path.normpath(source + symbol)
 
 
-    # Load DF
-    df = OpenFile(source)
+    # Load DF (source, year, month, day)
+    df = OpenFile(source, 2019, 1, 1)
 
     # Check index is correct format
     if type(df.index) != pd.core.indexes.datetimes.DatetimeIndex: return
@@ -290,14 +290,14 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
     dfPreMarket = df[df.Market == 0]
 
     # Open market only
-    df = df[df.Market == 1]
+    df = df[df.Market != 2]
     #dfFive = dfFive[dfFive.Market == 1]
 
     # log file:
     fileName = str(hodBars) + 'PB_' + str(ORBars) + 'OR_Raw.csv'
     if not os.path.exists(destination + fileName):
         with open(destination + fileName, "w") as f:
-            f.write("Date,Symbol,Type,PreVolume,preMarketHigh,preMarketLow,OR,ATR,OR%ofATR,yHigh,yLow,VWAP,VWAP%DiffPrice,Entry,Stop,StopType,RiskPerShare,EntryTime,PB#,PT1,PT1-time,P1Met,PT2,PT2-time,P2Met,Figure\n")
+            f.write("Date,Symbol,Type,PreVolume,preMarketHigh,preMarketLow,OR,ATR,OR%ofATR,yHigh,yLow,VWAP,VWAP%DiffPrice,Entry,Stop,StopType,RiskPerShare,EntryTime,PB#,PBBars,topWickPerc,bottomWickPerc,bodyUpPerc,bodyDownPerc,PT1,PT1-time,P1Met,PT2,PT2-time,P2Met,Figure\n")
     f = open(destination + fileName, 'a')
     """ Parameters """
     # Where is OR in relation to yesterday
@@ -356,11 +356,11 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
         if min(Low) > 250 or max(High) < 5: continue
 
         # Create figure
-        #figure = Figure.Figure()
-        #figure.CandleStick(day)
-        #figure.TextConfig(chartTitle=f"{symbol} : {idx}")
-        #figure.AddLine(day, "vwap", "yellow", "VWAP",2)
-        #figure.AddLine(day, "50EMA", "blue", "50EMA",2)
+        figure = Figure.Figure()
+        figure.CandleStick(day)
+        figure.TextConfig(chartTitle=f"{symbol} : {idx}")
+        figure.AddLine(day, "vwap", "yellow", "VWAP",2)
+        figure.AddLine(day, "50EMA", "blue", "50EMA",2)
 
         # Update high and low now that they have been used
         # This is ready for the next iteration
@@ -378,7 +378,7 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
         preMarketVol = sum(preMarket.volume.to_numpy())
 
         # Exclude low pre-market volume or low OR volume
-        if preMarketVol < 1000000 or sum(Vol[0:ORBars]) < 2000000:
+        if preMarketVol < 500000 and sum(Vol[0:ORBars]) < 2000000:
             continue
 
         # Trade variables, reset to defaults
@@ -417,6 +417,11 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
         highIndex = 0
         currLow = 99999
         lowIndex = 0
+        pbBarCount = 0
+        topWickPerc = 0
+        bottomWickPerc = 0
+        bodyUpPerc = 0
+        bodyDownPerc = 0
         # 15 min ORB
         orbHigh = max(High[0:ORBars])
         orbLow = min(Low[0:ORBars])
@@ -434,6 +439,26 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
         fileLocation = destination + "/figures/" + symbol + "_" + str(idx) + ".png"
         # Iterate through the candlesticks of the current day
         for i in range(0, len(Low)):
+            rangeBar = abs(High[i] - Low[i])
+            # Calculate percent
+            if rangeBar > 0:
+                # Calculate size of body
+                bodyPerc = abs(Close[i] - Open[i]) / rangeBar
+                # If red bar
+                if CandleDir[i] == -1:
+                    topWick = High[i] - Open[i]
+                    bottomWick = Close[i] - Low[i]
+                    bodyDownPerc += bodyPerc
+                else:
+                    topWick = High[i] - Close[i]
+                    bottomWick = Open[i] - Low[i]
+                    bodyUpPerc += bodyPerc
+
+                # Calculate top and bottom wick
+                topWickPerc += topWick / rangeBar
+                bottomWickPerc += bottomWick / rangeBar
+
+
             # Do not trade within first 15 minutes
             if i < ORBars:
                 # Get the current high and low
@@ -445,14 +470,16 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     lowIndex = i
                 continue
 
-            if not breakAbove and not breakBelow:
+            if not breakAbove and not breakBelow and str(Date[i]) <= '10:15:00' and str(Date[i]) >= '09:35:00': #and Date[i] > '09:44:00':
                 # Look for break above HOD: check high is above current high, that the bar opens above VWAP and that it was at least 1 bar ago (a pullback)
-                if(High[i] > currHigh and Open[i] > VWAP[i] and highIndex+hodBars < i and High[i] > orbHigh):
+                if(High[i] > currHigh and Open[i] > VWAP[i] and highIndex+hodBars < i and High[i] > orbHigh and currHigh > preMarketHigh):
                     ####
-                    #### L O N G
+                    #### L O N G   E N T R Y
                     ####
-                    entryPrice = currHigh + 0.02
-                    stopLoss = Low[i] - 0.01
+                    entryPrice = currHigh + 0.01
+                    #stopLoss = Low[i] - 0.01
+                    #stopLoss = round(entryPrice - (ATR / 4),2)
+                    stopLoss = min(Low[highIndex:i])
                     riskPerShare = round((entryPrice - stopLoss),2)
 
                     # Don't risk under 0.05 and Don't risk more than $0.35
@@ -463,21 +490,26 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     profitOne = round((riskPerShare * 2.0) + entryPrice,2)
                     profitTwo = round((riskPerShare * 3.0) + entryPrice,2)
 
+                    # number of bars in PB
+                    pbBarCount = i - highIndex
+
                     # Add to figure
-                    #figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "(L)", size=16)
-                    entries = entries + 1
+                    figure.AddMarker(Date[i], entryPrice, 'triangle-up', 'green', "(L)", size=16)
+                    #entries = entries + 1
                     entryTime = Date[i].strftime("%H:%M")
                     entryVwap = VWAP[i]
                     tradeType = 'Long'
                     breakAbove = True
                     drawFigure = True
 
-                elif(Low[i] < currLow and Open[i] < VWAP[i] and lowIndex+hodBars < i and Low[i] < orbLow):
+                elif(Low[i] < currLow and Open[i] < VWAP[i] and lowIndex+hodBars < i and Low[i] < orbLow and currLow < preMarketLow):
                     ####
-                    #### S H O R T
+                    #### S H O R T    E N T R Y
                     ####
-                    entryPrice = currLow - 0.02
-                    stopLoss = High[i] + 0.01
+                    entryPrice = currLow - 0.01
+                    #stopLoss = High[i] + 0.01
+                    #stopLoss = round(entryPrice + (ATR / 4),2)
+                    stopLoss = min(High[lowIndex:i])
                     riskPerShare = round((stopLoss - entryPrice),2)
 
                     # Don't risk under 0.05 and Don't risk more than $0.35
@@ -488,8 +520,11 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     profitOne = round(entryPrice - (riskPerShare * 2.0) ,2)
                     profitTwo = round(entryPrice - (riskPerShare * 3.0) ,2)
 
+                    # number of bars in PB
+                    pbBarCount = i - lowIndex
+
                     # Add to figure
-                    #figure.AddMarker(Date[i], entryPrice, 'triangle-down', 'red', "(S)", size=16)
+                    figure.AddMarker(Date[i], entryPrice, 'triangle-down', 'red', "(S)", size=16)
                     entries = entries + 1
                     entryTime = Date[i].strftime("%H:%M")
                     entryVwap = VWAP[i]
@@ -506,7 +541,7 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     P1Met = 1
                     profitOneTime = Date[i].strftime("%H:%M")
                     # Add exit to figure
-                    #figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', "(PT1)", size=16)
+                    figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', "(PT1)", size=16)
 
                 # P R O F I T   T W O
                 elif(High[i] >= profitTwo):
@@ -514,9 +549,9 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     P2Met = 1
                     profitTwoTime = Date[i].strftime("%H:%M")
                     # Write
-                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{profitOne},{profitOneTime}, {P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
+                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{pbBarCount},{round(topWickPerc/i,3)},{round(bottomWickPerc/i,3)},{round(bodyUpPerc/i,3)},{round(bodyDownPerc/i,3)},{profitOne},{profitOneTime}, {P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
                     # Add exit to figure
-                    #figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', "(PT2)", size=16)
+                    figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', "(PT2)", size=16)
                     # Reset variables
                     reset = True
 
@@ -526,9 +561,9 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     stoppedOut = True
                     profitOneMet = False
                     # Write
-                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
+                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{pbBarCount},{round(topWickPerc/i,3)},{round(bottomWickPerc/i,3)},{round(bodyUpPerc/i,3)},{round(bodyDownPerc/i,3)},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
                     # Add exit to figure
-                    #figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', '(SL)', size=16)
+                    figure.AddMarker(Date[i], stopLoss, 'triangle-down', 'red', '(SL)', size=16)
                     # Reset variables
                     reset = True
             # S H O R T
@@ -540,7 +575,7 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     P1Met = 1
                     profitOneTime = Date[i].strftime("%H:%M")
                     # Add exit to figure
-                    #figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', "(PT1)" , size=16)
+                    figure.AddMarker(Date[i], profitOne, 'triangle-down', 'blue', "(PT1)" , size=16)
 
                 # P R O F I T   T W O
                 elif(Low[i] <= profitTwo):
@@ -548,9 +583,9 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     P2Met = 1
                     profitTwoTime = Date[i].strftime("%H:%M")
                     # Write
-                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
+                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{pbBarCount},{round(topWickPerc/i,3)},{round(bottomWickPerc/i,3)},{round(bodyUpPerc/i,3)},{round(bodyDownPerc/i,3)},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
                     # Add exit to figure
-                    #figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', "(PT2)", size=16)
+                    figure.AddMarker(Date[i], profitTwo, 'triangle-down', 'blue', "(PT2)", size=16)
                     # Reset variables
                     reset = True
 
@@ -559,9 +594,9 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                     # Lost trade
                     stoppedOut = True
                     # Write
-                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
+                    f.write(f"{idx},{symbol},{tradeType},{preMarketVol},{preMarketHigh},{preMarketLow},{orbRange},{ATR},{orbPerc},{yHigh},{yLow},{entryVwap}, {abs(round((1 - (entryPrice/entryVwap)) * 100,2))},{entryPrice},{stopLoss},{stopType},{riskPerShare},{entryTime},{entries},{pbBarCount},{round(topWickPerc/i,3)},{round(bottomWickPerc/i,3)},{round(bodyUpPerc/i,3)},{round(bodyDownPerc/i,3)},{profitOne},{profitOneTime},{P1Met},{profitTwo},{profitTwoTime},{P2Met},{fileLocation}\n")
                     # Add exit to figure
-                    #figure.AddMarker(Date[i], stopLoss, 'triangle-up', 'green', '(SL)', size=16)
+                    figure.AddMarker(Date[i], stopLoss, 'triangle-up', 'green', '(SL)', size=16)
                     # Reset variables
                     reset = True
 
@@ -577,6 +612,7 @@ def Analyse(symbol, source, destination, hodBars, ORBars, marketOnly=True, outpu
                 profitOneTime = ""
                 entryVwap = 0
                 tradeType = None
+                pbBarCount = 0
                 # default
                 reset = False
 

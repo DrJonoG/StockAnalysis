@@ -93,7 +93,9 @@ class UpdateData:
             if self.vWAP:
                 newData = newData.groupby(newData.index.date, group_keys=False).apply(self.indicators.ComputeVWAP)
                 newData['vwap'] = newData['vwap'].fillna(method='ffill')
-                newData.loc[(newData.between_time('16:00:01', '09:29:59').index), 'vwap'] = 0
+                newData['vwapOpen'] = newData['vwap'].fillna(method='ffill')
+                newData.loc[(newData.between_time('16:00:01', '09:29:59').index), 'vwapOpen'] = 0
+
 
             # Join if existing file
             if os.path.exists(saveFile):

@@ -30,22 +30,18 @@ class Figure:
         self.figure.add_trace(go.Candlestick(x=df.index.time,
                                     open=df['open'], high=df['high'],
                                     low=df['low'], close=df['close'],
-                                    increasing_line_color= 'black', decreasing_line_color= 'black', opacity=0.8,
+                                    increasing_line_color= 'green', decreasing_line_color= 'red', opacity=0.8,
                                     name='Day', yaxis='y'
                                   )
                    )
-
-        self.figure.data[0].decreasing.fillcolor = 'black'
-        self.figure.data[0].increasing.fillcolor = 'white'
-
         self.figure.add_trace(go.Bar(x=df.index.time, y=df['volume'],
-                          name='Volume', opacity=0.1, marker_color='#778899',
-                          yaxis='y2'
+                          name='Volume', opacity=0.1
+                          , yaxis='y2'
                           )
                    )
 
         self.figure.update_layout(plot_bgcolor='rgba(0,0,0,0)')
-        self.figure.update_layout(margin=dict(l=5, r=5, t=5, b=5))
+        self.figure.update_layout(margin=dict(l=20, r=20, t=20, b=20))
         #self.figure.add_trace(go.Bar(x=df.index,y=df[‘volume’]),row=2,col=1)
         #self.figure = make_subplots(specs=[[{"secondary_y": True}]])
         #self.figure.add_trace(go.Bar(x=df.index, y=df['volume']), secondary_y=False)
@@ -107,7 +103,7 @@ class Figure:
         self.figure.add_annotation(
             xref='x domain',
             yref='y domain',
-            x=0.03,
+            x=0.01,
             y=0.9,
             text='YHigh: ' + str(yhigh) + '<br />YLow: ' + str(ylow) + '<br />PHigh: ' + str(preh) + '<br />PLow: ' + str(prel),
             showarrow=False,
@@ -130,7 +126,7 @@ class Figure:
         self.figure.add_vrect(
             x0=x0,
             x1=x1,
-            line_width=10,
+            line_width=50,
             fillcolor=color,
             opacity=0.5
         )
