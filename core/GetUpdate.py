@@ -40,12 +40,6 @@ class UpdateData:
         # Get data
         rawData = self.data.GetRaw(dataAddress)
 
-        # Ensure there is a return
-        #if rawData is None:
-        #    with open(destination + '/error.csv', "a") as file:
-        #        file.write(symbol + ', No data found. \n')
-        #    return
-
         # Extract and format data
         newData = self.data.PriceDFSorter(rawData.text)
         # Check if data was retrieved, if not, return.
