@@ -29,10 +29,10 @@ from helpers import LoadIndicators, SymbolIterator
 
 def Historic(dataPath, symbolFileList, alpha, timeFramesAlpha):
     # Download all data for all sybols
-    for i in range(1, len(timeFramesAlpha)):
+    for i in range(0, len(timeFramesAlpha)):
         print(f"==> Downloading for {timeFramesAlpha[i]}")
         # arguments [destination, timeframe, month, year, merge, skipExsiting]
-        SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:2], timeFramesAlpha[i], '*', '*', True, True, False], apiCap=150, functionCalls=24)
+        SymbolIterator(symbolFileList, alpha.DownloadExtended, [dataPath + timeFramesAlpha[i][:2], timeFramesAlpha[i], '*', '*'], apiCap=150, functionCalls=24)
 
     # Create timeframe data and compute indicators
     for i in range(1, len(timeFramesAlpha)):

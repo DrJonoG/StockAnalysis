@@ -111,7 +111,7 @@ class GetData:
 
 
 
-    def DownloadExtended(self, symbol, destination, dataInterval, month='*', year='*', merge=True, skipExisting=False, dateFilter=True):
+    def DownloadExtended(self, symbol, destination, dataInterval, month='*', year='*', merge=True, skipExisting=False, dateFilter=False):
         """
 	    https://www.alphavantage.co/documentation/#intraday-extended
 
@@ -139,13 +139,13 @@ class GetData:
 
         # Get the requested months and store in an array
         if month == '*':
-            monthRequest = [m for m in range(1, 13)]
+            monthRequest = [m for m in range(13,-1,-1)]
         else:
             monthRequest = [month]
 
         # Get request years and store in an array
         if year == '*':
-            yearRequest = [y for y in range(1, 3)]
+            yearRequest = [y for y in range(2,-1,-1)]
         else:
             yearRequest = [year]
 
@@ -189,6 +189,7 @@ class GetData:
                             newData.to_csv(saveFile, index=True)
                 else:
                     newData.to_csv(destination + '/%s_year_%s_month_%s.csv' % (symbol, str(y), str(m)))
+
 
         return True
 

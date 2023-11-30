@@ -191,11 +191,9 @@ def SymbolIterator(fileList, function, arguments, prefix='Downloading', apiCap=1
     symbolList = pd.Series(dtype="float64")
 
     # Iterate list and load csv if file list, or append string otherwise
-    for f in fileList:
-        symbolList = symbolList.append(LoadTickerNames(f, 0), ignore_index=True)
+    symbolList = symbolList.append(LoadTickerNames(fileList, 0), ignore_index=True)
     symbolList = symbolList.drop_duplicates()
     symbolCount = len(symbolList)
-
     # Dictionary to return data if not saving
     symbolData = {}
     # Iterate through symbolList and download data
